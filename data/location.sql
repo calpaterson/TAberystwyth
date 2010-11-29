@@ -1,5 +1,5 @@
 CREATE TABLE location(
-	text name not null;
-	smallint rating;
+	"location_name" text not null,
+	"rating" smallint
 	CONSTRAINT check_rating CHECK (rating>=0 AND rating <=100)
-)
+);

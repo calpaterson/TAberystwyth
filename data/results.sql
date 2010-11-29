@@ -1,5 +1,5 @@
 create table results(
-    smallint round_number not null;
-    text team_name not null;
-    smallint position not null;
+    "round_number" smallint not null,
+    "team_name" text not null,
+    "position" smallint not null
 );

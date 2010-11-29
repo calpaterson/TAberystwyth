@@ -1,6 +1,6 @@
 create table speaker(
-    text institution not null;
-    text name not null;
-    boolean esl not null;
-    boolean novice not null;
+    "institution" text not null,
+    "name" text not null,
+    "esl" boolean not null,
+    "novice" boolean not null
 );

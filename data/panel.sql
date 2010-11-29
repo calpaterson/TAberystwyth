@@ -1,8 +1,8 @@
 CREATE table panel(
-	text location not null;
-	smallint round not null;
-	smallint judgeID not null;
-	boolean isChair not null;
-	CONSTRAINT check_round CHECK (round>0)
-	CONSTRAINT check_one_chair UNIQUE (round,isChar)
-)
+	"location" text not null,
+	"round" smallint not null,
+	"judgeID" smallint not null,
+	"isChair" boolean not null,
+	CONSTRAINT check_round CHECK (round>0),
+	CONSTRAINT check_one_chair UNIQUE (round, "isChair")
+);

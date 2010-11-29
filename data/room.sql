@@ -1,8 +1,8 @@
 create table room(
-    text location not null;
-    text team1 not null;
-    text team2 not null;
-    text team3 not null;
-    text team4 not null;
-    smallint roundnumber not null;
+    "location" text not null,
+    "team1" text not null,
+    "team2" text not null,
+    "team3" text not null,
+    "team4" text not null,
+    "roundnumber" smallint not null
 );

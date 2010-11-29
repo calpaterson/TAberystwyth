@@ -1,5 +1,5 @@
 create table team(
-    text speaker1 not null;
-    text speaker2 not null;
-    text team_name not null;
+    "speaker1" text not null,
+    "speaker2" text not null,
+    "team_name" text not null
 );

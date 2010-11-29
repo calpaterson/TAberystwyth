@@ -11,6 +11,8 @@ import javax.swing.JTextField;
 
 public class TeamInsertionFrame extends JFrame {
 	
+	TeamInsertionListener listener = new TeamInsertionListener(this);
+	
 	JTextField teamName = new JTextField();
 	
 	JTextField speaker1 = new JTextField();
@@ -38,6 +40,8 @@ public class TeamInsertionFrame extends JFrame {
 	JLabel institution1Label = new JLabel("Institution 1:");
 	JLabel institution2Label = new JLabel("Institution 2:");
 	
+	
+	
 	public TeamInsertionFrame(){
 		setVisible(true);
 		setLayout(new GridLayout(11,2));
@@ -64,6 +68,20 @@ public class TeamInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 		pack();
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		clear.addActionListener(listener);
+		save.addActionListener(listener);
+		
+	}
+
+	public void clear() {
+		System.out.println("Clear");
+		
+	}
+
+	public void save() {
+		System.out.println("Save");
 		
 	}
 

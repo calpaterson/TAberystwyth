@@ -1,0 +1,27 @@
+TODO
+====
+
+- Data Entry
+    - teams
+    - judges
+    - locations
+    - results
+`   - wing/judge feedback
+- Multiple headed entry
+- Printing
+    - ballots
+    - slides
+    - final tab
+- Inspection (/Drag and Drop)
+    - Judges
+    - Locations
+- Algorithm
+    - Team allocation
+    - Judge allocation
+    - Strikes
+    - ESL
+    - Novice
+    - Swing teams
+- Configuration management
+    - dotfiles on *nix
+    - "%APPDATA%" on windows

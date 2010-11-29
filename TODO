@@ -1,7 +1,7 @@
 TODO
 ====
 
-- Data Entry
+- Data entry
     - teams
     - judges
     - locations
@@ -25,3 +25,9 @@ TODO
 - Configuration management
     - dotfiles on *nix
     - "%APPDATA%" on windows
+
+For v0.1
+--------
+- Data entry for teams
+- Printing slides
+- Algorithm for team allocation

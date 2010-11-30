@@ -5,6 +5,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class MainFrameMenu extends JMenuBar {
+	private static final long serialVersionUID = 1L;
+	
 	JMenu fileMenu = new JMenu("File");
 	JMenu roundsMenu = new JMenu("Rounds");
 	JMenu insertMenu = new JMenu("Insert");

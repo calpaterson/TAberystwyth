@@ -10,7 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class TeamInsertionFrame extends JFrame {
-	
+	private static final long serialVersionUID = 1L;
+
 	TeamInsertionListener listener = new TeamInsertionListener(this);
 	
 	JTextField teamName = new JTextField();

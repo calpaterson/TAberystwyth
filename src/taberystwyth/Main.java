@@ -1,13 +1,12 @@
 package taberystwyth;
 
-import java.sql.Connection;
+/*import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.SQLException;*/
 
 import javax.swing.*;
 
 import taberystwyth.view.OverviewFrame;
-import taberystwyth.view.TeamInsertionFrame;
 
 public class Main {
 

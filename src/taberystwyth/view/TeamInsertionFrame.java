@@ -14,9 +14,13 @@ public class TeamInsertionFrame extends JFrame {
 	TeamInsertionListener listener = new TeamInsertionListener(this);
 	
 	JTextField teamName = new JTextField();
+	JCheckBox swing = new JCheckBox();
 	
 	JTextField speaker1 = new JTextField();
 	JTextField speaker2 = new JTextField();
+	
+	JTextField institution1 = new JTextField();
+	JTextField institution2 = new JTextField();
 	
 	JCheckBox esl1 = new JCheckBox();
 	JCheckBox esl2 = new JCheckBox();
@@ -31,26 +35,29 @@ public class TeamInsertionFrame extends JFrame {
 	JButton save = new JButton("Save");
 	
 	JLabel teamNameLabel = new JLabel("Team Name:");
+	JLabel swingLabel = new JLabel("Swing?");
 	JLabel speaker1Label = new JLabel("Speaker Name 1:");
 	JLabel speaker2Label = new JLabel("Speaker Name 2:");
 	JLabel esl1Label = new JLabel("Esl?:");
 	JLabel novice1Label = new JLabel("Novice?:");
 	JLabel esl2Label = new JLabel("Esl?:");
 	JLabel novice2Label = new JLabel("Novice?:");
-	JLabel institution1Label = new JLabel("Institution 1:");
-	JLabel institution2Label = new JLabel("Institution 2:");
-	
-	
+	JLabel inst1Label = new JLabel("Institution 1:");
+	JLabel inst2Label = new JLabel("Institution 2:");
 	
 	public TeamInsertionFrame(){
 		setVisible(true);
-		setLayout(new GridLayout(11,2));
+		setLayout(new GridLayout(13,2));
 		add(teamNameLabel);
 		add(teamName);
+		add(swingLabel);
+		add(swing);
 		add(new JPanel());
 		add(new JPanel());
 		add(speaker1Label);
 		add(speaker1);
+		add(inst1Label);
+		add(inst1);
 		add(esl1Label);
 		add(esl1);
 		add(novice1Label);
@@ -59,12 +66,12 @@ public class TeamInsertionFrame extends JFrame {
 		add(new JPanel());
 		add(speaker2Label);
 		add(speaker2);
+		add(inst2Label);
+		add(inst2);
 		add(esl2Label);
 		add(esl2);
 		add(novice2Label);
 		add(novice2);
-		add(new JPanel());
-		add(new JPanel());
 		add(clear);
 		add(save);
 		pack();

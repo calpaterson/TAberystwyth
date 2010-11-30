@@ -84,7 +84,18 @@ public class TeamInsertionFrame extends JFrame {
 
 	public void clear() {
 		System.out.println("Clear");
+		teamName.setText("");
+		swing.setSelected(false);
 		
+		speaker1.setText("");
+		inst1.setText("");
+		esl1.setSelected(false);
+		novice1.setSelected(false);
+		
+		speaker2.setText("");
+		inst2.setText("");
+		esl2.setSelected(false);
+		novice2.setSelected(false);
 	}
 
 	public void save() {

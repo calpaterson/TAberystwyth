@@ -11,7 +11,7 @@ public class OverviewFrame extends JFrame {
 
 	public OverviewFrame(){
 		setLayout(new BorderLayout());
-		add(new MainFrameMenu(), BorderLayout.NORTH);
+		add(new MainFrameMenuBar(), BorderLayout.NORTH);
 		JPanel viewPanel = new JPanel(new GridLayout(1,3));
 		viewPanel.add(new JLabel("Judges"));
 		viewPanel.add(new JLabel("Teams"));

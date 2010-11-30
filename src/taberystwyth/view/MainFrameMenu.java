@@ -22,6 +22,9 @@ public class MainFrameMenu extends JMenuBar {
 		
 		roundsMenu.add(drawRound);
 		roundsMenu.add(viewRounds);
+		
+		add(fileMenu);
+		add(roundsMenu);
 	}
 	
 }

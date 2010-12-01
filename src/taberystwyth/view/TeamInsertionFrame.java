@@ -77,7 +77,6 @@ public class TeamInsertionFrame extends JFrame {
 		add(save);
 		pack();
 		
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
 		

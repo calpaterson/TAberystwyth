@@ -61,7 +61,7 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void insertSpeakers() {
-		// TODO Auto-generated method stub
+		TeamInsertionFrame insertionFrame = new TeamInsertionFrame();
 		
 	}
 

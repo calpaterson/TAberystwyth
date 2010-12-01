@@ -16,7 +16,7 @@ public class MainFrameMenu extends JMenuBar {
 	JMenuItem save = new JMenuItem("Save");
 	JMenuItem quit = new JMenuItem("Quit");
 	
-	JMenuItem speakers = new JMenuItem("Speakers");
+	JMenuItem speakers = new JMenuItem("Teams");
 	JMenuItem judges = new JMenuItem("Judges");
 	JMenuItem locations = new JMenuItem("Locations");
 	

@@ -23,7 +23,7 @@ public class OverviewFrameMenuListener implements ActionListener {
 			overviewFrame.quit();
 		}
 		
-		if(e.getActionCommand().equals("Speakers")){
+		if(e.getActionCommand().equals("Teams")){
 			overviewFrame.insertSpeakers();
 		}
 		

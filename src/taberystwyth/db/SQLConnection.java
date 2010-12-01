@@ -28,7 +28,7 @@ public class SQLConnection {
 			System.exit(255);
 		}
 		try {
-			 conn = DriverManager.getConnection("jdbc:sqlite:~/Desktop/taberystwyth.tab");
+			 conn = DriverManager.getConnection("jdbc:sqlite:taberystwyth.tab");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

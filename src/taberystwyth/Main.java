@@ -1,8 +1,6 @@
 package taberystwyth;
 
 import javax.swing.*;
-import taberystwyth.db.*;
-import taberystwyth.view.OverviewFrame;
 
 public class Main {
 

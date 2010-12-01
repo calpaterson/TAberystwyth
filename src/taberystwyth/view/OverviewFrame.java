@@ -56,13 +56,11 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void quit() {
-		// TODO Auto-generated method stub
-		
+		System.exit(0);		
 	}
 
 	public void insertSpeakers() {
-		TeamInsertionFrame insertionFrame = new TeamInsertionFrame();
-		
+		TeamInsertionFrame insertionFrame = new TeamInsertionFrame();	
 	}
 
 	public void insertJudges() {

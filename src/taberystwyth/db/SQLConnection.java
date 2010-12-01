@@ -46,8 +46,8 @@ public class SQLConnection {
 			/*
 			 * If the tables don't already exist, load them.
 			 */
+			@SuppressWarnings("serial")
 			HashSet<String> expected = new HashSet<String>() {
-				private static final long serialVersionUID = 1L;
 				{
 					add("LOCATION");
 					add("PANEL");

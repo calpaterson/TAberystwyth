@@ -1,6 +1,7 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -81,7 +82,7 @@ public class TeamInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 		pack();
-		//this.setResizable(false);
+		// this.setResizable(false);
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
 
@@ -117,13 +118,19 @@ public class TeamInsertionFrame extends JFrame {
 				+ speaker1.getText() + "\"" + ", " + "\"" + speaker2.getText()
 				+ "\"" + ", " + "\"" + teamName.getText() + "\"" + ");";
 
-		System.out.println(speaker1Insert);
+		/*System.out.println(speaker1Insert);
 		System.out.println(speaker2Insert);
-		System.out.println(teamInsert);
+		System.out.println(teamInsert);*/
 
 		conn.execute(speaker1Insert);
 		conn.execute(speaker2Insert);
 		conn.execute(teamInsert);
+		try {
+			OverviewFrame.getInstance().refreshSpeakers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

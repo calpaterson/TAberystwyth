@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -15,13 +16,34 @@ public class OverviewFrame extends JFrame {
 	OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(this);
 	SQLConnection conn = SQLConnection.getInstance();
 	
-	JList speakerList = new JList();
-	JList judgeList = new JList();
-	JList locationList = new JList();
+	/*
+	 * Models
+	 */
+	DefaultListModel speakerModel;
+	DefaultListModel judgeModel;
+	DefaultListModel locationModel;
 
-	public OverviewFrame(){
+	private static OverviewFrame instance = new OverviewFrame();
+	public static OverviewFrame getInstance(){
+		return instance;
+	}
+	private OverviewFrame(){
 		setLayout(new BorderLayout());
 		setTitle("TAberystwyth");
+		
+		/*
+		 * Set up the models...
+		 */
+		speakerModel = new DefaultListModel();
+		judgeModel = new DefaultListModel();
+		locationModel = new DefaultListModel();
+		
+		/*
+		 * ...and the lists
+		 */
+		JList speakerList = new JList(speakerModel);
+		JList judgeList = new JList(judgeModel);
+		JList locationList = new JList(locationModel);
 		
 		/*
 		 * Add menu bar
@@ -53,6 +75,12 @@ public class OverviewFrame extends JFrame {
 		add(holdingPanel, BorderLayout.CENTER);
 		setVisible(true);
 		pack();
+		try {
+			refreshSpeakers();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void open() {
@@ -99,10 +127,13 @@ public class OverviewFrame extends JFrame {
 	}
 	
 	public void refreshSpeakers() throws SQLException{
-		speakerList.removeAll();
+		speakerModel.removeAllElements();
 		ResultSet speakers = conn.executeQuery("select (name) from speaker;");
+		int index = 0;
 		while(speakers.next()){
-			speakerList.add(new JLabel(speakers.getString("NAME")));
+			System.out.println("Inserting " + speakers.getString("NAME"));
+			speakerModel.add(index, speakers.getString("NAME"));
+			++index;
 		}
 	}
 }

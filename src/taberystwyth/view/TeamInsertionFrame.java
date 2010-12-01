@@ -81,7 +81,7 @@ public class TeamInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 		pack();
-		this.setResizable(false);
+		//this.setResizable(false);
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
 

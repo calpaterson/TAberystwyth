@@ -17,6 +17,7 @@ public class Main {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+		SQLConnection sqlConn = SQLConnection.getInstance();
 		new OverviewFrame();
 		//new TeamInsertionFrame();
 

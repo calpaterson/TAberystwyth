@@ -39,7 +39,7 @@ public class SQLConnection {
 			}
 
 			/*
-			 * Load the database FIXME: this needs to be way more flexible
+			 * Load the database FIXME: the user should be consulted about which one
 			 */
 			setDatabase("taberystwyth.tab");
 

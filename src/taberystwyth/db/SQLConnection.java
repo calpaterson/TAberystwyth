@@ -1,6 +1,13 @@
 package taberystwyth.db;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -15,23 +22,56 @@ public class SQLConnection {
 	String SQLError = "There was some kind of problem accessing the database.";
 	
 	private SQLConnection(){
-		/*
-		 * Ensure that the Sqlite driver is pulled through the class loader
-		 */
 		try {
+			/*
+			 * Ensure that the Sqlite driver is pulled through the class loader
+			 */
 			Class.forName("org.sqlite.JDBC");
-		} catch (Exception e) {
+			
+			/*
+			 * Load the database FIXME: this needs to be way more flexible
+			 */
+			conn = DriverManager.getConnection("jdbc:sqlite:taberystwyth.tab");
+			
+			/*
+			 * If the tables don't already exist, load them.
+			 */
+			HashSet<String> expected = new HashSet<String>(){
+				private static final long serialVersionUID = 1L;
+				{
+				add("LOCATION");
+				add("PANEL");
+				add("RESULTS");
+				add("ROOM");
+				add("SPEAKER");
+				add("SPEAKER_POINTS");
+				add("TEAM");
+				add("SQLITE_AUTOINDEX_PANEL_1"); // automatic
+			}};
+			HashSet<String> actual = new HashSet<String>();
+			
+			/*
+			 * Fill up the actual
+			 */
+			ResultSet rs = conn.getMetaData().getTables(null, null, null, null);
+			while (rs.next()){
+			    actual.add(rs.getString("TABLE_NAME"));
+			}
+			
+			/*
+			 * If not equal then load the sql files
+			 */
+			if (!actual.equals(expected)){
+				System.out.println("not equal");
+			}
+			
+			rs.close();
+			} catch (Exception e) {
 			String error = "There was some kind of problem loading important libraries. \n" +
 				"Your computer is probably not supported.";
 			JOptionPane.showMessageDialog(null, error);
 			e.printStackTrace();
 			System.exit(255);
-		}
-		try {
-			 conn = DriverManager.getConnection("jdbc:sqlite:taberystwyth.tab");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -58,5 +98,19 @@ public class SQLConnection {
 		}
 		return returnValue;
 	}
+	
+    /**
+     * Evaluates a given SQL file against the given connection.
+     * @param conn connection to SQL database
+     * @param filePath path of SQL file
+     * @throws IOException if the file is  not found
+     * @throws SQLException if there is some problem with the SQL server
+     */
+    private void evaluateSQLFile(String filePath) throws IOException, SQLException {
+        char[] cbuf = new char[2000];
+        new BufferedReader(new FileReader(new File(filePath))).read(cbuf);
+        //System.out.println(new String(cbuf));
+        conn.createStatement().execute(new String(cbuf));
+    }
 
 }

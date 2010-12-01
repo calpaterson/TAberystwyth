@@ -9,32 +9,35 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import taberystwyth.db.SQLConnection;
+
 public class TeamInsertionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
+	SQLConnection conn = SQLConnection.getInstance();
 
 	TeamInsertionListener listener = new TeamInsertionListener(this);
-	
+
 	JTextField teamName = new JTextField();
 	JCheckBox swing = new JCheckBox();
-	
+
 	JTextField speaker1 = new JTextField();
 	JTextField speaker2 = new JTextField();
-	
+
 	JTextField institution1 = new JTextField();
 	JTextField institution2 = new JTextField();
-	
+
 	JCheckBox esl1 = new JCheckBox();
 	JCheckBox esl2 = new JCheckBox();
-	
+
 	JCheckBox novice1 = new JCheckBox();
 	JCheckBox novice2 = new JCheckBox();
-	
+
 	JTextField inst1 = new JTextField();
 	JTextField inst2 = new JTextField();
-	
+
 	JButton clear = new JButton("Clear");
 	JButton save = new JButton("Save");
-	
+
 	JLabel teamNameLabel = new JLabel("Team Name:");
 	JLabel swingLabel = new JLabel("Swing?");
 	JLabel speaker1Label = new JLabel("Speaker Name 1:");
@@ -45,12 +48,12 @@ public class TeamInsertionFrame extends JFrame {
 	JLabel novice2Label = new JLabel("Novice?:");
 	JLabel inst1Label = new JLabel("Institution 1:");
 	JLabel inst2Label = new JLabel("Institution 2:");
-	
-	public TeamInsertionFrame(){
+
+	public TeamInsertionFrame() {
 		setVisible(true);
-		setLayout(new GridLayout(13,2));
+		setLayout(new GridLayout(13, 2));
 		setTitle("Insert Team");
-		
+
 		add(teamNameLabel);
 		add(teamName);
 		add(swingLabel);
@@ -78,22 +81,22 @@ public class TeamInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 		pack();
-		
+
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
-		
+
 	}
 
 	public void clear() {
 		System.out.println("Clear");
 		teamName.setText("");
 		swing.setSelected(false);
-		
+
 		speaker1.setText("");
 		inst1.setText("");
 		esl1.setSelected(false);
 		novice1.setSelected(false);
-		
+
 		speaker2.setText("");
 		inst2.setText("");
 		esl2.setSelected(false);
@@ -102,7 +105,25 @@ public class TeamInsertionFrame extends JFrame {
 
 	public void save() {
 		System.out.println("Save");
-		
+		String speaker1Insert = "insert into speaker values(" + "\""
+				+ inst1.getText() + "\"" + ", " + "\"" + speaker1.getText()
+				+ "\"" + ", " + "\"" + esl1.isSelected() + "\"" + ", " + "\""
+				+ novice1.isSelected() + "\"" + ");";
+		String speaker2Insert = "insert into speaker values(" + "\""
+				+ inst2.getText() + "\"" + ", " + "\"" + speaker2.getText()
+				+ "\"" + ", " + "\"" + esl2.isSelected() + "\"" + ", " + "\""
+				+ novice2.isSelected() + "\"" + ");";
+		String teamInsert = "insert into team values(" + "\""
+				+ speaker1.getText() + "\"" + ", " + "\"" + speaker2.getText()
+				+ "\"" + ", " + "\"" + teamName.getText() + "\"" + ");";
+
+		System.out.println(speaker1Insert);
+		System.out.println(speaker2Insert);
+		System.out.println(teamInsert);
+
+		conn.execute(speaker1Insert);
+		conn.execute(speaker2Insert);
+		conn.execute(teamInsert);
 	}
 
 }

@@ -1,6 +1,7 @@
 package taberystwyth.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,6 +76,7 @@ public class OverviewFrame extends JFrame {
 		add(holdingPanel, BorderLayout.CENTER);
 		setVisible(true);
 		pack();
+		setSize(new Dimension(500,500));
 		try {
 			refreshSpeakers();
 			//refreshJudges(); //FIXME:

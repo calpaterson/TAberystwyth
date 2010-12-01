@@ -77,6 +77,8 @@ public class OverviewFrame extends JFrame {
 		pack();
 		try {
 			refreshSpeakers();
+			//refreshJudges(); //FIXME:
+			refreshLocation();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,12 +129,24 @@ public class OverviewFrame extends JFrame {
 	}
 	
 	public void refreshSpeakers() throws SQLException{
-		speakerModel.removeAllElements();
-		ResultSet speakers = conn.executeQuery("select (name) from speaker;");
+		refreshList("speaker", speakerModel);
+	}
+	
+	public void refreshJudges() throws SQLException{
+		refreshList("panel", judgeModel);
+	}
+	
+	public void refreshLocation() throws SQLException{
+		refreshList("location", locationModel);
+	}
+	
+	private void refreshList(String table, DefaultListModel model) throws SQLException{
+		model.removeAllElements();
+		ResultSet rs = conn.executeQuery("select (name) from " + table + ";");
 		int index = 0;
-		while(speakers.next()){
-			System.out.println("Inserting " + speakers.getString("NAME"));
-			speakerModel.add(index, speakers.getString("NAME"));
+		while(rs.next()){
+			System.out.println("Inserting " + rs.getString("NAME"));
+			model.add(index, rs.getString("NAME"));
 			++index;
 		}
 	}

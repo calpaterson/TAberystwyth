@@ -60,6 +60,7 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void insertSpeakers() {
+		@SuppressWarnings("unused")
 		TeamInsertionFrame insertionFrame = new TeamInsertionFrame();	
 	}
 

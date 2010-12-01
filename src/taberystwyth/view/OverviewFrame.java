@@ -3,11 +3,15 @@ package taberystwyth.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 import taberystwyth.db.SQLConnection;
 
@@ -31,6 +35,15 @@ public class OverviewFrame extends JFrame {
 	private OverviewFrame(){
 		setLayout(new BorderLayout());
 		setTitle("TAberystwyth");
+		/*
+		 * When the window is closed, exit the program
+		 */
+		addWindowListener(new WindowAdapter() {
+	        @Override
+			public void windowClosing(WindowEvent evt) {
+	            System.exit(0);
+	        }
+		});
 		
 		/*
 		 * Set up the models...
@@ -69,8 +82,8 @@ public class OverviewFrame extends JFrame {
 		 * View Panel
 		 */
 		JPanel viewPanel = new JPanel(new GridLayout(1,3));
-		viewPanel.add(new JScrollPane(speakerList));
 		viewPanel.add(new JScrollPane(judgeList));
+		viewPanel.add(new JScrollPane(speakerList));
 		viewPanel.add(new JScrollPane(locationList));
 		holdingPanel.add(viewPanel, BorderLayout.CENTER);
 		add(holdingPanel, BorderLayout.CENTER);
@@ -87,14 +100,53 @@ public class OverviewFrame extends JFrame {
 		}
 	}
 
-	public void open() {
-		// TODO Auto-generated method stub
-		
+	public void new_(){
+		File f = getFile("New");
+		System.out.println("Nothing to do here!"); //FIXME
+	}
+	
+	private File getFile(String title) {
+		/*
+		 * Make a new filechooser, along with the 
+		 */
+		JFileChooser fc = new JFileChooser(title);
+		fc.setFileFilter(new FileFilter() {
+			
+			@Override
+			public String getDescription() {
+				return "Debate Tab Files";
+			}
+			
+			@Override
+			public boolean accept(File f) {
+				if (f.getName().endsWith(".tab")){
+					return true;
+				} else if (f.isDirectory()){
+					return true;
+				}
+				return false;
+			}
+		});
+		int result = fc.showOpenDialog(this);
+		File returnValue;
+		if (result == JFileChooser.APPROVE_OPTION){
+			returnValue = fc.getSelectedFile();
+		} else {
+			returnValue = null;
+		}
+		return returnValue;
+	}
+	
+	public void open(){
+		File f = getFile("Open");
+		if (f != null){
+			SQLConnection.getInstance().setDatabase(f);
+		}
 	}
 
 	public void save() {
-		// TODO Auto-generated method stub
-		
+		File f = getFile("Save");
+		System.out.println("Nothing to do here!"); //FIXME
 	}
 
 	public void quit() {

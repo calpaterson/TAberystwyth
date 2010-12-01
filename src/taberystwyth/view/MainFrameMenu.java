@@ -12,6 +12,7 @@ public class MainFrameMenu extends JMenuBar {
 	JMenu insertMenu = new JMenu("Insert");
 	JMenu helpMenu = new JMenu("Help");
 	
+	JMenuItem new_ = new JMenuItem("New");
 	JMenuItem open = new JMenuItem("Open");
 	JMenuItem save = new JMenuItem("Save");
 	JMenuItem quit = new JMenuItem("Quit");
@@ -26,6 +27,7 @@ public class MainFrameMenu extends JMenuBar {
 	JMenuItem viewRounds = new JMenuItem("View Rounds");
 	
 	public MainFrameMenu(OverviewFrameMenuListener menuListener){
+		fileMenu.add(new_);
 		fileMenu.add(open);
 		fileMenu.add(save);
 		fileMenu.add(quit);

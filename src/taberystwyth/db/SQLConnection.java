@@ -19,11 +19,11 @@ public class SQLConnection {
 	Connection conn;
 	String SQLError = "There was some kind of problem accessing the database.";
 
-	public void setDatabase(String filePath){
+	public void setDatabase(File file){
 		try {
-			conn = DriverManager.getConnection("jdbc:sqlite:" + filePath);
+			conn = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
 		} catch (SQLException e) {
-			panic(e, "Unable to load the following file:\n" + filePath);
+			panic(e, "Unable to load the following file:\n" + file);
 		}
 	}
 	
@@ -41,7 +41,7 @@ public class SQLConnection {
 			/*
 			 * Load the database FIXME: the user should be consulted about which one
 			 */
-			setDatabase("taberystwyth.tab");
+			setDatabase(new File("taberystwyth.tab"));
 
 			/*
 			 * If the tables don't already exist, load them.

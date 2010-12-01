@@ -1,13 +1,8 @@
 package taberystwyth.db;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
@@ -24,7 +19,7 @@ public class SQLConnection {
 	private SQLConnection(){
 		try {
 			/*
-			 * Ensure that the Sqlite driver is pulled through the class loader
+			 * Ensure that the SQL driver is pulled through the class loader
 			 */
 			Class.forName("org.sqlite.JDBC");
 			
@@ -62,19 +57,28 @@ public class SQLConnection {
 			 * If not equal then load the sql files
 			 */
 			if (!actual.equals(expected)){
-				System.out.println("not equal");
+				String[] sqlFiles = {"location", "panel", "results", "room", "speaker", "speaker_points",
+						"team"};
+				for (String s: sqlFiles){
+					System.out.println("SQLConnection: evaluating " + s + ".sql");
+					evaluateSQLFile("data/" + s + ".sql");
+				}
 			}
 			
 			rs.close();
 			} catch (Exception e) {
-			String error = "There was some kind of problem loading important libraries. \n" +
-				"Your computer is probably not supported.";
+			String error = "There was some kind of SQL initialisation problem and I cannot continue.";
 			JOptionPane.showMessageDialog(null, error);
 			e.printStackTrace();
 			System.exit(255);
 		}
 	}
 	
+	/**
+	 * Execute an SQL query against the database
+	 * @param query query
+	 * @return resultset
+	 */
 	public synchronized ResultSet executeQuery(String query){
 		ResultSet returnValue = null;
 		try {
@@ -87,11 +91,16 @@ public class SQLConnection {
 		return returnValue;
 	}
 	
-	public synchronized boolean execute(String insert){
+	/**
+	 * Execute an SQL statement against the database
+	 * @param statement statement
+	 * @return success or failure
+	 */
+	public synchronized boolean execute(String statement){
 		boolean returnValue = false;
 		try {
 			Statement stmt = conn.createStatement();
-			returnValue = stmt.execute(insert);
+			returnValue = stmt.execute(statement);
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, SQLError);
 			e.printStackTrace();
@@ -106,7 +115,7 @@ public class SQLConnection {
      * @throws IOException if the file is  not found
      * @throws SQLException if there is some problem with the SQL server
      */
-    private void evaluateSQLFile(String filePath) throws IOException, SQLException {
+    private synchronized void evaluateSQLFile(String filePath) throws IOException, SQLException {
         char[] cbuf = new char[2000];
         new BufferedReader(new FileReader(new File(filePath))).read(cbuf);
         //System.out.println(new String(cbuf));

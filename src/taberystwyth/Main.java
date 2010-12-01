@@ -1,9 +1,5 @@
 package taberystwyth;
 
-/*import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;*/
-
 import javax.swing.*;
 
 import taberystwyth.db.SQLConnection;
@@ -17,7 +13,6 @@ public class Main {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		SQLConnection sqlConn = SQLConnection.getInstance();
 		new OverviewFrame();
 		//new TeamInsertionFrame();
 

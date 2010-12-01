@@ -49,6 +49,8 @@ public class TeamInsertionFrame extends JFrame {
 	public TeamInsertionFrame(){
 		setVisible(true);
 		setLayout(new GridLayout(13,2));
+		setTitle("Insert Team");
+		
 		add(teamNameLabel);
 		add(teamName);
 		add(swingLabel);

@@ -12,6 +12,7 @@ public class OverviewFrame extends JFrame {
 
 	public OverviewFrame(){
 		setLayout(new BorderLayout());
+		setTitle("TAberystwyth");
 		
 		/*
 		 * Add menu bar

@@ -75,7 +75,7 @@ public class SQLConnection {
 		}
 	}
 	
-	public synchronized ResultSet query(String query){
+	public synchronized ResultSet executeQuery(String query){
 		ResultSet returnValue = null;
 		try {
 			Statement stmt = conn.createStatement();
@@ -87,7 +87,7 @@ public class SQLConnection {
 		return returnValue;
 	}
 	
-	public synchronized boolean insert(String insert){
+	public synchronized boolean execute(String insert){
 		boolean returnValue = false;
 		try {
 			Statement stmt = conn.createStatement();

@@ -10,6 +10,7 @@ public class MainFrameMenu extends JMenuBar {
 	JMenu fileMenu = new JMenu("File");
 	JMenu roundsMenu = new JMenu("Rounds");
 	JMenu insertMenu = new JMenu("Insert");
+	JMenu helpMenu = new JMenu("Help");
 	
 	JMenuItem open = new JMenuItem("Open");
 	JMenuItem save = new JMenuItem("Save");
@@ -19,10 +20,12 @@ public class MainFrameMenu extends JMenuBar {
 	JMenuItem judges = new JMenuItem("Judges");
 	JMenuItem locations = new JMenuItem("Locations");
 	
+	JMenuItem about = new JMenuItem("About");
+	
 	JMenuItem drawRound = new JMenuItem("Draw Round");
 	JMenuItem viewRounds = new JMenuItem("View Rounds");
 	
-	public MainFrameMenu(){
+	public MainFrameMenu(OverviewFrameMenuListener menuListener){
 		fileMenu.add(open);
 		fileMenu.add(save);
 		fileMenu.add(quit);
@@ -34,9 +37,22 @@ public class MainFrameMenu extends JMenuBar {
 		roundsMenu.add(drawRound);
 		roundsMenu.add(viewRounds);
 		
+		helpMenu.add(about);
+		
 		add(fileMenu);
 		add(insertMenu);
 		add(roundsMenu);
+		add(helpMenu);
+		
+		open.addActionListener(menuListener);
+		save.addActionListener(menuListener);
+		quit.addActionListener(menuListener);
+		speakers.addActionListener(menuListener);
+		judges.addActionListener(menuListener);
+		locations.addActionListener(menuListener);
+		drawRound.addActionListener(menuListener);
+		viewRounds.addActionListener(menuListener);
+		about.addActionListener(menuListener);
 	}
 	
 }

@@ -5,10 +5,9 @@ import javax.swing.JMenuBar;
 public class MainFrameMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
-	MainFrameMenu menu = new MainFrameMenu();
-	public MainFrameMenuBar(){
+	public MainFrameMenuBar(OverviewFrameMenuListener menuListener){
 		setVisible(true);
-		this.add(menu);
+		this.add(new MainFrameMenu(menuListener));
 		
 	}
 

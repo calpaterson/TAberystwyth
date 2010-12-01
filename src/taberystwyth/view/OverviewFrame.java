@@ -8,6 +8,7 @@ import javax.swing.*;
 public class OverviewFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
+	OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(this);
 
 	public OverviewFrame(){
 		setLayout(new BorderLayout());
@@ -15,7 +16,7 @@ public class OverviewFrame extends JFrame {
 		/*
 		 * Add menu bar
 		 */
-		add(new MainFrameMenuBar(), BorderLayout.NORTH);
+		add(new MainFrameMenuBar(menuListener), BorderLayout.NORTH);
 		
 		/*
 		 * Holding panel

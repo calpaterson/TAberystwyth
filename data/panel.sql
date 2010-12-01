@@ -4,5 +4,5 @@ CREATE table panel(
 	"judgeID" smallint not null,
 	"isChair" boolean not null,
 	CONSTRAINT check_round CHECK (round>0),
-	CONSTRAINT check_one_chair UNIQUE (round, "isChair")
+	CONSTRAINT check_one_chair UNIQUE ("round", "isChair")
 );

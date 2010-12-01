@@ -44,4 +44,49 @@ public class OverviewFrame extends JFrame {
 		setVisible(true);
 		pack();
 	}
+
+	public void open() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void quit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void insertSpeakers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void insertJudges() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void insertLocations() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void drawRound() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void viewRounds() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void about() {
+		// TODO Auto-generated method stub
+		
+	}
 }

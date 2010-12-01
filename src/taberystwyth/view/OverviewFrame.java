@@ -2,13 +2,22 @@ package taberystwyth.view;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.*;
+
+import taberystwyth.db.SQLConnection;
 
 public class OverviewFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(this);
+	SQLConnection conn = SQLConnection.getInstance();
+	
+	JList speakerList = new JList();
+	JList judgeList = new JList();
+	JList locationList = new JList();
 
 	public OverviewFrame(){
 		setLayout(new BorderLayout());
@@ -37,9 +46,9 @@ public class OverviewFrame extends JFrame {
 		 * View Panel
 		 */
 		JPanel viewPanel = new JPanel(new GridLayout(1,3));
-		viewPanel.add(new JScrollPane(new JList()));
-		viewPanel.add(new JScrollPane(new JList()));
-		viewPanel.add(new JScrollPane(new JList()));
+		viewPanel.add(new JScrollPane(speakerList));
+		viewPanel.add(new JScrollPane(judgeList));
+		viewPanel.add(new JScrollPane(locationList));
 		holdingPanel.add(viewPanel, BorderLayout.CENTER);
 		add(holdingPanel, BorderLayout.CENTER);
 		setVisible(true);
@@ -61,8 +70,7 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void insertSpeakers() {
-		@SuppressWarnings("unused")
-		TeamInsertionFrame insertionFrame = new TeamInsertionFrame();	
+		new TeamInsertionFrame();	
 	}
 
 	public void insertJudges() {
@@ -88,5 +96,13 @@ public class OverviewFrame extends JFrame {
 	public void about() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void refreshSpeakers() throws SQLException{
+		speakerList.removeAll();
+		ResultSet speakers = conn.executeQuery("select (name) from speaker;");
+		while(speakers.next()){
+			speakerList.add(new JLabel(speakers.getString("NAME")));
+		}
 	}
 }

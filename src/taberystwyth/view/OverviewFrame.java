@@ -62,7 +62,7 @@ public class OverviewFrame extends JFrame {
 		/*
 		 * Add menu bar
 		 */
-		add(new MainFrameMenuBar(menuListener), BorderLayout.NORTH);
+		add(new OverviewFrameMenuBar(menuListener), BorderLayout.NORTH);
 		
 		/*
 		 * Holding panel

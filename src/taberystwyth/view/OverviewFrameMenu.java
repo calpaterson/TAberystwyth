@@ -4,7 +4,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class MainFrameMenu extends JMenuBar {
+public class OverviewFrameMenu extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 	
 	JMenu fileMenu = new JMenu("File");
@@ -26,7 +26,7 @@ public class MainFrameMenu extends JMenuBar {
 	JMenuItem drawRound = new JMenuItem("Draw Round");
 	JMenuItem viewRounds = new JMenuItem("View Rounds");
 	
-	public MainFrameMenu(OverviewFrameMenuListener menuListener){
+	public OverviewFrameMenu(OverviewFrameMenuListener menuListener){
 		fileMenu.add(new_);
 		fileMenu.add(open);
 		fileMenu.add(save);

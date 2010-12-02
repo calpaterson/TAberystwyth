@@ -163,7 +163,7 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void insertLocations() {
-		// TODO Auto-generated method stub
+		new LocationInsertionFrame();
 		
 	}
 

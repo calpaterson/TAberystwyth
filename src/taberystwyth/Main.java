@@ -8,7 +8,7 @@ public class Main {
 		try {
 			Class.forName("taberystwyth.db.SQLConnection");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			Class.forName("taberystwyth.view.OverviewFrame");
+			Class.forName("taberystwyth.view.OverviewFrame"); //
 		} catch (Exception e){
 			e.printStackTrace();
 		}

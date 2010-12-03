@@ -126,7 +126,7 @@ public class TeamInsertionFrame extends JFrame {
 		conn.execute(speaker2Insert);
 		conn.execute(teamInsert);
 		try {
-			OverviewFrame.getInstance().refreshSpeakers();
+			OverviewFrame.getInstance().refreshTeams();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

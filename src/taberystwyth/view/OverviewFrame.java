@@ -91,7 +91,7 @@ public class OverviewFrame extends JFrame {
 		pack();
 		setSize(new Dimension(500,500));
 		try {
-			refreshSpeakers();
+			refreshTeams();
 			//refreshJudges(); //FIXME:
 			refreshLocation();
 		} catch (SQLException e) {
@@ -182,8 +182,8 @@ public class OverviewFrame extends JFrame {
 		
 	}
 	
-	public void refreshSpeakers() throws SQLException{
-		refreshList("speaker", speakerModel);
+	public void refreshTeams() throws SQLException{
+		refreshList("team", speakerModel);
 	}
 	
 	public void refreshJudges() throws SQLException{
@@ -200,8 +200,62 @@ public class OverviewFrame extends JFrame {
 		int index = 0;
 		while(rs.next()){
 			System.out.println("Inserting " + rs.getString("NAME"));
-			model.add(index, rs.getString("NAME"));
+			String entry = rs.getString("NAME");
+			if (table.equals("team")){
+				entry += " (" + getInst(entry) + ")";
+			}
+			model.add(index, entry);
 			++index;
 		}
+	}
+	private String getInst(String teamName) {
+		String query = null;
+		String returnValue = null;
+		try{
+			/*
+			 * Get the speakers on the team
+			 */
+			query = "select speaker1, speaker2 from team where team.name = '" + 
+				teamName + "';";
+			ResultSet rs = conn.executeQuery(query);
+			rs.next();
+			String speaker1 = rs.getString("SPEAKER1");
+			String speaker2 = rs.getString("SPEAKER2");
+			
+			/*
+			 * Get the institution of speaker1
+			 */
+			query = "select (institution) from speaker where speaker.name = '" +
+				speaker1 + "'";
+			rs = conn.executeQuery(query);
+			rs.next();
+			String inst1 = rs.getString("INSTITUTION");
+			rs.close();
+			
+			/*
+			 * Get the institution of speaker2
+			 */
+			query = "select (institution) from speaker where speaker.name = '" +
+				speaker2 + "'";
+			rs = conn.executeQuery(query);
+			rs.next();
+			String inst2 = rs.getString("INSTITUTION");
+			rs.close();
+			
+			/*
+			 * Compare them
+			 */
+			if (!inst1.equals(inst2)){
+				returnValue = "Mixed";
+			} else {
+				returnValue = inst1;
+			}
+			
+			
+		} catch (SQLException e){
+			conn.panic(e, "Unable to find what institution two speakers are from.  Query was:\n"
+					+ query);
+		}
+		return returnValue;
 	}
 }

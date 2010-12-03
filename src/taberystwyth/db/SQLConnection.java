@@ -119,9 +119,7 @@ public class SQLConnection {
 	 */
 	public synchronized void panic(Exception e, String reason) {
 		JOptionPane.showMessageDialog(OverviewFrame.getInstance(), reason);
-		if (e != null) {
-			e.printStackTrace();
-		}
+		e.printStackTrace();
 		System.exit(255);
 	}
 

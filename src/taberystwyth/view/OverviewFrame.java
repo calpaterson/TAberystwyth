@@ -199,16 +199,19 @@ public class OverviewFrame extends JFrame {
 		ResultSet rs = conn.executeQuery("select (name) from " + table + ";");
 		int index = 0;
 		while(rs.next()){
-			System.out.println("Inserting " + rs.getString("NAME"));
 			String entry = rs.getString("NAME");
+			/*
+			 * If it's a team, append the institution of the team
+			 */
 			if (table.equals("team")){
-				entry += " (" + getInst(entry) + ")";
+				entry += " (" + getInstitution(entry) + ")";
 			}
 			model.add(index, entry);
 			++index;
 		}
 	}
-	private String getInst(String teamName) {
+	
+	private String getInstitution(String teamName) {
 		String query = null;
 		String returnValue = null;
 		try{

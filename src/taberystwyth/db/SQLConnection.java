@@ -117,7 +117,7 @@ public class SQLConnection {
 	 * @param reason
 	 *            a Very Informative Description of the problem
 	 */
-	private void panic(Exception e, String reason) {
+	public synchronized void panic(Exception e, String reason) {
 		JOptionPane.showMessageDialog(OverviewFrame.getInstance(), reason);
 		if (e != null) {
 			e.printStackTrace();
@@ -163,7 +163,7 @@ public class SQLConnection {
 		return returnValue;
 	}
 
-	public void setDatabase(File file) {
+	public synchronized void setDatabase(File file) {
 		try {
 			conn = DriverManager.getConnection("jdbc:sqlite:"
 					+ file.getAbsolutePath());

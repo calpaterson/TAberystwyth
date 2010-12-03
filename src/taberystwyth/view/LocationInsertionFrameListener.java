@@ -15,7 +15,6 @@ public class LocationInsertionFrameListener implements ActionListener {
 		this.frame = frame;
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Save")) {
 			String statement = "insert into location values ("

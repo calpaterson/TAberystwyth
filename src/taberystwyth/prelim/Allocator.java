@@ -19,7 +19,7 @@ public class Allocator {
 	}
 
 	private int getCurrentRound() {
-		int returnValue = 0;
+		int returnValue = 0; 
 
 		/*
 		 * Check that there are tables in results, because if there aren't, this

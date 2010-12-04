@@ -173,7 +173,7 @@ public class OverviewFrame extends JFrame {
 	}
 
 	public void viewRounds() {
-		// TODO Auto-generated method stub
+		new ViewRoundFrame();
 		
 	}
 

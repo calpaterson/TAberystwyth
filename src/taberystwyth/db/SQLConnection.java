@@ -117,7 +117,7 @@ public class SQLConnection {
 	 * @param reason
 	 *            a Very Informative Description of the problem
 	 */
-	private void panic(Exception e, String reason) {
+	public void panic(Exception e, String reason) {
 		JOptionPane.showMessageDialog(OverviewFrame.getInstance(), reason);
 		if (e != null) {
 			e.printStackTrace();

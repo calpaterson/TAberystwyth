@@ -1,0 +1,316 @@
+pristine:0000000724-a92eecc9d26c861fec8bf7f36330291d37868272ede3bba885d7b8bd89d60e4d
+[Project begun.  README file added.  This feature is unique among tab programs.
+clp8@aber.ac.uk**20101129002457
+ Ignore-this: 40cea793baf0c7ae0a59226bf1df8e0c
+] 
+hash: 0000000177-df0f95342a55ff7ee0dda86d8a03b26735c29352edaafff02b344def531c22fc
+[Schemas
+clp8@aber.ac.uk**20101129164957
+ Ignore-this: 74c2fd19faf1fee4caf0b92ada1e5e87
+] 
+hash: 0000001073-ee5ab2ffc23ef9fe0cdcf7589746bee0f4a3d33be3a989de534e89e027f6d62a
+[Data changes
+r@sarrionandia.com**20101129170354
+ Ignore-this: fdf100926108a06ee9b4db898c57bb05
+] 
+hash: 0000000560-a51a12391c8b64e0f93ed81805d337d69423057b8db2154d2ccf1cb481ec41bf
+[Many SQL fixes
+clp8@aber.ac.uk**20101129171535
+ Ignore-this: ec5ef7094cb048fac85bf7b89c61ef2f
+] 
+hash: 0000002138-1754fa89efbc79f470ea423a4f6f8f2d57f3bbb11aaff5800b3fc048e367898e
+[Eclipse project.
+clp8@aber.ac.uk**20101129172158
+ Ignore-this: f68e48c71100908b8ffd0d2905713626
+] 
+hash: 0000000800-28aaee878fdb7f3c60fd00adeec689ef9bcc9a27657ef2182bf18f0153f16bd1
+[n
+r@sarrionandia.com**20101129181613
+ Ignore-this: 9c5afb65c18b60ba6985b5de9b245c63
+] 
+hash: 0000000154-5058d1cca47210122cad48ee06e97fe92e83f2d332c3e7bb7b14167a33402d6f
+[View written
+r@sarrionandia.com**20101129181641
+ Ignore-this: c424222664bbe7715ed4b3395f0a4c9a
+] 
+hash: 0000001954-9081661b9d80d0da26059f59da0abea5526b1af6bd8c42165b69f632bbaa1eb8
+[TeamInsertionListener added
+r@sarrionandia.com**20101129182638
+ Ignore-this: 6581a1f59ad48e31e0692f06fbceba1
+] 
+hash: 0000001362-ffaa1822e6c469d0ac7e8651c27d87e7c6b1158808f68b24715a3f929be92143
+[SQLLite JDBC
+clp8@aber.ac.uk**20101129183217
+ Ignore-this: 26f4001d608b367145642d022095637c
+] 
+hash: 0005506148-05029b610bfa04702c99f012e83b40f3b39f22027e53f474cd386c8f0180e067
+[Classpath
+clp8@aber.ac.uk**20101129183542
+ Ignore-this: 21efc75172178f0e34eebdf7b8d6daf
+] 
+hash: 0000000452-a7a931ce63560368e779c79bee8f77a81d7108fddb1a0c659f1f3f1352642164
+[JDBC relative path
+clp8@aber.ac.uk**20101129183801
+ Ignore-this: c4a4298185a918342615536ed95c8937
+] 
+hash: 0000000271-486f1a78622888c71df358f53360fe3607eff7f6b14160b8e8e802cb9ad2526a
+[Added TODO file
+clp8@aber.ac.uk**20101129212508
+ Ignore-this: f3e8455d09f082e91264d336bab6fb25
+] 
+hash: 0000000586-4656a837769d5f4671bfd6e1d9a1fe94902ba3b4e22897dbb3c40ac59aec683c
+[LICENCE
+clp8@aber.ac.uk**20101129213604
+ Ignore-this: 53e2429101ec9ec4a27910e0439ba774
+] 
+hash: 0000035945-62f82789a91a2d384fcc6f3e104b1f6bf665b439f3bbd15f1fd36c85dba3b0ee
+[TODO for v0.1
+clp8@aber.ac.uk**20101129223432
+ Ignore-this: 1968e0b3db49dd6dd6aee9162d9490a4
+] 
+hash: 0000000250-fb3496e44e34529d73a09f45e42b0e282fdc60d563853d9eb3a1931273269139
+[Insertion frame improvement
+clp8@aber.ac.uk**20101130161730
+ Ignore-this: 214b6537dc176bd03d7d3aac12310714
+] 
+hash: 0000001277-560a9ac20c7d39813556d41ff14f74e1773c3e0de0d9e32a3cef51fef0760499
+[TeamInsertion Clear
+clp8@aber.ac.uk**20101130162802
+ Ignore-this: 8e3843a107c5099c7cfc92338f905f56
+] 
+hash: 0000000483-d4183ee945e99dcb706a9ef57c6d98d5916febcc99f0d7e6d6a6658ea696c7ee
+[OverviewFrame
+clp8@aber.ac.uk**20101130164540
+ Ignore-this: d48e5774dd6decd254d0b3068ed4991c
+] 
+hash: 0000001193-a2ad60e8f53facaf69de6e244443d8f9470dbc4aa702d0a7191ce08f2f19eac8
+[Menu Bar
+r@sarrionandia.com**20101130164333
+ Ignore-this: 459d11c61c0d373042e5dd76acb9f5e5
+] 
+hash: 0000000317-ea5d28be57c21ca1d48b3b0b13e895674e05b51d9e5af57f0fa74504bb714376
+[MainFrameMenu
+r@sarrionandia.com**20101130164533
+ Ignore-this: 10d7b5be67471562ea7b66bccd9383d7
+] 
+hash: 0000000313-34ac350226e595b11ad75c67809d75271c6067ec9bbc00945c6aeee28a38fd1b
+[Readme and one small Main correction
+clp8@aber.ac.uk**20101130164934
+ Ignore-this: c5f1921d54feb794af92558374de6303
+] 
+hash: 0000000284-8eed6b47e474d3f23ddc8b4955723b80d062801e5a0a429115f486342db545d0
+[OverviewFrame skeleton
+clp8@aber.ac.uk**20101130165000
+ Ignore-this: f2c6aba5b93d6b94f5bc5681902c85fe
+] 
+hash: 0000000628-bb604ed9a404337e247d113241961957a4cefc8ef70400bcba4cfd7224af2a2a
+[Menu Structure
+r@sarrionandia.com**20101130165008
+ Ignore-this: 6fcd325ab3446615a5923b8305fd1ea7
+] 
+hash: 0000000944-cd6bf3547a986bff9ef7949d90cf38aa59d01cd60719f7288ebca71c6b52c821
+[Few corrections
+clp8@aber.ac.uk**20101130165418
+ Ignore-this: 75f63eddc8f0aaad9042dd9561023fbb
+] 
+hash: 0000000445-33e5a60c501efbed4ac59b4a2e6db57e0b8c1f07ad41c3e911fe8519bd0884bc
+[Menu Corrections
+r@sarrionandia.com**20101130165525
+ Ignore-this: a19858d7da705f851b2417620b6ebca0
+] 
+hash: 0000000194-9a58853ef9e27421022f636c60cc203c8326e308a898533014af3bf53d31cafe
+[Look and feel magic
+clp8@aber.ac.uk**20101130170139
+ Ignore-this: 311354e9204fb4ba2dd798b0fece543f
+] 
+hash: 0000000316-be7a6868e1e03e329561ec2e2709f536efe8c49b1822375abd1179192777c5e4
+[Insert Menu
+r@sarrionandia.com**20101130170021
+ Ignore-this: 5323c8a24f2424cbcf23c01793ab5804
+] 
+hash: 0000000603-7c85120c971d047cce4baf09f6d4317edcef6b1b94f8d46365bcb4176606d97e
+[OverviewFrame layout
+clp8@aber.ac.uk**20101130171449
+ Ignore-this: 6ae5e277f87a9c9ea6ee9fd82f97bfd3
+] 
+hash: 0000001068-0d6cf280f48e68db3aa191c81ecc7bd9932447aa27fe6c11c6b8acabadeac4c0
+[Error removal
+clp8@aber.ac.uk**20101130171833
+ Ignore-this: e7e8a67f7fb5dcd535a35b3be8e298ad
+] 
+hash: 0000000697-cc74402c070b2d9ea76254b9860c65c288afef4bf05b34c5174e137cb128d830
+[OverviewFrameMenuListener added
+r@sarrionandia.com**20101201160511
+ Ignore-this: 407a474d538705d568ea552e3444f430
+] 
+hash: 0000000514-9898775f159a805cc19ec882d7d7bbbd998a817344e44a83cf798e5bbf88bdcb
+[Menu Listener commands
+r@sarrionandia.com**20101201161828
+ Ignore-this: 9e43cd2408ba0780d8be092f2c232954
+] 
+hash: 0000002425-7e8687e3717071f3f78091d03842e964e526f99ad804453be7533b7aabd6a28f
+[SQLConnection
+clp8@aber.ac.uk**20101201164328
+ Ignore-this: 855cce05bf54da5dec8f2f06367c6d8b
+] 
+hash: 0000000732-2f2dcb0ef58d75ecc8349528ba132f5d73637a71e86290576a70a36725ed15e5
+[overviewframe menu methods
+r@sarrionandia.com**20101201162714
+ Ignore-this: fb8a34c5932aebd8d6514272b87a30c8
+] 
+hash: 0000001744-fd6caaaa6751d2a4682e3e66e03ce9bfb4791d8b14f82498bad5fa1e0d646085
+[Insertion Frame Opens
+r@sarrionandia.com**20101201163059
+ Ignore-this: 32809dc4e0cec9682147cb2f809cd7cf
+] 
+hash: 0000000372-2f4f6c53b0b58164286cc796bb48c3b8e142bb6134f629a75ad9f7f13cbbf4eb
+[Quit menu works
+r@sarrionandia.com**20101201163708
+ Ignore-this: c4aa9b18b8948b0f6b856d7ab0b19943
+] 
+hash: 0000000400-07f1338c8d81077ef307ab828f97c8e63c4e3c14462469ecd956461c4847ed31
+[Warnings cleanup
+r@sarrionandia.com**20101201163814
+ Ignore-this: 545bad8a77b193aeff22d3a15ab85290
+] 
+hash: 0000000183-e4de7bd6cd016a6290d92bbfa460752e3509f04e288b43369cc57e5f66a81639
+[Actually adding SQLConnection >.<
+clp8@aber.ac.uk**20101201164455
+ Ignore-this: eb421ac6166dd3d4b87b82af95f2e1a6
+] 
+hash: 0000001933-7d74e7185a852e43274504a12c3468de5a7102ee9a5864c51950e82510b06e71
+[Change in temporary database location
+clp8@aber.ac.uk**20101201164735
+ Ignore-this: 6673c955891fa3ecd7f7c5ac7085d07f
+] 
+hash: 0000000315-690b2aada01795e42e60d9da8b0aa7c8e8b918b90e7db9ef888f5a18191c5edc
+[Changed again...
+clp8@aber.ac.uk**20101201164951
+ Ignore-this: e0b9aa91524ed165324b28f877c2acfd
+] 
+hash: 0000000303-f6d4fbf6593174cf2410871f5133ce295a1a9bb6a2a1b2cbf05a41fb979c99d1
+[Towards the SQL wrapper
+clp8@aber.ac.uk**20101201174815
+ Ignore-this: 259272bf6dcdb3851a8a4ad8b8d5ee6
+] 
+hash: 0000002626-2ea28f50ea5bb4c7ce03d3acec1ad4ff775ebe215bfbc542db3e3a6a41d7be9f
+[Couple of renamed methods
+clp8@aber.ac.uk**20101201174900
+ Ignore-this: 855c789e5d1ee7e19f95ed6d727e58e2
+] 
+hash: 0000000425-d3c678616762fb234258780e17624570e6f3c4a62de4fc9430a2c92e964feb12
+[SQLConnection now creates the database if it does not already exist
+clp8@aber.ac.uk**20101201180104
+ Ignore-this: 30bc402bdddb7b89878a26e3fa482179
+] 
+hash: 0000002104-ebe03bf54f0618e0fd68d9bdee9642751f6b9c2ee1338535a063b79d4d04ff14
+[m
+clp8@aber.ac.uk**20101201180341
+ Ignore-this: 1ac133f5b7d2a37a50fedc28abb132f7
+] 
+hash: 0000000310-e5371fda99e2ddeb963097916b00ff194603df6b2216040c5c00a9955faf13a4
+[Comments in SQLConnection
+clp8@aber.ac.uk**20101201181425
+ Ignore-this: e933137afbb329546b869c48ddf116e3
+] 
+hash: 0000004686-b334d80181bc4677ff0ab6939d22c7c480fee2d429cfb16b44f0b026680c6488
+[Small SQL changes
+clp8@aber.ac.uk**20101201183058
+ Ignore-this: 65d2f3a24c06abc0a570a145d599098c
+] 
+hash: 0000000499-4c530a41cd2ac4a051dcc6814e0567133bfc73bb8e61e5f2eeffe52be7a3bf14
+[Windows have names.
+clp8@aber.ac.uk**20101201184829
+ Ignore-this: 12ff9cea6b274316da173d97b6ef7197
+] 
+hash: 0000000269-e5e831b2c07222f8ebae0232ef012add06a780030aad21d37b67f3aeb9442260
+[m
+clp8@aber.ac.uk**20101201185448
+ Ignore-this: f4bc4f8c857cf896db29982266a672ea
+] 
+hash: 0000000276-9e099a29915a36e15a6d00f703508f0c72ce8ba366404f85a9641372ceeffb0e
+[Team insertion.
+clp8@aber.ac.uk**20101201185519
+ Ignore-this: 6b69537415a2a9d01f7e11de57065da7
+] 
+hash: 0000002291-cbd04af8e2824f623499d2d66b131a848bc9656f299fb033b9c62937ae13bb41
+[Team Insertion Resizing
+r@sarrionandia.com**20101201165547
+ Ignore-this: 6c46e3432be31037b7ff2b059691ca83
+] 
+hash: 0000000276-20fdc4d6800197d984fc30e29da82669e02baa86a83fd64099231ed5ef7f5474
+[Conflicts...argh
+clp8@aber.ac.uk**20101201190721
+ Ignore-this: 370ed932536a8c060d0fc1e2f123ee27
+] 
+hash: 0000000187-7effa7718a7375b13b9b3af9dd90b2fecdb89650d3a2ff00d5e9fb21f2ad4268
+[Renamed "Speakers" to "Teams"
+clp8@aber.ac.uk**20101201191014
+ Ignore-this: 341fec40efaa80075c1c481524b69cd3
+] 
+hash: 0000000415-9f72918235044d8667de7b6b065ba2b6251cd3bc6de23f0a2d1ecf16a14d7f06
+[For some reason, resizing breaks on my machine...
+clp8@aber.ac.uk**20101201192359
+ Ignore-this: 3659eacde2aa2f2e52353ec54e3b5362
+] 
+hash: 0000000247-8d20bd2d47fd2304b45550a026a211d5f18599627c11d39823fc552c8b543ccb
+[JList reloading
+clp8@aber.ac.uk**20101201193341
+ Ignore-this: fc132b02e6e45555e29f7305ab9b4d4b
+] 
+hash: 0000001331-e2cb3aa7b29198393911894550b89af6df5329e5e18515fd889258f663c256a5
+[Overview displays speakers.
+clp8@aber.ac.uk**20101201210438
+ Ignore-this: 895dffe5be68951abc308e7c23b55ecb
+] 
+hash: 0000002590-a0d479fad2e55686fb8fcee8558378b7f0dd419907ac56ea487a62473998014d
+[Little SQL cleanup and some generalisations.  OverviewFrame now displays teams and locations.
+clp8@aber.ac.uk**20101201212837
+ Ignore-this: c9a5be42b493d9a3c8cbd67012bb8e90
+] 
+hash: 0000001404-0c45dcc91406ab87475afe77d24b9a626b03821ca851ebc7eb71f0e1433048ae
+[Much improved error messages and handling in SQLConnection
+clp8@aber.ac.uk**20101201214752
+ Ignore-this: f43b948076bb697c6fdcaad42c838f63
+] 
+hash: 0000003546-8466a7899e1f59d7f3c7fe267545e4f7b7f0621846064e43d7ea4227038b1f4f
+[m
+clp8@aber.ac.uk**20101201214913
+ Ignore-this: 859ed743d468a4d305ff5734aefec435
+] 
+hash: 0000000276-20edb1a0e92dad7625459b5cd70af21f39999ba01869263731386048d2b88a45
+[m
+clp8@aber.ac.uk**20101201215749
+ Ignore-this: 523f31eab54320b167a6dfb43a3b8eae
+] 
+hash: 0000000267-74f3af9fb8b3fb257e8026b6a0cd54c0ae25aaae63554bde63e0d7ca97a54ecd
+[Default size is 500x500
+clp8@aber.ac.uk**20101201215817
+ Ignore-this: ce5eefb3d6d5349300064555a2a9243b
+] 
+hash: 0000000270-acde9b64847015ae096e5cb8d7e1b993a04e2e94da77179904548dba20b1c916
+[Main cleaned.
+clp8@aber.ac.uk**20101201224502
+ Ignore-this: 80b551b7aaec665a578cb35bb8d8a5f
+] 
+hash: 0000000198-7090dae98b4bd1f93436a9391dbf93a49a75d711b4fa915e462505c0a51e4d97
+[File dialogs
+clp8@aber.ac.uk**20101201224636
+ Ignore-this: 6663aa160dba448932b0e2fb87886c92
+] 
+hash: 0000003054-9b86351d78cde823e0967bb3b45463bd685b3f54d3a8096c8fce88a5a49b81de
+[SQLConnection cleaned up
+clp8@aber.ac.uk**20101202012220
+ Ignore-this: 9ca80ba939d021b69bdbea733caf3732
+] 
+hash: 0000008255-40d39b053021aa4ea1f56c34b5ff0cdb52ec24521b0a05d346211d977171e955
+[LocationInsertionFrame
+clp8@aber.ac.uk**20101202125342
+ Ignore-this: db6f515165b09c7db77f2c00bf0b5991
+] 
+hash: 0000001024-fe30247825c6c6f67710349d5fe0d42b03cee9d48038c7f9b3c730151c34663c
+[LocationInsertionFrame has buttons
+clp8@aber.ac.uk**20101202125629
+ Ignore-this: 117339d8729117a35ebd0e5561f8d5db
+] 
+hash: 0000000591-d44774e07c5cd0bc35e99697e964c5f6f4478013199d0dc5b988c0ac75482aa6

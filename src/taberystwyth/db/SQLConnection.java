@@ -11,6 +11,14 @@ import taberystwyth.view.OverviewFrame;
 public class SQLConnection {
 
 	private static SQLConnection instance = new SQLConnection();
+	
+	/*
+	 * We ensure that we reuse the same statement object every time because
+	 * when a statement is reused, all the ResultSet objects used by it are 
+	 * closed and in general it is "better practice" (see the javadoc for the
+	 * ResultSet/Statement classes.
+	 */
+	private Statement statement = null;
 
 	public static SQLConnection getInstance() {
 		return instance;
@@ -82,6 +90,12 @@ public class SQLConnection {
 		} catch (SQLException e) {
 			panic(e, "Unable to close a resultset.");
 		}
+		
+		try {
+			statement = conn.createStatement();
+		} catch (SQLException e) {
+			panic(e, "Unable to create a statement with the database");
+		}
 	}
 
 	/**
@@ -100,7 +114,7 @@ public class SQLConnection {
 		char[] cbuf = new char[2000];
 		try {
 			new BufferedReader(new FileReader(new File(filePath))).read(cbuf);
-			conn.createStatement().execute(new String(cbuf));
+			statement.execute(new String(cbuf));
 		} catch (Exception e) {
 			panic(e,
 					"Unable to evaluate this file:\n"
@@ -133,8 +147,7 @@ public class SQLConnection {
 	public synchronized boolean execute(String statement) {
 		boolean returnValue = false;
 		try {
-			Statement stmt = conn.createStatement();
-			returnValue = stmt.execute(statement);
+			returnValue = this.statement.execute(statement);
 		} catch (SQLException e) {
 			panic(e, "Unable to execute this statement against the database:\n"
 					+ statement);

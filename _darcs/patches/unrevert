@@ -1,0 +1,216 @@
+
+New patches:
+
+[unrevert
+anon**20101202135045
+ Ignore-this: 4b7d543f8bab49f43aed1bff028c2ce8
+] hunk ./src/taberystwyth/view/TeamInsertionFrame.java 84
+ 		add(clear);
+ 		add(save);
+ 		pack();
+-		
++v v v v v v v
++
++*************
++		this.setResizable(false);
++^ ^ ^ ^ ^ ^ ^
+ 		clear.addActionListener(listener);
+ 		save.addActionListener(listener);
+ 
+
+Context:
+
+[Team Insertion Resizing
+r@sarrionandia.com**20101201165547
+ Ignore-this: 6c46e3432be31037b7ff2b059691ca83
+] 
+[Team insertion.
+clp8@aber.ac.uk**20101201185519
+ Ignore-this: 6b69537415a2a9d01f7e11de57065da7
+] 
+[m
+clp8@aber.ac.uk**20101201185448
+ Ignore-this: f4bc4f8c857cf896db29982266a672ea
+] 
+[Windows have names.
+clp8@aber.ac.uk**20101201184829
+ Ignore-this: 12ff9cea6b274316da173d97b6ef7197
+] 
+[Small SQL changes
+clp8@aber.ac.uk**20101201183058
+ Ignore-this: 65d2f3a24c06abc0a570a145d599098c
+] 
+[Comments in SQLConnection
+clp8@aber.ac.uk**20101201181425
+ Ignore-this: e933137afbb329546b869c48ddf116e3
+] 
+[m
+clp8@aber.ac.uk**20101201180341
+ Ignore-this: 1ac133f5b7d2a37a50fedc28abb132f7
+] 
+[SQLConnection now creates the database if it does not already exist
+clp8@aber.ac.uk**20101201180104
+ Ignore-this: 30bc402bdddb7b89878a26e3fa482179
+] 
+[Couple of renamed methods
+clp8@aber.ac.uk**20101201174900
+ Ignore-this: 855c789e5d1ee7e19f95ed6d727e58e2
+] 
+[Towards the SQL wrapper
+clp8@aber.ac.uk**20101201174815
+ Ignore-this: 259272bf6dcdb3851a8a4ad8b8d5ee6
+] 
+[Changed again...
+clp8@aber.ac.uk**20101201164951
+ Ignore-this: e0b9aa91524ed165324b28f877c2acfd
+] 
+[Change in temporary database location
+clp8@aber.ac.uk**20101201164735
+ Ignore-this: 6673c955891fa3ecd7f7c5ac7085d07f
+] 
+[Actually adding SQLConnection >.<
+clp8@aber.ac.uk**20101201164455
+ Ignore-this: eb421ac6166dd3d4b87b82af95f2e1a6
+] 
+[Warnings cleanup
+r@sarrionandia.com**20101201163814
+ Ignore-this: 545bad8a77b193aeff22d3a15ab85290
+] 
+[Quit menu works
+r@sarrionandia.com**20101201163708
+ Ignore-this: c4aa9b18b8948b0f6b856d7ab0b19943
+] 
+[Insertion Frame Opens
+r@sarrionandia.com**20101201163059
+ Ignore-this: 32809dc4e0cec9682147cb2f809cd7cf
+] 
+[overviewframe menu methods
+r@sarrionandia.com**20101201162714
+ Ignore-this: fb8a34c5932aebd8d6514272b87a30c8
+] 
+[SQLConnection
+clp8@aber.ac.uk**20101201164328
+ Ignore-this: 855cce05bf54da5dec8f2f06367c6d8b
+] 
+[Menu Listener commands
+r@sarrionandia.com**20101201161828
+ Ignore-this: 9e43cd2408ba0780d8be092f2c232954
+] 
+[OverviewFrameMenuListener added
+r@sarrionandia.com**20101201160511
+ Ignore-this: 407a474d538705d568ea552e3444f430
+] 
+[Error removal
+clp8@aber.ac.uk**20101130171833
+ Ignore-this: e7e8a67f7fb5dcd535a35b3be8e298ad
+] 
+[OverviewFrame layout
+clp8@aber.ac.uk**20101130171449
+ Ignore-this: 6ae5e277f87a9c9ea6ee9fd82f97bfd3
+] 
+[Insert Menu
+r@sarrionandia.com**20101130170021
+ Ignore-this: 5323c8a24f2424cbcf23c01793ab5804
+] 
+[Look and feel magic
+clp8@aber.ac.uk**20101130170139
+ Ignore-this: 311354e9204fb4ba2dd798b0fece543f
+] 
+[Menu Corrections
+r@sarrionandia.com**20101130165525
+ Ignore-this: a19858d7da705f851b2417620b6ebca0
+] 
+[Few corrections
+clp8@aber.ac.uk**20101130165418
+ Ignore-this: 75f63eddc8f0aaad9042dd9561023fbb
+] 
+[Menu Structure
+r@sarrionandia.com**20101130165008
+ Ignore-this: 6fcd325ab3446615a5923b8305fd1ea7
+] 
+[OverviewFrame skeleton
+clp8@aber.ac.uk**20101130165000
+ Ignore-this: f2c6aba5b93d6b94f5bc5681902c85fe
+] 
+[Readme and one small Main correction
+clp8@aber.ac.uk**20101130164934
+ Ignore-this: c5f1921d54feb794af92558374de6303
+] 
+[MainFrameMenu
+r@sarrionandia.com**20101130164533
+ Ignore-this: 10d7b5be67471562ea7b66bccd9383d7
+] 
+[Menu Bar
+r@sarrionandia.com**20101130164333
+ Ignore-this: 459d11c61c0d373042e5dd76acb9f5e5
+] 
+[OverviewFrame
+clp8@aber.ac.uk**20101130164540
+ Ignore-this: d48e5774dd6decd254d0b3068ed4991c
+] 
+[TeamInsertion Clear
+clp8@aber.ac.uk**20101130162802
+ Ignore-this: 8e3843a107c5099c7cfc92338f905f56
+] 
+[Insertion frame improvement
+clp8@aber.ac.uk**20101130161730
+ Ignore-this: 214b6537dc176bd03d7d3aac12310714
+] 
+[TODO for v0.1
+clp8@aber.ac.uk**20101129223432
+ Ignore-this: 1968e0b3db49dd6dd6aee9162d9490a4
+] 
+[LICENCE
+clp8@aber.ac.uk**20101129213604
+ Ignore-this: 53e2429101ec9ec4a27910e0439ba774
+] 
+[Added TODO file
+clp8@aber.ac.uk**20101129212508
+ Ignore-this: f3e8455d09f082e91264d336bab6fb25
+] 
+[JDBC relative path
+clp8@aber.ac.uk**20101129183801
+ Ignore-this: c4a4298185a918342615536ed95c8937
+] 
+[Classpath
+clp8@aber.ac.uk**20101129183542
+ Ignore-this: 21efc75172178f0e34eebdf7b8d6daf
+] 
+[SQLLite JDBC
+clp8@aber.ac.uk**20101129183217
+ Ignore-this: 26f4001d608b367145642d022095637c
+] 
+[TeamInsertionListener added
+r@sarrionandia.com**20101129182638
+ Ignore-this: 6581a1f59ad48e31e0692f06fbceba1
+] 
+[View written
+r@sarrionandia.com**20101129181641
+ Ignore-this: c424222664bbe7715ed4b3395f0a4c9a
+] 
+[n
+r@sarrionandia.com**20101129181613
+ Ignore-this: 9c5afb65c18b60ba6985b5de9b245c63
+] 
+[Eclipse project.
+clp8@aber.ac.uk**20101129172158
+ Ignore-this: f68e48c71100908b8ffd0d2905713626
+] 
+[Many SQL fixes
+clp8@aber.ac.uk**20101129171535
+ Ignore-this: ec5ef7094cb048fac85bf7b89c61ef2f
+] 
+[Data changes
+r@sarrionandia.com**20101129170354
+ Ignore-this: fdf100926108a06ee9b4db898c57bb05
+] 
+[Schemas
+clp8@aber.ac.uk**20101129164957
+ Ignore-this: 74c2fd19faf1fee4caf0b92ada1e5e87
+] 
+[Project begun.  README file added.  This feature is unique among tab programs.
+clp8@aber.ac.uk**20101129002457
+ Ignore-this: 40cea793baf0c7ae0a59226bf1df8e0c
+] 
+Patch bundle hash:
+6217fc693d3ba5d999ad498e6ff4f9cce34424de

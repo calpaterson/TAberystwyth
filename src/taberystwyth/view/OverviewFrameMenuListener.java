@@ -10,7 +10,6 @@ public class OverviewFrameMenuListener implements ActionListener {
 		overviewFrame = of;
 	}
 
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("New")){
 			overviewFrame.new_();

@@ -1,4 +1,5 @@
 #1: Teams not added properly to database
     -add three teams with insert teams dialog
+    -note that inserted teams appear in overviewframe
     -close taberystwyth and reopen it
     -only the first team is displayeed

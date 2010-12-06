@@ -6,6 +6,8 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
+import org.ibex.nestedvm.UnixRuntime.CygdriveFS;
+
 import taberystwyth.view.OverviewFrame;
 
 public class SQLConnection {
@@ -16,9 +18,11 @@ public class SQLConnection {
 		return instance;
 	}
 
+	File dbfile;
+	
 	private Connection conn;
 
-	private SQLConnection() {
+	private SQLConnection() {		
 		/*
 		 * Ensure that the SQL driver is pulled through the class loader
 		 */
@@ -33,6 +37,7 @@ public class SQLConnection {
 		 * Load the database FIXME: the user should be consulted about which one
 		 */
 		setDatabase(new File("taberystwyth.tab"));
+		
 
 		/*
 		 * If the tables don't already exist, load them.
@@ -82,6 +87,7 @@ public class SQLConnection {
 		} catch (SQLException e) {
 			panic(e, "Unable to close a resultset.");
 		}
+		System.out.println("SQL Constructor finished!"); //FIXME
 	}
 
 	/**
@@ -97,6 +103,7 @@ public class SQLConnection {
 	 *             if there is some problem with the SQL server
 	 */
 	private synchronized void evaluateSQLFile(String filePath) {
+		System.out.println("Evaluating: " + filePath);
 		char[] cbuf = new char[2000];
 		try {
 			new BufferedReader(new FileReader(new File(filePath))).read(cbuf);
@@ -132,9 +139,18 @@ public class SQLConnection {
 	 */
 	public synchronized boolean execute(String statement) {
 		boolean returnValue = false;
-		try {
+		try { 	
+			/*
+			 * Order seems to be important here because the semantics of sqlite are
+			 * quite odd.  Closing the connection is required in order to flush updates
+			 * to the database file
+			 */
 			Statement stmt = conn.createStatement();
 			returnValue = stmt.execute(statement);
+			stmt.close();
+			conn.close();
+			conn = DriverManager.getConnection("jdbc:sqlite:"
+					+ dbfile.getAbsolutePath()); 
 		} catch (SQLException e) {
 			panic(e, "Unable to execute this statement against the database:\n"
 					+ statement);
@@ -161,8 +177,9 @@ public class SQLConnection {
 		return returnValue;
 	}
 
-	public synchronized void setDatabase(File file) {
+	private synchronized void setDatabase(File file) {
 		try {
+			dbfile = file;
 			conn = DriverManager.getConnection("jdbc:sqlite:"
 					+ file.getAbsolutePath());
 		} catch (SQLException e) {

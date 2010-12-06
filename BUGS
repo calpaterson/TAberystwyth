@@ -1,0 +1,4 @@
+#1: Teams not added properly to database
+    -add three teams with insert teams dialog
+    -close taberystwyth and reopen it
+    -only the first team is displayeed

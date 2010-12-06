@@ -45,6 +45,7 @@ public class SQLConnection {
 		@SuppressWarnings("serial")
 		HashSet<String> expected = new HashSet<String>() {
 			{
+				add("JUDGE");
 				add("LOCATION");
 				add("PANEL");
 				add("RESULTS");
@@ -53,6 +54,9 @@ public class SQLConnection {
 				add("SPEAKER_POINTS");
 				add("TEAM");
 				add("SQLITE_AUTOINDEX_PANEL_1"); // automatic
+				add("SQLITE_AUTOINDEX_LOCATION_1");
+				add("SQLITE_AUTOINDEX_RESULTS_1");
+				add("SQLITE_SEQUENCE");
 			}
 		};
 		HashSet<String> actual = new HashSet<String>();
@@ -64,6 +68,8 @@ public class SQLConnection {
 		try {
 			rs = conn.getMetaData().getTables(null, null, null, null);
 			while (rs.next()) {
+				System.out.println("SQLConnection(): Found table - " + 
+						rs.getString("TABLE_NAME"));
 				actual.add(rs.getString("TABLE_NAME"));
 			}
 		} catch (SQLException e) {
@@ -75,9 +81,8 @@ public class SQLConnection {
 		 */
 		if (!actual.equals(expected)) {
 			String[] sqlFiles = { "location", "panel", "results", "room",
-					"speaker", "speaker_points", "team" };
+					"speaker", "speaker_points", "team", "judge" };
 			for (String s : sqlFiles) {
-				System.out.println("SQLConnection: evaluating " + s + ".sql");
 				evaluateSQLFile("data/" + s + ".sql");
 			}
 		}
@@ -87,7 +92,6 @@ public class SQLConnection {
 		} catch (SQLException e) {
 			panic(e, "Unable to close a resultset.");
 		}
-		System.out.println("SQL Constructor finished!"); //FIXME
 	}
 
 	/**
@@ -103,7 +107,7 @@ public class SQLConnection {
 	 *             if there is some problem with the SQL server
 	 */
 	private synchronized void evaluateSQLFile(String filePath) {
-		System.out.println("Evaluating: " + filePath);
+		System.out.println("SQLConnection.evaluateSQLFile: evaluating - " + filePath);
 		char[] cbuf = new char[2000];
 		try {
 			new BufferedReader(new FileReader(new File(filePath))).read(cbuf);

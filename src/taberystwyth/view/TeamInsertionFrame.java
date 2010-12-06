@@ -106,15 +106,15 @@ public class TeamInsertionFrame extends JFrame {
 
 	public void save() {
 		System.out.println("Save");
-		String speaker1Insert = "insert into speaker values(" + "\""
+		String speaker1Insert = "insert into speaker (institution, name, esl, novice) values(" + "\""
 				+ inst1.getText() + "\"" + ", " + "\"" + speaker1.getText()
 				+ "\"" + ", " + "\"" + esl1.isSelected() + "\"" + ", " + "\""
 				+ novice1.isSelected() + "\"" + ");";
-		String speaker2Insert = "insert into speaker values(" + "\""
+		String speaker2Insert = "insert into speaker (institution, name, esl, novice) values(" + "\""
 				+ inst2.getText() + "\"" + ", " + "\"" + speaker2.getText()
 				+ "\"" + ", " + "\"" + esl2.isSelected() + "\"" + ", " + "\""
 				+ novice2.isSelected() + "\"" + ");";
-		String teamInsert = "insert into team values(" + "\""
+		String teamInsert = "insert into team (speaker1, speaker2, name) values(" + "\""
 				+ speaker1.getText() + "\"" + ", " + "\"" + speaker2.getText()
 				+ "\"" + ", " + "\"" + teamName.getText() + "\"" + ");";
 

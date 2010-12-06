@@ -1,4 +1,4 @@
-CREATE TABLE location(
+create table location(
 	"name" text not null,
 	"rating" smallint
 	CONSTRAINT check_rating CHECK (rating>=0 AND rating <=100),

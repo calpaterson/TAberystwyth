@@ -1,8 +1,11 @@
-CREATE table panel(
-	"location" text not null,
-	"round" smallint not null,
-	"judgeID" smallint not null,
-	"isChair" boolean not null,
-	CONSTRAINT check_round CHECK (round>0),
-	CONSTRAINT check_one_chair UNIQUE ("round", "isChair")
-);
+create table panel(
+	"judge" integer not null,
+	"room" integer not null,
+	"isChair" boolean,
+	
+	FOREIGN KEY (room) REFERENCES room(id),
+	FOREIGN KEY (judge) REFERENCES judge(id),
+	
+	PRIMARY KEY (room,judge)
+	
+	);

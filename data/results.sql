@@ -1,5 +1,8 @@
 create table results(
-    "round_number" smallint not null,
-    "team_name" text not null,
-    "position" smallint not null
+    "round" smallint not null,
+    "team" integer not null,
+    "position" smallint not null,
+	FOREIGN KEY (team) REFERENCES team(id),
+	PRIMARY KEY (team,round),
+	CONSTRAINT check_position CHECK (position > 0 AND position <5)
 );

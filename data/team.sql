@@ -1,7 +1,8 @@
 create table team(
-    "speaker1" text not null,
-    "speaker2" text not null,
+	"id" integer primary key autoincrement,
+    "speaker1" integer not null,
+    "speaker2" integer not null,
     "name" text not null,
-    constraint fk_speaker1 foreign key (speaker1) references speaker(name),
-    constraint fk_speaker2 foreign key (speaker2) references speaker(name)
+	FOREIGN KEY (speaker1) REFERENCES speaker(id),
+	FOREIGN KEY (speaker2) REFERENCES speaker(id)
 );

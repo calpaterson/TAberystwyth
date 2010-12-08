@@ -68,8 +68,6 @@ public class SQLConnection {
 		try {
 			rs = conn.getMetaData().getTables(null, null, null, null);
 			while (rs.next()) {
-				System.out.println("SQLConnection(): Found table - " + 
-						rs.getString("TABLE_NAME"));
 				actual.add(rs.getString("TABLE_NAME"));
 			}
 		} catch (SQLException e) {

@@ -196,7 +196,6 @@ public class OverviewFrame extends JFrame {
 		int index = 0;
 		while(rs.next()){
 			String entry = rs.getString("NAME");
-			System.out.println("OverviewFrame.java: found " + entry);
 			/*
 			 * If it's a team, append the institution of the team
 			 */

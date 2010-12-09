@@ -52,11 +52,11 @@ public class ViewRoundFrame extends JFrame {
 
 	private void addRounds() {
 		SQLConnection db = SQLConnection.getInstance();
-		ResultSet rs = db.executeQuery("select distinct roundnumber from room;");
+		ResultSet rs = db.executeQuery("select distinct round from room;");
 		
 		try {
 			while(rs.next()){
-				rounds.addItem(rs.getString("roundnumber"));
+				rounds.addItem(rs.getString("round"));
 			}
 		} catch (SQLException e) {
 			db.panic(e,"Unable to select roundnumbers");

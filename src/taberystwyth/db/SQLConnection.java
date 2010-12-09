@@ -48,15 +48,11 @@ public class SQLConnection {
 				add("JUDGE");
 				add("LOCATION");
 				add("PANEL");
-				add("RESULTS");
+				add("RESULT");
 				add("ROOM");
 				add("SPEAKER");
 				add("SPEAKER_POINTS");
 				add("TEAM");
-				add("SQLITE_AUTOINDEX_PANEL_1"); // automatic
-				add("SQLITE_AUTOINDEX_LOCATION_1");
-				add("SQLITE_AUTOINDEX_RESULTS_1");
-				add("SQLITE_SEQUENCE");
 			}
 		};
 		HashSet<String> actual = new HashSet<String>();
@@ -77,11 +73,9 @@ public class SQLConnection {
 		/*
 		 * If we don't have the tables, we need to create them, using data/* .
 		 */
-		if (!actual.equals(expected)) {
-			String[] sqlFiles = { "location", "panel", "results", "room",
-					"speaker", "speaker_points", "team", "judge" };
-			for (String s : sqlFiles) {
-				evaluateSQLFile("data/" + s + ".sql");
+		for (String table:expected){
+			if (!actual.contains(table)){
+				evaluateSQLFile("data/" + table.toLowerCase() + ".sql");
 			}
 		}
 

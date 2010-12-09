@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
 import taberystwyth.view.TeamInsertionFrame;
@@ -27,6 +28,8 @@ public class OverviewFrameMenuListener implements ActionListener {
 			TeamInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("Locations")) {
 			LocationInsertionFrame.getInstance().setVisible(true);
+		} else if (e.getActionCommand().equals("Judges")) {
+			JudgeInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("View Rounds")) {
 			new ViewRoundFrame();
 		} else {

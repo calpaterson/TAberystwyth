@@ -17,11 +17,11 @@ import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
 
 public class OverviewFrame extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
 	OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(this);
 	SQLConnection conn = SQLConnection.getInstance();
-	
+
 	/*
 	 * Models
 	 */
@@ -30,153 +30,156 @@ public class OverviewFrame extends JFrame {
 	DefaultListModel locationModel;
 
 	private static OverviewFrame instance = new OverviewFrame();
-	public static OverviewFrame getInstance(){
+
+	public static OverviewFrame getInstance() {
 		return instance;
 	}
-	private OverviewFrame(){
+
+	private OverviewFrame() {
 		setLayout(new BorderLayout());
 		setTitle("TAberystwyth");
 		/*
 		 * When the window is closed, exit the program
 		 */
 		addWindowListener(new WindowAdapter() {
-	        @Override
+			@Override
 			public void windowClosing(WindowEvent evt) {
-	            System.exit(0);
-	        }
+				System.exit(0);
+			}
 		});
-		
+
 		/*
 		 * Set up the models...
 		 */
 		speakerModel = new DefaultListModel();
 		judgeModel = new DefaultListModel();
 		locationModel = new DefaultListModel();
-		
+
 		/*
 		 * ...and the lists
 		 */
 		JList speakerList = new JList(speakerModel);
 		JList judgeList = new JList(judgeModel);
 		JList locationList = new JList(locationModel);
-		
+
 		/*
 		 * Add menu bar
 		 */
-		add(new OverviewFrameMenu(new OverviewFrameMenuListener(this)), BorderLayout.NORTH);
-		
+		add(new OverviewFrameMenu(new OverviewFrameMenuListener(this)),
+				BorderLayout.NORTH);
+
 		/*
 		 * Holding panel
 		 */
 		JPanel holdingPanel = new JPanel(new BorderLayout());
-		
+
 		/*
 		 * Title Panel
 		 */
-		JPanel titlePanel = new JPanel(new GridLayout(1,3));
+		JPanel titlePanel = new JPanel(new GridLayout(1, 3));
 		titlePanel.add(new JLabel("Judges"));
 		titlePanel.add(new JLabel("Teams"));
 		titlePanel.add(new JLabel("Locations"));
 		holdingPanel.add(titlePanel, BorderLayout.NORTH);
-		
+
 		/*
 		 * View Panel
 		 */
-		JPanel viewPanel = new JPanel(new GridLayout(1,3));
+		JPanel viewPanel = new JPanel(new GridLayout(1, 3));
 		viewPanel.add(new JScrollPane(judgeList));
 		viewPanel.add(new JScrollPane(speakerList));
 		viewPanel.add(new JScrollPane(locationList));
 		holdingPanel.add(viewPanel, BorderLayout.CENTER);
 		add(holdingPanel, BorderLayout.CENTER);
 		pack();
-		setSize(new Dimension(500,500));
+		setSize(new Dimension(500, 500));
 		setVisible(true);
-		try {
-			refreshTeams();
-			//refreshJudges(); //FIXME:
-			refreshLocation();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		refreshTeams();
+		refreshJudges();
+		refreshLocation();
 	}
-	
-	public void refreshTeams() throws SQLException{
+
+	public void refreshTeams() {
 		refreshList("team", speakerModel);
 	}
-	
-	public void refreshJudges() throws SQLException{
-		refreshList("panel", judgeModel);
+
+	public void refreshJudges() {
+		refreshList("judge", judgeModel);
 	}
-	
-	public void refreshLocation() throws SQLException{
+
+	public void refreshLocation() {
 		refreshList("location", locationModel);
 	}
-	
-	private void refreshList(String table, DefaultListModel model) throws SQLException{
+
+	private void refreshList(String table, DefaultListModel model) {
 		model.removeAllElements();
 		ResultSet rs = conn.executeQuery("select (name) from " + table + ";");
 		int index = 0;
-		while(rs.next()){
-			String entry = rs.getString("NAME");
-			/*
-			 * If it's a team, append the institution of the team
-			 */
-			if (table.equals("team")){
-				entry += " (" + getInstitution(entry) + ")";
+		try {
+			while (rs.next()) {
+				String entry = rs.getString("NAME");
+				/*
+				 * If it's a team, append the institution of the team
+				 */
+				if (table.equals("team")) {
+					entry += " (" + getInstitution(entry) + ")";
+				}
+				model.add(index, entry);
+				++index;
 			}
-			model.add(index, entry);
-			++index;
+		} catch (SQLException e) {
+			SQLConnection.getInstance().panic(e,
+					"Unable to refresh overview frame");
 		}
 	}
-	
+
 	private String getInstitution(String teamName) {
 		String query = null;
 		String returnValue = null;
-		try{
+		try {
 			/*
 			 * Get the speakers on the team
 			 */
-			query = "select speaker1, speaker2 from team where team.name = '" + 
-				teamName + "';";
+			query = "select speaker1, speaker2 from team where team.name = '"
+					+ teamName + "';";
 			ResultSet rs = conn.executeQuery(query);
 			rs.next();
 			String speaker1 = rs.getString("SPEAKER1");
 			String speaker2 = rs.getString("SPEAKER2");
-			
+
 			/*
 			 * Get the institution of speaker1
 			 */
-			query = "select (institution) from speaker where speaker.name = '" +
-				speaker1 + "'";
+			query = "select (institution) from speaker where speaker.name = '"
+					+ speaker1 + "'";
 			rs = conn.executeQuery(query);
 			rs.next();
 			String inst1 = rs.getString("INSTITUTION");
 			rs.close();
-			
+
 			/*
 			 * Get the institution of speaker2
 			 */
-			query = "select (institution) from speaker where speaker.name = '" +
-				speaker2 + "'";
+			query = "select (institution) from speaker where speaker.name = '"
+					+ speaker2 + "'";
 			rs = conn.executeQuery(query);
 			rs.next();
 			String inst2 = rs.getString("INSTITUTION");
 			rs.close();
-			
+
 			/*
 			 * Compare them
 			 */
-			if (!inst1.equals(inst2)){
+			if (!inst1.equals(inst2)) {
 				returnValue = "Mixed";
 			} else {
 				returnValue = inst1;
 			}
-			
-			
-		} catch (SQLException e){
-			conn.panic(e, "Unable to find what institution two speakers are from.  Query was:\n"
-					+ query);
+
+		} catch (SQLException e) {
+			conn.panic(e,
+					"Unable to find what institution two speakers are from.  Query was:\n"
+							+ query);
 		}
 		return returnValue;
 	}

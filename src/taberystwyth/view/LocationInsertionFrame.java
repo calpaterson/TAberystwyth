@@ -1,7 +1,6 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -39,7 +38,7 @@ public class LocationInsertionFrame extends JFrame {
 
 	private static LocationInsertionFrame instance = new LocationInsertionFrame();
 
-	public static JFrame getInstance() {
+	public static LocationInsertionFrame getInstance() {
 		return instance;
 	}
 
@@ -65,8 +64,8 @@ public class LocationInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 
-		clear.addActionListener(new LocationInsertionFrameListener(this));
-		save.addActionListener(new LocationInsertionFrameListener(this));
+		clear.addActionListener(new LocationInsertionFrameListener());
+		save.addActionListener(new LocationInsertionFrameListener());
 
 		pack();
 	}

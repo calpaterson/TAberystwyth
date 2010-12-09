@@ -10,12 +10,8 @@ import taberystwyth.view.OverviewFrame;
 
 public class LocationInsertionFrameListener implements ActionListener {
 
-	private LocationInsertionFrame frame;
+	private LocationInsertionFrame frame = LocationInsertionFrame.getInstance();
 	private SQLConnection conn = SQLConnection.getInstance();
-
-	public LocationInsertionFrameListener(LocationInsertionFrame frame) {
-		this.frame = frame;
-	}
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Save")) {
@@ -26,16 +22,11 @@ public class LocationInsertionFrameListener implements ActionListener {
 							   frame.getRating().getText() +
 							   "\");";
 			conn.execute(statement);
+			OverviewFrame.getInstance().refreshLocation();
 		}
 		if (e.getActionCommand().equals("Clear")){
 			frame.getLocationName().setText("");
 			frame.getRating().setText("");
-		}
-		try {
-			OverviewFrame.getInstance().refreshLocation();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 	}
 

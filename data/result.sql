@@ -1,4 +1,4 @@
-create table results(
+create table result(
     "round" smallint not null,
     "team" integer not null,
     "position" smallint not null,

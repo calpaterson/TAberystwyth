@@ -82,11 +82,7 @@ public class TeamInsertionListener implements ActionListener {
 			conn.execute(speaker1Insert);
 			conn.execute(speaker2Insert);
 			conn.execute(teamInsert);
-			try {
-				OverviewFrame.getInstance().refreshTeams();
-			} catch (SQLException ex) {
-				conn.panic(ex, "Unable to refresh team list.");
-			}
+			OverviewFrame.getInstance().refreshTeams();
 		}
 		;
 	}

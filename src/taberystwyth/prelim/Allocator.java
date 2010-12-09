@@ -30,7 +30,7 @@ public class Allocator {
 		 * Check that there are tables in results, because if there aren't, this
 		 * is the first round.
 		 */
-		String query = "select count (*) from results;";
+		String query = "select count (*) from result;";
 		ResultSet rs = conn.executeQuery(query);
 		int n_tables = 0;
 		try{
@@ -44,7 +44,7 @@ public class Allocator {
 		if (n_tables < 1) {
 			returnValue = 0;
 		} else {
-			query = "select max (round_number) from results;";
+			query = "select max (round_number) from result;";
 			returnValue = 0;
 			try {
 				rs = conn.executeQuery(query);

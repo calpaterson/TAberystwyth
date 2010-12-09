@@ -9,7 +9,7 @@ public class Main {
 			Class.forName("taberystwyth.db.SQLConnection");
 			Class.forName("taberystwyth.prelim.Allocator");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			Class.forName("taberystwyth.view.OverviewFrame"); //
+			Class.forName("taberystwyth.view.OverviewFrame");
 		} catch (Exception e){
 			e.printStackTrace();
 		}

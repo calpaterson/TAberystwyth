@@ -88,9 +88,9 @@ public class OverviewFrame extends JFrame {
 		viewPanel.add(new JScrollPane(locationList));
 		holdingPanel.add(viewPanel, BorderLayout.CENTER);
 		add(holdingPanel, BorderLayout.CENTER);
-		setVisible(true);
 		pack();
 		setSize(new Dimension(500,500));
+		setVisible(true);
 		try {
 			refreshTeams();
 			//refreshJudges(); //FIXME:

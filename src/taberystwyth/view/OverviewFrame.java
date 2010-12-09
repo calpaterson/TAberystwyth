@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
+import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
 
 public class OverviewFrame extends JFrame {
@@ -62,7 +63,7 @@ public class OverviewFrame extends JFrame {
 		/*
 		 * Add menu bar
 		 */
-		add(new OverviewFrameMenuBar(menuListener), BorderLayout.NORTH);
+		add(new OverviewFrameMenu(new OverviewFrameMenuListener(this)), BorderLayout.NORTH);
 		
 		/*
 		 * Holding panel

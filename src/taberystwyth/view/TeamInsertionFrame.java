@@ -10,45 +10,57 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import taberystwyth.controller.TeamInsertionListener;
 import taberystwyth.db.SQLConnection;
 
 public class TeamInsertionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
-	SQLConnection conn = SQLConnection.getInstance();
+	private JButton clear = new JButton("Clear");
 
-	TeamInsertionListener listener = new TeamInsertionListener(this);
+	private SQLConnection conn = SQLConnection.getInstance();
 
-	JTextField teamName = new JTextField();
-	JCheckBox swing = new JCheckBox();
+	private TeamInsertionListener listener = new TeamInsertionListener(this);
 
-	JTextField speaker1 = new JTextField();
-	JTextField speaker2 = new JTextField();
+	private JButton save = new JButton("Save");
 
-	JTextField institution1 = new JTextField();
-	JTextField institution2 = new JTextField();
+	private JCheckBox speaker1ESL = new JCheckBox();
 
-	JCheckBox esl1 = new JCheckBox();
-	JCheckBox esl2 = new JCheckBox();
+	private JLabel speaker1ESLLabel = new JLabel("Esl?:");
 
-	JCheckBox novice1 = new JCheckBox();
-	JCheckBox novice2 = new JCheckBox();
+	private JTextField speaker1Institution = new JTextField();
 
-	JTextField inst1 = new JTextField();
-	JTextField inst2 = new JTextField();
+	private JLabel speaker1InstitutionLabel = new JLabel("Institution 1:");
 
-	JButton clear = new JButton("Clear");
-	JButton save = new JButton("Save");
+	private JTextField speaker1Name = new JTextField();
 
-	JLabel teamNameLabel = new JLabel("Team Name:");
-	JLabel swingLabel = new JLabel("Swing?");
-	JLabel speaker1Label = new JLabel("Speaker Name 1:");
-	JLabel speaker2Label = new JLabel("Speaker Name 2:");
-	JLabel esl1Label = new JLabel("Esl?:");
-	JLabel novice1Label = new JLabel("Novice?:");
-	JLabel esl2Label = new JLabel("Esl?:");
-	JLabel novice2Label = new JLabel("Novice?:");
-	JLabel inst1Label = new JLabel("Institution 1:");
-	JLabel inst2Label = new JLabel("Institution 2:");
+	private JLabel speaker1NameLabel = new JLabel("Speaker Name 1:");
+
+	private JCheckBox speaker1Novice = new JCheckBox();
+
+	private JLabel speaker1NoviceLabel = new JLabel("Novice?:");
+
+	private JCheckBox speaker2ESL = new JCheckBox();
+
+	private JLabel speaker2ESLLabel = new JLabel("Esl?:");
+
+	private JTextField speaker2Institution = new JTextField();
+
+	private JLabel speaker2InstitutionLabel = new JLabel("Institution 2:");
+
+	private JTextField speaker2Name = new JTextField();
+
+	private JLabel speaker2NameLabel = new JLabel("Speaker Name 2:");
+
+	private JCheckBox speaker2Novice = new JCheckBox();
+
+	private JLabel speaker2NoviceLabel = new JLabel("Novice?:");
+
+	private JCheckBox swing = new JCheckBox();
+
+	private JLabel swingLabel = new JLabel("Swing?");
+
+	private JTextField teamName = new JTextField();
+	private JLabel teamNameLabel = new JLabel("Team Name:");
 
 	public TeamInsertionFrame() {
 		setVisible(true);
@@ -61,76 +73,73 @@ public class TeamInsertionFrame extends JFrame {
 		add(swing);
 		add(new JPanel());
 		add(new JPanel());
-		add(speaker1Label);
-		add(speaker1);
-		add(inst1Label);
-		add(inst1);
-		add(esl1Label);
-		add(esl1);
-		add(novice1Label);
-		add(novice1);
+		add(speaker1NameLabel);
+		add(speaker1Name);
+		add(speaker1InstitutionLabel);
+		add(speaker1Institution);
+		add(speaker1ESLLabel);
+		add(speaker1ESL);
+		add(speaker1NoviceLabel);
+		add(speaker1Novice);
 		add(new JPanel());
 		add(new JPanel());
-		add(speaker2Label);
-		add(speaker2);
-		add(inst2Label);
-		add(inst2);
-		add(esl2Label);
-		add(esl2);
-		add(novice2Label);
-		add(novice2);
+		add(speaker2NameLabel);
+		add(speaker2Name);
+		add(speaker2InstitutionLabel);
+		add(speaker2Institution);
+		add(speaker2ESLLabel);
+		add(speaker2ESL);
+		add(speaker2NoviceLabel);
+		add(speaker2Novice);
 		add(clear);
 		add(save);
 		pack();
 		// this.setResizable(false);
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
-
 	}
 
-	public void clear() {
-		System.out.println("Clear");
-		teamName.setText("");
-		swing.setSelected(false);
-
-		speaker1.setText("");
-		inst1.setText("");
-		esl1.setSelected(false);
-		novice1.setSelected(false);
-
-		speaker2.setText("");
-		inst2.setText("");
-		esl2.setSelected(false);
-		novice2.setSelected(false);
+	public static synchronized long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void save() {
-		System.out.println("Save");
-		String speaker1Insert = "insert into speaker (institution, name, esl, novice) values(" + "\""
-				+ inst1.getText() + "\"" + ", " + "\"" + speaker1.getText()
-				+ "\"" + ", " + "\"" + esl1.isSelected() + "\"" + ", " + "\""
-				+ novice1.isSelected() + "\"" + ");";
-		String speaker2Insert = "insert into speaker (institution, name, esl, novice) values(" + "\""
-				+ inst2.getText() + "\"" + ", " + "\"" + speaker2.getText()
-				+ "\"" + ", " + "\"" + esl2.isSelected() + "\"" + ", " + "\""
-				+ novice2.isSelected() + "\"" + ");";
-		String teamInsert = "insert into team (speaker1, speaker2, name) values(" + "\""
-				+ speaker1.getText() + "\"" + ", " + "\"" + speaker2.getText()
-				+ "\"" + ", " + "\"" + teamName.getText() + "\"" + ");";
-
-		/*System.out.println(speaker1Insert);
-		System.out.println(speaker2Insert);
-		System.out.println(teamInsert);*/
-
-		conn.execute(speaker1Insert);
-		conn.execute(speaker2Insert);
-		conn.execute(teamInsert);
-		try {
-			OverviewFrame.getInstance().refreshTeams();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public synchronized JCheckBox getSpeaker1ESL() {
+		return speaker1ESL;
 	}
 
+	public synchronized JTextField getSpeaker1Institution() {
+		return speaker1Institution;
+	}
+
+	public synchronized JTextField getSpeaker1Name() {
+		return speaker1Name;
+	}
+
+	public synchronized JCheckBox getSpeaker1Novice() {
+		return speaker1Novice;
+	}
+
+	public synchronized JCheckBox getSpeaker2ESL() {
+		return speaker2ESL;
+	}
+
+	public synchronized JTextField getSpeaker2Institution() {
+		return speaker2Institution;
+	}
+
+	public synchronized JTextField getSpeaker2Name() {
+		return speaker2Name;
+	}
+
+	public synchronized JCheckBox getSpeaker2Novice() {
+		return speaker2Novice;
+	}
+
+	public synchronized JCheckBox getSwing() {
+		return swing;
+	}
+
+	public synchronized JTextField getTeamName() {
+		return teamName;
+	}
 }

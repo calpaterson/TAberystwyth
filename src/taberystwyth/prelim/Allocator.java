@@ -16,6 +16,7 @@ public class Allocator {
 	}
 
 	private Allocator() {
+		System.out.println(getCurrentRound());
 	}
 
 	private int getCurrentRound() {

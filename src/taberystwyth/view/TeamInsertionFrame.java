@@ -1,6 +1,8 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -62,8 +64,23 @@ public class TeamInsertionFrame extends JFrame {
 	private JTextField teamName = new JTextField();
 	private JLabel teamNameLabel = new JLabel("Team Name:");
 
-	public TeamInsertionFrame() {
-		setVisible(true);
+	private static TeamInsertionFrame instance = new TeamInsertionFrame();
+	
+	public static TeamInsertionFrame getInstance(){
+		return instance;
+	}
+	
+	private TeamInsertionFrame() {
+		/*
+		 * When the window is closed, make it invisible
+		 */
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent evt) {
+				LocationInsertionFrame.getInstance().setVisible(false);
+			}
+		});
+		
 		setLayout(new GridLayout(13, 2));
 		setTitle("Insert Team");
 

@@ -15,9 +15,6 @@ import taberystwyth.view.ViewRoundFrame;
 
 public class OverviewFrameMenuListener implements ActionListener {
 	OverviewFrame overviewFrame;
-	TeamInsertionFrame teamInsertionFrame;
-	LocationInsertionFrame locationInsertionFrame;
-	ViewRoundFrame viewRoundFrame;
 
 	public OverviewFrameMenuListener(OverviewFrame overviewFrame) {
 		overviewFrame = overviewFrame;
@@ -27,9 +24,9 @@ public class OverviewFrameMenuListener implements ActionListener {
 		if (e.getActionCommand().equals("Quit")) {
 			System.exit(0);
 		} else if (e.getActionCommand().equals("Teams")) {
-			new TeamInsertionFrame();
+			TeamInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("Locations")) {
-			new LocationInsertionFrame();
+			LocationInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("View Rounds")) {
 			new ViewRoundFrame();
 		} else {

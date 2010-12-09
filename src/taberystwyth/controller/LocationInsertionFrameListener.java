@@ -1,10 +1,12 @@
-package taberystwyth.view;
+package taberystwyth.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import taberystwyth.db.SQLConnection;
+import taberystwyth.view.LocationInsertionFrame;
+import taberystwyth.view.OverviewFrame;
 
 public class LocationInsertionFrameListener implements ActionListener {
 
@@ -17,13 +19,18 @@ public class LocationInsertionFrameListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Save")) {
-			String statement = "insert into location values ("
-					+ "\"" + frame.name.getText() + "\", \"" + frame.rating.getText()
-					+ "\");";
+			String statement = "insert into location (name, location) values (" + 
+							   "\"" +
+							   frame.getLocationName().getText() + 
+							   "\", \"" + 
+							   frame.getRating().getText() +
+							   "\");";
 			conn.execute(statement);
 		}
-		frame.name.setText("");
-		frame.rating.setText("");
+		if (e.getActionCommand().equals("Clear")){
+			frame.getLocationName().setText("");
+			frame.getRating().setText("");
+		}
 		try {
 			OverviewFrame.getInstance().refreshLocation();
 		} catch (SQLException e1) {

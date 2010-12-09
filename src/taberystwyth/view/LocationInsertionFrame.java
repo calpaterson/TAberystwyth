@@ -3,6 +3,8 @@ package taberystwyth.view;
 import java.awt.GridLayout;
 
 import javax.swing.*;
+
+import taberystwyth.controller.LocationInsertionFrameListener;
 import taberystwyth.db.SQLConnection;
 
 public class LocationInsertionFrame extends JFrame {
@@ -13,24 +15,32 @@ public class LocationInsertionFrame extends JFrame {
 	/*
 	 * Textfields
 	 */
-	JTextField name = new JTextField();
-	JLabel nameLabel = new JLabel("Name:");
-	JTextField rating = new JTextField();
-	JLabel ratingLabel = new JLabel("Rating:");
+	private JTextField locationName = new JTextField();
+	private JLabel locationNameLabel = new JLabel("Name:");
+	private JTextField rating = new JTextField();
+	private JLabel ratingLabel = new JLabel("Rating:");
 	
 	/*
 	 * Buttons
 	 */
-	JButton clear = new JButton("Clear");
-	JButton save = new JButton("Save");
+	private JButton clear = new JButton("Clear");
+	private JButton save = new JButton("Save");
 	
+	public synchronized JTextField getLocationName() {
+		return locationName;
+	}
+
+	public synchronized JTextField getRating() {
+		return rating;
+	}
+
 	public LocationInsertionFrame(){
 		setVisible(true);
 		setLayout(new GridLayout(3,2));
 		setTitle("Insert Location");
 		
-		add(nameLabel);
-		add(name);
+		add(locationNameLabel);
+		add(locationName);
 		add(ratingLabel);
 		add(rating);
 		

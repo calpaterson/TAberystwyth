@@ -30,3 +30,5 @@ For v0.1
 --------
 - Printing slides
 - Algorithm for team allocation
+- Refuse to open if there is already an instance on the current machine
+ - This causes the confusing situation where the second instance appears but has missing data

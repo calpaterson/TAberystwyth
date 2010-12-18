@@ -176,6 +176,12 @@ public class SQLConnection extends Observable {
 			dbfile = file;
 			conn = DriverManager.getConnection("jdbc:sqlite:"
 					+ file.getAbsolutePath());
+			
+			/*
+			 * This line is required in order to unfuck sqlites' default
+			 * behaviour, which is to ignore fk constraints
+			 */
+			execute("PRAGMA foreign_keys = ON;");
 
 			/*
 			 * If the tables don't already exist, load them.

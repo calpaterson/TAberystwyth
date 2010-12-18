@@ -23,7 +23,6 @@ public class JudgeInsertionFrameListener implements ActionListener {
 							   frame.getRating().getText() +
 							   "\");";
 			conn.execute(statement);
-			OverviewFrame.getInstance().refreshJudges();
 		} else if (e.getActionCommand().equals("Clear")){
 			frame.getJudgeName().setText("");
 			frame.getRating().setText("");

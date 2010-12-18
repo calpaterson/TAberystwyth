@@ -8,6 +8,8 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -16,11 +18,10 @@ import javax.swing.filechooser.FileFilter;
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
 
-public class OverviewFrame extends JFrame {
+public class OverviewFrame extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(this);
-	SQLConnection conn = SQLConnection.getInstance();
 
 	/*
 	 * Models
@@ -94,26 +95,31 @@ public class OverviewFrame extends JFrame {
 		pack();
 		setSize(new Dimension(500, 500));
 		setVisible(true);
-		refreshTeams();
-		refreshJudges();
-		refreshLocation();
+		
+		/*
+		 * Add myself as an observer and force and update
+		 */
+		SQLConnection.getInstance().addObserver(this);
+		SQLConnection.getInstance().setChanged();
+		SQLConnection.getInstance().notifyObservers();
+		System.out.println("OverviewFrame()");
 	}
-
-	public void refreshTeams() {
+	
+	private void refreshTeams() {
 		refreshList("team", speakerModel);
 	}
 
-	public void refreshJudges() {
+	private void refreshJudges() {
 		refreshList("judge", judgeModel);
 	}
 
-	public void refreshLocation() {
+	private void refreshLocation() {
 		refreshList("location", locationModel);
 	}
 
 	private void refreshList(String table, DefaultListModel model) {
 		model.removeAllElements();
-		ResultSet rs = conn.executeQuery("select (name) from " + table + ";");
+		ResultSet rs = SQLConnection.getInstance().executeQuery("select (name) from " + table + ";");
 		int index = 0;
 		try {
 			while (rs.next()) {
@@ -136,6 +142,7 @@ public class OverviewFrame extends JFrame {
 	private String getInstitution(String teamName) {
 		String query = null;
 		String returnValue = null;
+		SQLConnection conn = SQLConnection.getInstance();
 		try {
 			/*
 			 * Get the speakers on the team
@@ -182,5 +189,12 @@ public class OverviewFrame extends JFrame {
 							+ query);
 		}
 		return returnValue;
+	}
+
+	public void update(Observable o, Object arg) {
+		System.out.println("OverviewFrame.update()");
+		refreshTeams();
+		refreshJudges();
+		refreshLocation();
 	}
 }

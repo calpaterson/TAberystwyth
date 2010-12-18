@@ -82,7 +82,6 @@ public class TeamInsertionListener implements ActionListener {
 			conn.execute(speaker1Insert);
 			conn.execute(speaker2Insert);
 			conn.execute(teamInsert);
-			OverviewFrame.getInstance().refreshTeams();
 		}
 		;
 	}

@@ -23,7 +23,7 @@ insert into judge(name,rating) values("Tom Coyle",65);
 insert into judge(name,rating) values("Richard Stevens",68);
 
 
-insert into room(round, fprop,fop,sprop,sop,location) values (1,1,2,3,4, "Old Hall");
+--insert into room(round, fprop,fop,sprop,sop,location) values (1,1,2,3,4, "Old Hall");
 insert into panel values(1,1,'true');
 insert into panel values(2,1,'false');
 insert into panel values(3,1,'false');

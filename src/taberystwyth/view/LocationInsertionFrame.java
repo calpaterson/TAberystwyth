@@ -7,12 +7,10 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 import taberystwyth.controller.LocationInsertionFrameListener;
-import taberystwyth.db.SQLConnection;
 
 public class LocationInsertionFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	SQLConnection conn = SQLConnection.getInstance();
 
 	/*
 	 * Textfields
@@ -42,7 +40,7 @@ public class LocationInsertionFrame extends JFrame {
 		return instance;
 	}
 
-	private LocationInsertionFrame() {
+	private LocationInsertionFrame() {;
 		setLayout(new GridLayout(3, 2));
 		setTitle("Insert Location");
 
@@ -64,8 +62,11 @@ public class LocationInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 
-		clear.addActionListener(new LocationInsertionFrameListener());
-		save.addActionListener(new LocationInsertionFrameListener());
+		LocationInsertionFrameListener listener = 
+			new LocationInsertionFrameListener(this);
+		
+		clear.addActionListener(listener);
+		save.addActionListener(listener);
 
 		pack();
 	}

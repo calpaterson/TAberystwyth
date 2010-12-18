@@ -10,12 +10,16 @@ import taberystwyth.view.OverviewFrame;
 
 public class LocationInsertionFrameListener implements ActionListener {
 
-	private LocationInsertionFrame frame = LocationInsertionFrame.getInstance();
+	private LocationInsertionFrame frame;
+
+	public LocationInsertionFrameListener(LocationInsertionFrame frame){
+		this.frame = frame;
+	}
 	private SQLConnection conn = SQLConnection.getInstance();
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Save")) {
-			String statement = "insert into location (name, location) values (" + 
+			String statement = "insert into location (name, rating) values (" + 
 							   "\"" +
 							   frame.getLocationName().getText() + 
 							   "\", \"" + 

@@ -109,7 +109,7 @@ public class SQLConnection extends Observable {
 	 *            a Very Informative Description of the problem
 	 */
 	public synchronized void panic(Exception e, String reason) {
-		JOptionPane.showMessageDialog(OverviewFrame.getInstance(), reason);
+		JOptionPane.showMessageDialog(null, reason);
 		e.printStackTrace();
 		System.exit(255);
 	}

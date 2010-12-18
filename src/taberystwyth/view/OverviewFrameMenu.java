@@ -24,7 +24,7 @@ public class OverviewFrameMenu extends JMenuBar {
 	
 	JMenuItem about = new JMenuItem("About");
 	
-	JMenuItem drawRound = new JMenuItem("Draw Round");
+	JMenuItem drawRound = new JMenuItem("Draw Preliminary Round");
 	JMenuItem viewRounds = new JMenuItem("View Rounds");
 	
 	public OverviewFrameMenu(OverviewFrameMenuListener menuListener){

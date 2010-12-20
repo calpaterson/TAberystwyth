@@ -28,6 +28,7 @@ import javax.swing.filechooser.FileFilter;
 
 import taberystwyth.db.SQLConnection;
 import taberystwyth.prelim.Allocator;
+import taberystwyth.view.AboutDialog;
 import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
@@ -76,6 +77,8 @@ public class OverviewFrameMenuListener implements ActionListener {
 			JudgeInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("Draw Preliminary Round")){
 			Allocator.getInstance().allocate();
+		} else if (e.getActionCommand().equals("About")){
+		    AboutDialog.getInstance().setVisible(true);
 		//} else if (e.getActionCommand().equals("View Rounds")) {
 		//	new ViewRoundFrame(); FIXME
 		} else {

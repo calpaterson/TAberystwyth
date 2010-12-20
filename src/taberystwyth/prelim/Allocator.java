@@ -35,7 +35,7 @@ public class Allocator {
 		 * Build the list of teams
 		 */
 		TreeMap<String,Integer> teamNames = new TreeMap<String,Integer>();
-		String query = "select name from team;";
+		String query = "select name from teams;";
 		ResultSet rs = conn.executeQuery(query);
 		try {
 			while(rs.next()){
@@ -45,7 +45,7 @@ public class Allocator {
 				 * 
 				 */
 				int teamPoints = 0;
-				subQuery = "select position from result where team = '" + 
+				subQuery = "select position from team_results where team = '" + 
 						teamName + 
 						"'";
 				subrs = conn.executeQuery(subQuery);
@@ -72,7 +72,7 @@ public class Allocator {
 		 * Build the list of locations
 		 */
 		TreeMap<String,Integer> locationNames = new TreeMap<String,Integer>();
-		query = "select name, rating from location;";
+		query = "select name, rating from locations;";
 		rs = conn.executeQuery(query);
 		try {
 			while(rs.next()){
@@ -142,21 +142,22 @@ public class Allocator {
 		 * Check that there are tables in results, because if there aren't, this
 		 * is the first round.
 		 */
-		String query = "select count (*) from result;";
+		String query = "select count (*) from team_results;";
 		ResultSet rs = conn.executeQuery(query);
-		int n_tables = 0;
+		int nEntriesInResults = 0;
 		try{
 			rs.next();
-			n_tables = rs.getInt(1);
+			nEntriesInResults = rs.getInt(1);
 			rs.close();
 		} catch (SQLException e){
 			conn.panic(e, "Unable to count the number of tables in results.  Query was:\n" +
 					query);
 		}
-		if (n_tables < 1) {
+		
+		if (nEntriesInResults < 1) {
 			returnValue = 0;
 		} else {
-			query = "select max (round_number) from result;";
+			query = "select max (round) from team_results;";
 			returnValue = 0;
 			try {
 				rs = conn.executeQuery(query);

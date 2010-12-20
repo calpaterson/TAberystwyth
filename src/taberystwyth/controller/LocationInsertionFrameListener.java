@@ -19,7 +19,7 @@ public class LocationInsertionFrameListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Save")) {
-			String statement = "insert into location (name, rating) values (" + 
+			String statement = "insert into locations (name, rating) values (" + 
 							   "\"" +
 							   frame.getLocationName().getText() + 
 							   "\", \"" + 

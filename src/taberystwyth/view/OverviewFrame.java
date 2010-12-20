@@ -106,20 +106,22 @@ public class OverviewFrame extends JFrame implements Observer {
 	}
 	
 	private void refreshTeams() {
-		refreshList("team", speakerModel);
+		refreshList("teams", speakerModel);
 	}
 
 	private void refreshJudges() {
-		refreshList("judge", judgeModel);
+		refreshList("judges", judgeModel);
 	}
 
 	private void refreshLocation() {
-		refreshList("location", locationModel);
+		refreshList("locations", locationModel);
 	}
 
 	private void refreshList(String table, DefaultListModel model) {
 		model.removeAllElements();
-		ResultSet rs = SQLConnection.getInstance().executeQuery("select (name) from " + table + ";");
+		ResultSet rs = 
+		    SQLConnection.getInstance().executeQuery(
+		            "select (name) from " + table + ";");
 		int index = 0;
 		try {
 			while (rs.next()) {
@@ -127,7 +129,7 @@ public class OverviewFrame extends JFrame implements Observer {
 				/*
 				 * If it's a team, append the institution of the team
 				 */
-				if (table.equals("team")) {
+				if (table.equals("teams")) {
 					entry += " (" + getInstitution(entry) + ")";
 				}
 				model.add(index, entry);
@@ -147,7 +149,10 @@ public class OverviewFrame extends JFrame implements Observer {
 			/*
 			 * Get the speakers on the team
 			 */
-			query = "select speaker1, speaker2 from team where team.name = '"
+		    // FIXME: small hack here to ensure that the teamname (which might
+		    // contain a ' is properly escaped:
+		    teamName = teamName.replaceAll("'", "''");
+			query = "select speaker1, speaker2 from teams where teams.name = '"
 					+ teamName + "';";
 			ResultSet rs = conn.executeQuery(query);
 			rs.next();
@@ -157,7 +162,7 @@ public class OverviewFrame extends JFrame implements Observer {
 			/*
 			 * Get the institution of speaker1
 			 */
-			query = "select (institution) from speaker where speaker.name = '"
+			query = "select (institution) from speakers where speakers.name = '"
 					+ speaker1 + "'";
 			rs = conn.executeQuery(query);
 			rs.next();
@@ -167,7 +172,7 @@ public class OverviewFrame extends JFrame implements Observer {
 			/*
 			 * Get the institution of speaker2
 			 */
-			query = "select (institution) from speaker where speaker.name = '"
+			query = "select (institution) from speakers where speakers.name = '"
 					+ speaker2 + "'";
 			rs = conn.executeQuery(query);
 			rs.next();

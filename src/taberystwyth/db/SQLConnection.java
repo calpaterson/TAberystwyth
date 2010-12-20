@@ -48,7 +48,7 @@ public class SQLConnection extends Observable {
 	 */
 	private Connection conn;
 
-	private boolean changeTracking = false;
+	private boolean changeTracking = true;
 
 	/**
 	 * Constructor
@@ -109,7 +109,9 @@ public class SQLConnection extends Observable {
 	 *            a Very Informative Description of the problem
 	 */
 	public synchronized void panic(Exception e, String reason) {
-		JOptionPane.showMessageDialog(null, reason);
+	    String message = reason + "\n" + "The exact exception was:\n" +
+	        e.getMessage();
+		JOptionPane.showMessageDialog(null, message);
 		e.printStackTrace();
 		System.exit(255);
 	}
@@ -184,57 +186,26 @@ public class SQLConnection extends Observable {
 			execute("PRAGMA foreign_keys = ON;");
 
 			/*
-			 * If the tables don't already exist, load them.
+			 * FIXME: This section should contain magic that checks the 
+			 * version of the database schema, and throws errors if it doesn't
+			 * match, etc etc.  Currently, it does not.
 			 */
-			@SuppressWarnings("serial")
-			HashSet<String> expected = new HashSet<String>() {
-				{
-					add("SPEAKER");
-					add("SPEAKER_POINTS");
-					add("TEAM");
-					add("RESULT");
-					add("JUDGE");
-					add("LOCATION");
-					add("ROOM");
-					add("PANEL");
-				}
-			};
-			HashSet<String> actual = new HashSet<String>();
-
-			/*
-			 * See what tables we currently have
-			 */
-			ResultSet rs = null;
+			int version = 0;
 			try {
-				rs = conn.getMetaData().getTables(null, null, null, null);
-				while (rs.next()) {
-					actual.add(rs.getString("TABLE_NAME"));
-				}
+			    Statement stmt = conn.createStatement();
+				ResultSet rs = 
+				    stmt.executeQuery("select version from version;");
+				rs.next();
+				rs.getInt("version");
 			} catch (SQLException e) {
-				panic(e,
-						"Unable to check what tables are already in the database");
+				//panic(e, "Unable to determine the current version of the tab");
 			}
 
 			/*
-			 * If we don't have the tables, we need to create them.  It's 
-			 * required that that we disable change tracking for this block
-			 * of code, otherwise all the GUI updates will fail to find tables
-			 * and bomb
+			 * If the version number is not what we expect it to be, reload
+			 * the database.  FIXME: for the moment, we never reload.
 			 */
-			changeTracking = false;
-			for (String table : expected) {
-				if (!actual.contains(table)) {
-					evaluateSQLFile("data/" + table.toLowerCase() + ".sql");
-				}
-			}
-			changeTracking = true;
 
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				panic(e, "Unable to close a resultset.");
-				changeTracking = true;
-			}
 		} catch (SQLException e) {
 			panic(e, "Unable to load the following file:\n" + file);
 			changeTracking = true;

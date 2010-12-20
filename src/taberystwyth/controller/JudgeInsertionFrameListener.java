@@ -16,7 +16,7 @@ public class JudgeInsertionFrameListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		frame = JudgeInsertionFrame.getInstance();
 		if (e.getActionCommand().equals("Save")){
-			String statement = "insert into judge (name, rating) values (" +
+			String statement = "insert into judges (name, rating) values (" +
 							   "\"" +
 							   frame.getJudgeName().getText() +
 							   "\", \"" +

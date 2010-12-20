@@ -36,7 +36,7 @@ public class TeamInsertionListener implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals("Save")) {
-			String speaker1Insert = "insert into speaker (institution, name, esl, novice) values("
+			String speaker1Insert = "insert into speakers (institution, name, esl, novice) values("
 					+ "\""
 					+ frame.getSpeaker1Institution().getText()
 					+ "\""
@@ -52,7 +52,7 @@ public class TeamInsertionListener implements ActionListener {
 					+ "\""
 					+ frame.getSpeaker1Novice().isSelected()
 					+ "\"" + ");";
-			String speaker2Insert = "insert into speaker (institution, name, esl, novice) values("
+			String speaker2Insert = "insert into speakers (institution, name, esl, novice) values("
 					+ "\""
 					+ frame.getSpeaker2Institution().getText()
 					+ "\""
@@ -68,7 +68,7 @@ public class TeamInsertionListener implements ActionListener {
 					+ "\""
 					+ frame.getSpeaker2Novice().isSelected()
 					+ "\"" + ");";
-			String teamInsert = "insert into team (speaker1, speaker2, name) values("
+			String teamInsert = "insert into teams (speaker1, speaker2, name) values("
 					+ "\""
 					+ frame.getSpeaker1Name().getText()
 					+ "\""

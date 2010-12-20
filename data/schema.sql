@@ -11,8 +11,10 @@ create table version (
 
 -- Judges
 create table judges (
-       "name" text primary key,
-       "rating" smallint not null default 10
+       "name" text,
+       "institution" text,
+       "rating" smallint not null default 10,
+       primary key (name, institution),
        constraint check_rating check (rating between 0 and 100)
 );
 

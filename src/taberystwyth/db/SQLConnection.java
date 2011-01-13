@@ -32,6 +32,7 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import taberystwyth.view.OverviewFrame;
+import taberystwyth.view.WelcomeDialog;
 
 /**
  * A clever wrapper for the Connection class that provides Observer/Observable
@@ -81,6 +82,12 @@ public class SQLConnection extends Observable {
 					+ "Perhaps your computer architecture is not supported?");
 		}
 
+		/*
+		 * Run the welcome dialog that asks the user for the location of the
+		 * tab file, etc
+		 */
+		new WelcomeDialog();
+		
 		/*
 		 * Load the database FIXME: the user should be consulted about which one
 		 */
@@ -203,31 +210,26 @@ public class SQLConnection extends Observable {
 			execute("PRAGMA foreign_keys = ON;");
 
 			/*
-			 * FIXME: This section should contain magic that checks the 
-			 * version of the database schema, and throws errors if it doesn't
-			 * match, etc etc.  Currently, it does not.
+			 * Get the version of the tab file 
 			 */
-			int version = 0;
-			try {
+			long tabVersion = 0;
 			    Statement stmt = conn.createStatement();
 				ResultSet rs = 
 				    stmt.executeQuery("select version from version;");
 				rs.next();
-				rs.getInt("version");
-			} catch (SQLException e) {
-			    /*
-			     * Unable to work out the version of the schema, it's likely
-			     * that the file selected is "new".  Ask the user whether he
-			     * wants to make this file into a tab file
-			     */
-			    File schema =  new File("data/schema.sql");
-			    JOptionPane.showOptionDialog(null, 
-			            "The file " + schema.getAbsoluteFile() + " does not " +
-			            "seem to be a tabfile.  Overwrite it with a tab" +
-			            "file?", "Not a tab file", 
-			            JOptionPane.YES_NO_OPTION,
-			            JOptionPane.ERROR_MESSAGE, null, null, null);
-				panic(e, "Unable to determine the current version of the tab");
+				tabVersion = rs.getLong("version");
+			
+			/*
+			 * Get the unixtime of the last modification of the schema file
+			 */
+			long schemaVersion = new File("data/schema.sql").lastModified();
+			
+			/*
+			 * If they don't match, bomb.
+			 */
+			if (tabVersion != schemaVersion){
+			    panic(new Exception(), "The version of the tabfile is " +
+			            "different than expected.");
 			}
 
 			/*
@@ -236,7 +238,8 @@ public class SQLConnection extends Observable {
 			 */
 
 		} catch (SQLException e) {
-			panic(e, "Unable to load the following file:\n" + file);
+			panic(e, "Unable to load the following file:\n" + file +
+			        "  Possibly it is from an old version?");
 			changeTracking = true;
 		}
 		System.out.println("SQLConnection.setDatabase()");

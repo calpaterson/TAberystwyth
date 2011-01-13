@@ -215,7 +215,19 @@ public class SQLConnection extends Observable {
 				rs.next();
 				rs.getInt("version");
 			} catch (SQLException e) {
-				//panic(e, "Unable to determine the current version of the tab");
+			    /*
+			     * Unable to work out the version of the schema, it's likely
+			     * that the file selected is "new".  Ask the user whether he
+			     * wants to make this file into a tab file
+			     */
+			    File schema =  new File("data/schema.sql");
+			    JOptionPane.showOptionDialog(null, 
+			            "The file " + schema.getAbsoluteFile() + " does not " +
+			            "seem to be a tabfile.  Overwrite it with a tab" +
+			            "file?", "Not a tab file", 
+			            JOptionPane.YES_NO_OPTION,
+			            JOptionPane.ERROR_MESSAGE, null, null, null);
+				panic(e, "Unable to determine the current version of the tab");
 			}
 
 			/*
@@ -236,7 +248,7 @@ public class SQLConnection extends Observable {
 	 * An override that changes the visibility (the thread-safety) of the 
 	 * superclasses' setChanged method
 	 */
-	public synchronized void setChanged() {
+    public synchronized void setChanged() {
 		/*
 		 * We might not be tracking changes at the moment (ie: we are loading
 		 * the schema into a new tab.  If so, do not track changes).

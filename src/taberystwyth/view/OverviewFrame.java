@@ -22,16 +22,11 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Vector;
-
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
 
@@ -218,5 +213,9 @@ public class OverviewFrame extends JFrame implements Observer {
 		refreshTeams();
 		refreshJudges();
 		refreshLocation();
+	}
+	
+	public void setEnabled(Boolean b){
+	    super.setEnabled(b);
 	}
 }

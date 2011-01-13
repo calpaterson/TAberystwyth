@@ -18,7 +18,12 @@
 
 package taberystwyth.view;
 
+import java.awt.GridLayout;
+
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * A dialog to offer the user to create a new tab or open an old one that is shown when
@@ -26,5 +31,22 @@ import javax.swing.JFrame;
  * @author Roberto Sarrionandia [r@sarrionandia.com]s
  */
 public class WelcomeDialog extends JFrame {
+	private static final long serialVersionUID = 1L;
+
+	public WelcomeDialog(){
+		this.setLayout(new GridLayout(2,1));
+		JLabel message = new JLabel("Create a new Tab, or load an existing tab file.");
+		JButton create = new JButton("New Tab");
+		JButton open = new JButton("Open Existing Tab");
+		
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(create);
+		buttonPanel.add(open);
+		
+		this.add(message);
+		this.add(buttonPanel);
+		
+		this.setVisible(true);
+	}
 
 }

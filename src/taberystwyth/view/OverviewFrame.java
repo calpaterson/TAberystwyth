@@ -106,7 +106,6 @@ public class OverviewFrame extends JFrame implements Observer {
 		add(holdingPanel, BorderLayout.CENTER);
 		pack();
 		setSize(new Dimension(500, 500));
-		setVisible(true);
 		
 		/*
 		 * Add myself as an observer and force and update

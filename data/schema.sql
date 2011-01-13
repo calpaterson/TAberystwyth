@@ -25,8 +25,8 @@ create table version (
 
 -- Judges
 create table judges (
-       "name" text,
-       "institution" text,
+       "name" text not null,
+       "institution" text not null,
        "rating" smallint not null default 10,
        primary key (name, institution),
        constraint check_rating check (rating between 0 and 100)
@@ -54,7 +54,7 @@ create table locations (
 create table teams (
        "name" text not null,
        "speaker1" text not null,
-       "speaker2" integer not null,
+       "speaker2" text not null,
        primary key (name, speaker1, speaker2),
        foreign key (speaker1) references speaker(name) on delete cascade,
        foreign key (speaker2) references speaker(name) on delete cascade
@@ -83,7 +83,6 @@ create table speaker_results (
 -- Rooms (individual debates)
 create table rooms (
        "round" smallint not null,
-       "judging_panel" integer not null,
        "location" text not null,
        "first_prop" text not null,
        "first_op" text not null,
@@ -91,7 +90,6 @@ create table rooms (
        "second_op" text not null,
        primary key (round, location),
        foreign key (location) references location(name),
-       foreign key (judging_panel) references judging_panel(id),
        foreign key (first_prop) references team(name),
        foreign key (first_op) references team(name),
        foreign key (second_prop) references team(name),
@@ -100,12 +98,19 @@ create table rooms (
 
 -- Judging panels
 create table judging_panels (
-       "panel" smallint not null, -- used to differentiate between rounds
-       "round" smallint not null,
        "name" text not null,
-       "chair" boolean not null default 'f',
-       primary key (panel, round, name),
-       foreign key (name) references judges(name)
+       "round" smallint not null,
+       "room" text not null,
+       "isChair" boolean not null,
+       primary key (name, round, room),
+       foreign key (name) references judge(name),
+       foreign key (room) references locations(name)
+);
+
+create table motions (
+       "text" text not null,
+       "round" smallint not null,
+       primary key ("round")
 );
 
 -- FIXME: Would be nice to have a check that there is only one chair per

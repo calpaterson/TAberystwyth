@@ -32,6 +32,7 @@ import javax.swing.JPanel;
  */
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
+	public String tabFile;
 
 	public WelcomeDialog(){
 		this.setLayout(new GridLayout(2,1));
@@ -40,6 +41,7 @@ public class WelcomeDialog extends JFrame {
 		JButton open = new JButton("Open Existing Tab");
 		
 		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(1,2));
 		buttonPanel.add(create);
 		buttonPanel.add(open);
 		

@@ -25,6 +25,8 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import taberystwyth.controller.WelcomeDialogListener;
+
 /**
  * A dialog to offer the user to create a new tab or open an old one that is shown when
  * the program launches.
@@ -32,10 +34,13 @@ import javax.swing.JPanel;
  */
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
-	public String tabFile;
+	WelcomeDialogListener listener;
 
 	public WelcomeDialog(){
+		listener = new WelcomeDialogListener(this);
+		
 		this.setLayout(new GridLayout(2,1));
+		
 		JLabel message = new JLabel("Create a new Tab, or load an existing tab file.");
 		JButton create = new JButton("New Tab");
 		JButton open = new JButton("Open Existing Tab");
@@ -49,6 +54,7 @@ public class WelcomeDialog extends JFrame {
 		this.add(buttonPanel);
 		
 		this.setVisible(true);
+		this.pack();
 	}
 
 }

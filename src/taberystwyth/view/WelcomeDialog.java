@@ -32,7 +32,7 @@ import taberystwyth.controller.WelcomeDialogListener;
 /**
  * A dialog to offer the user to create a new tab or open an old one that is shown when
  * the program launches.
- * @author Roberto Sarrionandia [r@sarrionandia.com]s
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
  */
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -55,6 +55,7 @@ public class WelcomeDialog extends JFrame {
 		
 		this.add(message);
 		this.add(buttonPanel);
+		this.setTitle("TAberystwyth");
 		
 		this.setVisible(true);
 		this.pack();

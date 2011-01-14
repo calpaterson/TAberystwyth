@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import taberystwyth.controller.TeamFocusListener;
 import taberystwyth.controller.TeamInsertionListener;
 import taberystwyth.db.SQLConnection;
 
@@ -80,8 +81,14 @@ public class TeamInsertionFrame extends JFrame {
 
 	private JTextField teamName = new JTextField();
 	private JLabel teamNameLabel = new JLabel("Team Name:");
+	
+	private TeamFocusListener  institutionDuplicator 
+		= new TeamFocusListener(speaker1Institution, speaker2Institution);
+	
 
 	private static TeamInsertionFrame instance = new TeamInsertionFrame();
+	
+	
 	
 	public static TeamInsertionFrame getInstance(){
 		return instance;
@@ -125,6 +132,9 @@ public class TeamInsertionFrame extends JFrame {
 		add(speaker2ESL);
 		add(speaker2NoviceLabel);
 		add(speaker2Novice);
+		
+		speaker1Institution.addFocusListener(institutionDuplicator);
+		
 		add(clear);
 		add(save);
 		pack();

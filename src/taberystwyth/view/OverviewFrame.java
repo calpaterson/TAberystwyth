@@ -30,6 +30,8 @@ import java.sql.SQLException;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
 
@@ -71,6 +73,8 @@ public class OverviewFrame extends JFrame implements Observer {
 
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
+                        "tab"));
                 jfc.showDialog(this, "Create");
                 File selection = jfc.getSelectedFile();
                 try {
@@ -88,6 +92,8 @@ public class OverviewFrame extends JFrame implements Observer {
                  */
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
+                "tab"));
                 jfc.showDialog(this, "Open");
                 File selection = jfc.getSelectedFile();
                 try {

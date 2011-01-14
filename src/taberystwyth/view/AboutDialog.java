@@ -51,10 +51,10 @@ public class AboutDialog extends JDialog {
 
         
         JLabel name = new 
-            JLabel("TAberystwyth, Bitch.");
+            JLabel("TAberystwyth v0.0, Bitch.");
         JLabel desc = new JLabel("A Debating Competition Organiser");
         box.add(imageLabel,"Center");
-        box.add(name);
+        box.add(name, "Center");
         //box.add(desc);
         box.add(Box.createGlue());
         getContentPane().add(box);
@@ -71,6 +71,7 @@ public class AboutDialog extends JDialog {
 
         });
 
+        setResizable(false);
         pack();
     }
     

@@ -56,18 +56,19 @@ public class OverviewFrame extends JFrame implements Observer {
         /*
          * Run a "simple" dialog locating the current tab or creating a new one
          */
-        Object[] options = { "Create a new tab", "Open an existing tab", 
-                "Cancel" };
-        int n = JOptionPane.showOptionDialog(this,
-                "Create a new tab or open an existing one?", "TAberystwyth",
-                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-                options, options[0]);
-        if (n == 0) {
-            /*
-             * Create a new tab
-             */
-            boolean problem = true;
-            while (problem == true) {
+        boolean problem = true;
+        while (problem == true) {
+            Object[] options = { "Create a new tab", "Open an existing tab",
+                    "Cancel" };
+            int n = JOptionPane.showOptionDialog(this,
+                    "Create a new tab or open an existing one?",
+                    "TAberystwyth", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n == 0) {
+                /*
+                 * Create a new tab
+                 */
+
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
                 jfc.showDialog(this, "Create");
@@ -81,13 +82,10 @@ public class OverviewFrame extends JFrame implements Observer {
                             JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
-            }
-        } else if (n == 1) {
-            /*
-             * Open an existing tab
-             */
-            boolean problem = true;
-            while (problem == true) {
+            } else if (n == 1) {
+                /*
+                 * Open an existing tab
+                 */
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
                 jfc.showDialog(this, "Open");
@@ -101,9 +99,9 @@ public class OverviewFrame extends JFrame implements Observer {
                             JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
+            } else if (n == 2) {
+                System.exit(0);
             }
-        } else if (n == 2) {
-            System.exit(0);
         }
         
         setLayout(new BorderLayout());

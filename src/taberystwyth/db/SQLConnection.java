@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 
 import taberystwyth.view.OverviewFrame;
 import taberystwyth.view.WelcomeDialog;
+import util.Singleton;
 
 /**
  * A clever wrapper for the Connection class that provides Observer/Observable
@@ -40,7 +41,7 @@ import taberystwyth.view.WelcomeDialog;
  * 
  * @author Cal Paterson
  */
-public class SQLConnection extends Observable {
+public class SQLConnection extends Observable implements Singleton {
 
 	/**
 	 * The instance of this (singleton) object
@@ -56,17 +57,17 @@ public class SQLConnection extends Observable {
 		return instance;
 	}
 
-	/**
-	 * The current database file
-	 */
-	private File dbfile;
+	private boolean changeTracking = true;
 
 	/**
 	 * The current connection
 	 */
 	private Connection conn;
 
-	private boolean changeTracking = true;
+	/**
+	 * The current database file
+	 */
+	private File dbfile;
 
 	/**
 	 * Constructor
@@ -86,6 +87,29 @@ public class SQLConnection extends Observable {
 		 * No initialisation here - that is done by WelcomeDialog
 		 */
 	}
+
+	/**
+     * Creates a tab in a given location
+     * @param file the given location
+     * @return 
+     */
+    public synchronized void create(File file) {
+        if (file.exists()){
+            panic(new Exception(), "New tab file already exists");
+        }
+        
+        long schemaUnixTime = new File("data/schema.sql").lastModified();
+        
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:"
+                    + file.getAbsolutePath());
+            evaluateSQLFile("data/schema.sql");
+            execute("insert into version(" + schemaUnixTime + ");");
+        } catch (SQLException e) {
+            panic(e, "Unable to write to the new tab file");
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * Evaluates a given SQL file against the current connection.
@@ -114,23 +138,6 @@ public class SQLConnection extends Observable {
 		System.out.println("SQLConnection.evaluateSQLFile()");
 		setChanged();
 		notifyObservers();
-	}
-
-	/**
-	 * There are so many instances where an unfixable situation arises in this
-	 * file that I have defined this shorthand.
-	 * 
-	 * @param e
-	 *            an exception
-	 * @param reason
-	 *            a Very Informative Description of the problem
-	 */
-	public synchronized void panic(Exception e, String reason) {
-	    String message = reason + "\n" + "The exact exception was:\n" +
-	        e.getMessage();
-		JOptionPane.showMessageDialog(null, message);
-		e.printStackTrace();
-		System.exit(255);
 	}
 
 	/**
@@ -181,6 +188,42 @@ public class SQLConnection extends Observable {
 					+ query);
 		}
 		return returnValue;
+	}
+
+	public synchronized void initialise() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * There are so many instances where an unfixable situation arises in this
+	 * file that I have defined this shorthand.
+	 * 
+	 * @param e
+	 *            an exception
+	 * @param reason
+	 *            a Very Informative Description of the problem
+	 */
+	public synchronized void panic(Exception e, String reason) {
+	    String message = reason + "\n" + "The exact exception was:\n" +
+	        e.getMessage();
+		JOptionPane.showMessageDialog(null, message);
+		e.printStackTrace();
+		System.exit(255);
+	}
+    
+    /**
+	 * An override that changes the visibility (the thread-safety) of the 
+	 * superclasses' setChanged method
+	 */
+    public synchronized void setChanged() {
+		/*
+		 * We might not be tracking changes at the moment (ie: we are loading
+		 * the schema into a new tab.  If so, do not track changes).
+		 */
+		if (changeTracking){
+			super.setChanged();
+		}
 	}
 
 	/**
@@ -239,42 +282,5 @@ public class SQLConnection extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-
-	/**
-	 * An override that changes the visibility (the thread-safety) of the 
-	 * superclasses' setChanged method
-	 */
-    public synchronized void setChanged() {
-		/*
-		 * We might not be tracking changes at the moment (ie: we are loading
-		 * the schema into a new tab.  If so, do not track changes).
-		 */
-		if (changeTracking){
-			super.setChanged();
-		}
-	}
-    
-    /**
-     * Creates a tab in a given location
-     * @param file the given location
-     * @return 
-     */
-    public synchronized void create(File file) {
-        if (file.exists()){
-            panic(new Exception(), "New tab file already exists");
-        }
-        
-        long schemaUnixTime = new File("data/schema.sql").lastModified();
-        
-        try {
-            conn = DriverManager.getConnection("jdbc:sqlite:"
-                    + file.getAbsolutePath());
-            evaluateSQLFile("data/schema.sql");
-            execute("insert into version(" + schemaUnixTime + ");");
-        } catch (SQLException e) {
-            panic(e, "Unable to write to the new tab file");
-            e.printStackTrace();
-        }
-    }
 
 }

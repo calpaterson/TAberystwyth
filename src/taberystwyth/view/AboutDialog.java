@@ -51,7 +51,7 @@ public class AboutDialog extends JDialog {
 
         
         JLabel name = new 
-            JLabel("TAberystwyth");
+            JLabel("TAberystwyth, Bitch.");
         JLabel desc = new JLabel("A Debating Competition Organiser");
         box.add(imageLabel,"Center");
         box.add(name);

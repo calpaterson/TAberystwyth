@@ -101,16 +101,18 @@ public class SQLConnection extends Observable {
             throw new IOException("tab already exists");
         }
         
+        dbfile = file;
+        
         long schemaUnixTime = new File("data/schema.sql").lastModified();
         
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
-        evaluateSQLFile("data/schema.sql");
+        evaluateSQLFile(new File("data/schema.sql"));
         
         /*
          * Set tab version
          */
-        execute("insert into version(" + schemaUnixTime + ");");
+        //execute("insert into version values(" + schemaUnixTime + ");");
     }
     
     /**
@@ -125,17 +127,27 @@ public class SQLConnection extends Observable {
      * @throws SQLException
      *             if there is some problem with the SQL server
      */
-    private synchronized void evaluateSQLFile(String filePath) {
+    private synchronized void evaluateSQLFile(File file) {
         System.out.println("SQLConnection.evaluateSQLFile: evaluating - "
-                + filePath);
-        char[] cbuf = new char[2000];
+                + file.getAbsolutePath());
+        char[] cbuf = new char[4000];
         try {
-            new BufferedReader(new FileReader(new File(filePath))).read(cbuf);
-            conn.createStatement().execute(new String(cbuf));
+            new BufferedReader(new FileReader(file)).read(cbuf);
+            
+            /*
+             * This block is 
+             */
+            String fileContents = new String(cbuf);
+            String[] statements = fileContents.split(";");
+            for (int i = 0; i < (statements.length - 1); ++i){
+                statements[i] = statements[i].concat(";");
+                System.out.println(statements[i]);
+                conn.createStatement().execute(statements[i]);
+            }
         } catch (Exception e) {
             panic(e,
                     "Unable to evaluate this file:\n"
-                            + new File(filePath).getAbsolutePath());
+                            + file.getAbsolutePath());
         }
         System.out.println("SQLConnection.evaluateSQLFile()");
         setChanged();

@@ -92,7 +92,7 @@ public class OverviewFrame extends JFrame implements Observer {
                 jfc.showDialog(this, "Open");
                 File selection = jfc.getSelectedFile();
                 try {
-                    SQLConnection.getInstance().create(selection);
+                    SQLConnection.getInstance().set(selection);
                 } catch (Exception e) {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this,

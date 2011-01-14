@@ -112,7 +112,7 @@ public class SQLConnection extends Observable {
         /*
          * Set tab version
          */
-        //execute("insert into version values(" + schemaUnixTime + ");");
+        execute("insert into version values(" + schemaUnixTime + ");");
     }
     
     /**
@@ -135,7 +135,8 @@ public class SQLConnection extends Observable {
             new BufferedReader(new FileReader(file)).read(cbuf);
             
             /*
-             * This block is 
+             * FIXME: This block is some disgusting magic that loads all of
+             * the SQL statements in the given file
              */
             String fileContents = new String(cbuf);
             String[] statements = fileContents.split(";");
@@ -270,7 +271,7 @@ public class SQLConnection extends Observable {
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("select version from version;");
         rs.next();
-        tabVersion = rs.getLong("version");
+        tabVersion = rs.getLong(1);
         
         /*
          * Get the unixtime of the last modification of the schema file

@@ -49,8 +49,8 @@ public class WelcomeDialogListener implements ActionListener {
 		else if(e.getActionCommand().equals("Open Existing Tab")){
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(dialog);
-			dialog.setSelection(chooser.getSelectedFile());
-		}
+			sql.setDatabase(chooser.getSelectedFile());		
+			}
 
 	}
 

@@ -52,7 +52,7 @@ public class OverviewFrameMenuListener implements ActionListener {
 					if(!tab.createNewFile()){
 						throw new IOException("File already exists");
 					}
-					SQLConnection.getInstance().setDatabase(tab);
+					SQLConnection.getInstance().set(tab);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -64,7 +64,7 @@ public class OverviewFrameMenuListener implements ActionListener {
 			int option = fc.showOpenDialog(overviewFrame);
 			if (option == JFileChooser.APPROVE_OPTION){
 				File tab = fc.getSelectedFile();
-				SQLConnection.getInstance().setDatabase(tab);
+				SQLConnection.getInstance().set(tab);
 			}
 		}
 	    else if (e.getActionCommand().equals("Quit")) {

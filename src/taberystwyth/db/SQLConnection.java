@@ -33,8 +33,6 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import taberystwyth.view.OverviewFrame;
-import taberystwyth.view.WelcomeDialog;
-import util.Singleton;
 
 /**
  * A clever wrapper for the Connection class that provides Observer/Observable
@@ -42,7 +40,7 @@ import util.Singleton;
  * 
  * @author Cal Paterson
  */
-public class SQLConnection extends Observable implements Singleton {
+public class SQLConnection extends Observable {
     
     /**
      * The instance of this (singleton) object

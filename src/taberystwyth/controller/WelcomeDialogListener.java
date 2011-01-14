@@ -65,8 +65,7 @@ public class WelcomeDialogListener implements ActionListener {
             chooser.showDialog(null, "Load");
             
             /*
-             * While the user manages to cause a problem, ask him again for a 
-             * file
+             * Loop while there is  a problem with the selection
              */
             boolean problem = false;
             do {

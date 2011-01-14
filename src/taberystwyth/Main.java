@@ -19,6 +19,9 @@ package taberystwyth;
 
 import javax.swing.*;
 
+import taberystwyth.controller.DebugMenuListener;
+import taberystwyth.view.OverviewFrame;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -29,6 +32,20 @@ public class Main {
 			Class.forName("taberystwyth.view.OverviewFrame");
 		} catch (Exception e){
 			e.printStackTrace();
+		}
+		
+		/*
+		 * If the debug argument is passed, add the debug menu
+		 */
+		System.out.println(args[0]);
+		if (args[0].equals("--debug")){
+		    System.out.println("Entering Debug Mode");
+		    
+		    JMenu debugMenu = new JMenu("Debug");
+		    debugMenu.addActionListener(new DebugMenuListener());
+		    debugMenu.add(new JMenuItem("Load Example Data"));
+		    
+		    OverviewFrame.getInstance().getMenu().add(debugMenu);
 		}
 	}
 

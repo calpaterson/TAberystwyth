@@ -54,6 +54,8 @@ public class OverviewFrame extends JFrame implements Observer {
         return instance;
     }
     
+    private JMenuBar menu;
+    
     private OverviewFrame() {
         /*
          * Run a "simple" dialog locating the current tab or creating a new one
@@ -134,7 +136,8 @@ public class OverviewFrame extends JFrame implements Observer {
         /*
          * Add menu bar
          */
-        add(new OverviewFrameMenu(new OverviewFrameMenuListener(this)),
+        menu = new OverviewFrameMenu(new OverviewFrameMenuListener(this));
+        add(menu,
                 BorderLayout.NORTH);
         
         /*
@@ -268,8 +271,12 @@ public class OverviewFrame extends JFrame implements Observer {
         refreshJudges();
         refreshLocation();
     }
-    
-    public void setEnabled(Boolean b) {
-        super.setEnabled(b);
+
+    /*
+     * Returns the menubar being used by this frame (used only to enable the
+     * debug menu)
+     */
+    public JMenuBar getMenu() {
+        return menu;
     }
 }

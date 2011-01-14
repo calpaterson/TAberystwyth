@@ -37,7 +37,6 @@ public class Main {
 		/*
 		 * If the debug argument is passed, add the debug menu
 		 */
-		System.out.println(args[0]);
 		if (args[0].equals("--debug")){
 		    System.out.println("Entering Debug Mode");
 		    

@@ -22,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -103,11 +105,12 @@ public class SQLConnection extends Observable {
         
         dbfile = file;
         
-        long schemaUnixTime = new File("data/schema.sql").lastModified();
+        long schemaUnixTime = new File("/data/schema.sql").lastModified();
         
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
-        evaluateSQLFile(new File("data/schema.sql"));
+        InputStream schema = this.getClass().getResourceAsStream("/schema.sql");
+        evaluateSQLFile(schema);
         
         /*
          * Set tab version
@@ -127,12 +130,10 @@ public class SQLConnection extends Observable {
      * @throws SQLException
      *             if there is some problem with the SQL server
      */
-    private synchronized void evaluateSQLFile(File file) {
-        System.out.println("SQLConnection.evaluateSQLFile: evaluating - "
-                + file.getAbsolutePath());
+    private synchronized void evaluateSQLFile(InputStream file) {
         char[] cbuf = new char[4000];
         try {
-            new BufferedReader(new FileReader(file)).read(cbuf);
+            new BufferedReader(new InputStreamReader(file)).read(cbuf);
             
             /*
              * FIXME: This block is some disgusting magic that loads all of
@@ -142,13 +143,12 @@ public class SQLConnection extends Observable {
             String[] statements = fileContents.split(";");
             for (int i = 0; i < (statements.length - 1); ++i){
                 statements[i] = statements[i].concat(";");
-                System.out.println(statements[i]);
+                //System.out.println(statements[i]);
                 conn.createStatement().execute(statements[i]);
             }
         } catch (Exception e) {
             panic(e,
-                    "Unable to evaluate this file:\n"
-                            + file.getAbsolutePath());
+                    "Unable to evaluate SQL file");
         }
         System.out.println("SQLConnection.evaluateSQLFile()");
         setChanged();

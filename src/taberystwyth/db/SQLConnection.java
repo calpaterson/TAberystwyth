@@ -86,12 +86,17 @@ public class SQLConnection extends Observable {
 		 * Run the welcome dialog that asks the user for the location of the
 		 * tab file, etc
 		 */
-		new WelcomeDialog();
+		WelcomeDialog wd = new WelcomeDialog();
 		
 		/*
-		 * Load the database FIXME: the user should be consulted about which one
+		 * Load the database
 		 */
-		setDatabase(new File("taberystwyth.tab"));
+		try {
+            setDatabase(wd.getSelection().take());
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 	}
 
 	/**

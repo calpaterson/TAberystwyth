@@ -20,10 +20,6 @@ package taberystwyth.view;
 
 import java.awt.GridLayout;
 import java.io.File;
-<<<<<<< HEAD
-=======
-import java.util.concurrent.SynchronousQueue;
->>>>>>> dadcaf55e406421b0e89bec7be540446f47b3b59
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,7 +35,6 @@ import taberystwyth.controller.WelcomeDialogListener;
  */
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private SynchronousQueue<File> selection = new SynchronousQueue<File>();
 	WelcomeDialogListener listener;
 	File selectedFile;
 
@@ -64,18 +59,5 @@ public class WelcomeDialog extends JFrame {
 		this.setVisible(true);
 		this.pack();
 	}
-	
-	public File getSelection(){
-		return selectedFile;
-	}
-	
-	public void setSelection(File f){
-		selectedFile = f;
-	}
-	
-
-    public SynchronousQueue<File> getSelection() {
-        return selection;
-    }
 
 }

@@ -81,26 +81,14 @@ public class SQLConnection extends Observable {
 			panic(e, "Unable to load the database driver."
 					+ "Perhaps your computer architecture is not supported?");
 		}
-
-		/*
-		 * Run the welcome dialog that asks the user for the location of the
-		 * tab file, etc
-		 */
-		WelcomeDialog wd = new WelcomeDialog();
 		
 		/*
-		 * Load the database
+		 * No initialisation here - that is done by WelcomeDialog
 		 */
-		try {
-            setDatabase(wd.getSelection().take());
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 	}
 
 	/**
-	 * Evaluates a given SQL file against the given connection.
+	 * Evaluates a given SQL file against the current connection.
 	 * 
 	 * @param conn
 	 *            connection to SQL database
@@ -265,5 +253,28 @@ public class SQLConnection extends Observable {
 			super.setChanged();
 		}
 	}
+    
+    /**
+     * Creates a tab in a given location
+     * @param file the given location
+     * @return 
+     */
+    public synchronized void create(File file) {
+        if (file.exists()){
+            panic(new Exception(), "New tab file already exists");
+        }
+        
+        long schemaUnixTime = new File("data/schema.sql").lastModified();
+        
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:"
+                    + file.getAbsolutePath());
+            evaluateSQLFile("data/schema.sql");
+            execute("insert into version(" + schemaUnixTime + ");");
+        } catch (SQLException e) {
+            panic(e, "Unable to write to the new tab file");
+            e.printStackTrace();
+        }
+    }
 
 }

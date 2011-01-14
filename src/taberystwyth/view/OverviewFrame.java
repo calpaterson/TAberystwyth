@@ -56,10 +56,11 @@ public class OverviewFrame extends JFrame implements Observer {
         /*
          * Run a "simple" dialog locating the current tab or creating a new one
          */
-        Object[] options = { "Create a new tab", "Open an existing tab" };
+        Object[] options = { "Create a new tab", "Open an existing tab", 
+                "Cancel" };
         int n = JOptionPane.showOptionDialog(this,
                 "Create a new tab or open an existing one?", "TAberystwyth",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
                 options, options[0]);
         if (n == 0) {
             /*
@@ -101,6 +102,8 @@ public class OverviewFrame extends JFrame implements Observer {
                     problem = true;
                 }
             }
+        } else if (n == 2) {
+            System.exit(0);
         }
         
         setLayout(new BorderLayout());

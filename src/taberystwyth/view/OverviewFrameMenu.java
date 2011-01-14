@@ -30,9 +30,7 @@ public class OverviewFrameMenu extends JMenuBar {
 	JMenu roundsMenu = new JMenu("Rounds");
 	JMenu insertMenu = new JMenu("Insert");
 	JMenu helpMenu = new JMenu("Help");
-	
-	JMenuItem newTab = new JMenuItem("New Tab");
-	JMenuItem openTab = new JMenuItem("Open Tab");
+
 	JMenuItem quit = new JMenuItem("Quit");
 	
 	JMenuItem speakers = new JMenuItem("Teams");
@@ -45,8 +43,6 @@ public class OverviewFrameMenu extends JMenuBar {
 	JMenuItem viewRounds = new JMenuItem("View Rounds");
 	
 	public OverviewFrameMenu(OverviewFrameMenuListener menuListener){
-		fileMenu.add(newTab);
-		fileMenu.add(openTab);
 		fileMenu.add(quit);
 		
 		insertMenu.add(speakers);
@@ -63,8 +59,6 @@ public class OverviewFrameMenu extends JMenuBar {
 		add(roundsMenu);
 		add(helpMenu);
 		
-		newTab.addActionListener(menuListener);
-		openTab.addActionListener(menuListener);
 		quit.addActionListener(menuListener);
 		speakers.addActionListener(menuListener);
 		judges.addActionListener(menuListener);

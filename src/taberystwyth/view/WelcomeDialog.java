@@ -19,6 +19,8 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
+import java.io.File;
+import java.util.concurrent.SynchronousQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,6 +36,7 @@ import taberystwyth.controller.WelcomeDialogListener;
  */
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private SynchronousQueue<File> selection = new SynchronousQueue<File>();
 	WelcomeDialogListener listener;
 
 	public WelcomeDialog(){
@@ -56,5 +59,9 @@ public class WelcomeDialog extends JFrame {
 		this.setVisible(true);
 		this.pack();
 	}
+
+    public SynchronousQueue<File> getSelection() {
+        return selection;
+    }
 
 }

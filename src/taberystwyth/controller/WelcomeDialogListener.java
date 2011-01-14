@@ -44,14 +44,12 @@ public class WelcomeDialogListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("New Tab")){
-			sql.execute("data/schema.sql");
+			sql.create();
 		}
 		else if(e.getActionCommand().equals("Open Existing Tab")){
 			JFileChooser chooser = new JFileChooser();
 			chooser.showOpenDialog(dialog);
-			
-			sql.setDatabase(chooser.getSelectedFile());			
-			
+			dialog.setSelection(chooser.getSelectedFile());
 		}
 
 	}

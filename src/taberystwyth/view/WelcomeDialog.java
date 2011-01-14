@@ -19,6 +19,7 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +36,7 @@ import taberystwyth.controller.WelcomeDialogListener;
 public class WelcomeDialog extends JFrame {
 	private static final long serialVersionUID = 1L;
 	WelcomeDialogListener listener;
+	File selectedFile;
 
 	public WelcomeDialog(){
 		listener = new WelcomeDialogListener(this);
@@ -57,5 +59,14 @@ public class WelcomeDialog extends JFrame {
 		this.setVisible(true);
 		this.pack();
 	}
+	
+	public File getSelection(){
+		return selectedFile;
+	}
+	
+	public void setSelection(File f){
+		selectedFile = f;
+	}
+	
 
 }

@@ -41,7 +41,7 @@ public class JudgeInsertionFrame extends JFrame {
 	/*
 	 * Textfields
 	 */
-	private JTextField judgeName = new JTextField(30);
+	private JTextField judgeName = new JTextField(20);
 	private JTextField rating = new JTextField(4);
 	
 	/*
@@ -77,10 +77,10 @@ public class JudgeInsertionFrame extends JFrame {
 		add(judgeName, "grow");
 		
 		add(ratingLabel);
-		add(rating, "grow");
+		add(rating, "");
 		
-		add(clear);
-		add(save);
+		add(clear, "tag cancel");
+		add(save, "tag apply");
 		
 		pack();
 		

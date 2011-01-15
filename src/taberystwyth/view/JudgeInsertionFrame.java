@@ -17,11 +17,14 @@
 
 package taberystwyth.view;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
+
+import net.miginfocom.swing.MigLayout;
 
 import taberystwyth.controller.JudgeInsertionFrameListener;
 
@@ -38,8 +41,8 @@ public class JudgeInsertionFrame extends JFrame {
 	/*
 	 * Textfields
 	 */
-	private JTextField judgeName = new JTextField();
-	private JTextField rating = new JTextField();
+	private JTextField judgeName = new JTextField(30);
+	private JTextField rating = new JTextField(4);
 	
 	/*
 	 * Buttons
@@ -57,7 +60,7 @@ public class JudgeInsertionFrame extends JFrame {
 	}
 	
 	private JudgeInsertionFrame(){
-		setLayout(new GridLayout(3, 2));
+		setLayout(new MigLayout("wrap 2, flowx, fillx", "[left]rel[right]"));
 		setTitle("Insert Judges");
 		
 		/*
@@ -71,10 +74,10 @@ public class JudgeInsertionFrame extends JFrame {
 		});
 		
 		add(judgeNameLabel);
-		add(judgeName);
+		add(judgeName, "grow");
 		
 		add(ratingLabel);
-		add(rating);
+		add(rating, "grow");
 		
 		add(clear);
 		add(save);

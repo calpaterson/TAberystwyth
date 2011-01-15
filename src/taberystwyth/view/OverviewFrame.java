@@ -30,7 +30,7 @@ import java.sql.SQLException;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
-//import javax.swing.filechooser.FileNameExtensionFilter;
+// import javax.swing.filechooser.FileNameExtensionFilter;
 
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.db.SQLConnection;
@@ -101,11 +101,21 @@ public class OverviewFrame extends JFrame implements Observer {
                 try {
                     SQLConnection.getInstance().set(selection);
                 } catch (Exception e) {
+                    if (e.getMessage().equals("tab version not as expected")){
+                        JOptionPane.showMessageDialog(this,
+                                "The selected tab file is of a different " +
+                                		"version to this program - it will " + 
+                                		"not be possible to open it",
+                                "Tab Version Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        problem = true;
+                    } else {
                     e.printStackTrace();
                     JOptionPane.showMessageDialog(this,
                             "Problem reading selected file", "File Error",
                             JOptionPane.ERROR_MESSAGE);
                     problem = true;
+                    }
                 }
             } else if (n == 2) {
                 System.exit(0);
@@ -271,7 +281,7 @@ public class OverviewFrame extends JFrame implements Observer {
         refreshJudges();
         refreshLocation();
     }
-
+    
     /*
      * Returns the menubar being used by this frame (used only to enable the
      * debug menu)

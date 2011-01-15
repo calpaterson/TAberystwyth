@@ -24,6 +24,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -105,7 +107,13 @@ public class SQLConnection extends Observable {
         
         dbfile = file;
         
-        long schemaUnixTime = new File("/data/schema.sql").lastModified();
+        /*
+         * This lump of code is required in order to get the last modification
+         * time of a jar resource
+         */
+        URL url = this.getClass().getResource("/schema.sql");
+        URLConnection urlConn = url.openConnection();
+        long schemaUnixTime = urlConn.getLastModified();
         
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
@@ -282,6 +290,8 @@ public class SQLConnection extends Observable {
          * If they don't match, bomb.
          */
         if (tabVersion != schemaVersion) {
+            System.out.println("tabVersion=" + tabVersion);
+            System.out.println("schemaVersion=" + schemaVersion);
             throw new Exception("tab version not as expected");
         }
         

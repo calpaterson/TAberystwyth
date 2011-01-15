@@ -35,7 +35,7 @@ public class AboutDialog extends JDialog {
          * Load the image and put it in a label
          */
         try {
-            aduLogo = ImageIO.read(new File("adu.jpeg"));
+            aduLogo = ImageIO.read(this.getClass().getResourceAsStream("/adu.jpeg"));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(OverviewFrame.getInstance(), 
                     "The file \"adu.jpeg\" was not loaded correctly.", 

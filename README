@@ -1,4 +1,40 @@
 README
 ======
+TAberystwyth is a debating competition organiser.
 
+BUGS
+====
+- Some weirdness in tab versioning when inside a jar file
+
+For v0.1
+========
+- Printing slides
+- Algorithm for team allocation
+- Refuse to open if there is already an instance on the current machine
+ - This causes the confusing situation where the second instance appears but has missing data
+
+
+TODO
+====
+- Data entry
+    - results
+    - wing/judge feedback
+- Multiple headed entry
+- Printing
+    - ballots
+    - slides
+    - final tab
+- Inspection (/Drag and Drop)
+    - Judges
+    - Locations
+- Algorithm
+    - Team allocation
+    - Judge allocation
+    - Strikes
+    - ESL
+    - Novice
+    - Swing teams
+- Configuration management
+    - dotfiles on *nix
+    - "%APPDATA%" on windows
 

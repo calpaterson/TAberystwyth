@@ -69,7 +69,7 @@ public class JudgeInsertionFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent evt) {
-				LocationInsertionFrame.getInstance().setVisible(false);
+				JudgeInsertionFrame.getInstance().setVisible(false);
 			}
 		});
 		

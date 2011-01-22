@@ -17,8 +17,7 @@ public class AllocationFrame extends JFrame {
 	JLabel drawTypeLabel = new JLabel("Type of Draw");
 	JComboBox drawTypeBox = new JComboBox();
 	DefaultComboBoxModel drawTypes = new DefaultComboBoxModel();
-	
-	
+
 	JButton cancel = new JButton("Cancel");
 	JButton allocate = new JButton("Allocate");
 	
@@ -43,6 +42,11 @@ public class AllocationFrame extends JFrame {
                 AllocationFrame.getInstance().setVisible(false);
             }
         });
+        
+        /*
+         * Set up comboboxes
+         */
+        drawTypes.addElement("Normal");
         
         
         add(drawTypeLabel);

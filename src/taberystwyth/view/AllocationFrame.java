@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import taberystwyth.controller.AllocationFrameListener;
+import taberystwyth.prelim.DrawTypeRepository;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -18,9 +19,23 @@ public class AllocationFrame extends JFrame {
 	
 	AllocationFrameListener listener = new AllocationFrameListener();
 	
-	JLabel drawTypeLabel = new JLabel("Type of Draw");
-	JComboBox drawTypeBox = new JComboBox();
-	DefaultComboBoxModel drawTypes = new DefaultComboBoxModel();
+	DrawTypeRepository repos = DrawTypeRepository.getInstance();
+	
+	JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
+	JLabel teamDrawTypeDescription = new JLabel();
+	JComboBox teamDrawTypeBox = new JComboBox();
+	DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
+	
+	JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
+	JLabel locationDrawTypeDescription = new JLabel();
+	JComboBox locationDrawTypeBox = new JComboBox();
+	DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
+
+	JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
+	JLabel judgeDrawTypeDescription = new JLabel();
+	JComboBox judgeDrawTypeBox = new JComboBox();
+	DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
+
 
 	JButton cancel = new JButton("Cancel");
 	JButton allocate = new JButton("Allocate");
@@ -49,12 +64,42 @@ public class AllocationFrame extends JFrame {
         
         /*
          * Set up comboboxes
-         */
-        drawTypes.addElement("Normal");
-        drawTypeBox.setModel(drawTypes);
+         */      
+        for(String name : repos.getTeamDrawTypeMap().keySet()){        	
+        	teamDrawTypes.addElement(name);
+        }
         
-        add(drawTypeLabel);
-        add(drawTypeBox);
+        for(String name : repos.getJudgeDrawTypeMap().keySet()){        	
+        	judgeDrawTypes.addElement(name);
+        }
+
+        for(String name : repos.getLocationDrawTypeMap().keySet()){        	
+        	locationDrawTypes.addElement(name);
+        }
+        
+        teamDrawTypeBox.setModel(teamDrawTypes);
+        judgeDrawTypeBox.setModel(judgeDrawTypes);
+        locationDrawTypeBox.setModel(locationDrawTypes);
+
+        
+        add(teamDrawTypeLabel);
+        add(teamDrawTypeBox);
+        add(teamDrawTypeDescription);
+        add(new JLabel()); //FIXME
+        
+        add(judgeDrawTypeLabel);
+        add(judgeDrawTypeBox);
+        add(judgeDrawTypeDescription);
+        add(new JLabel()); //FIXME
+
+        add(locationDrawTypeLabel);
+        add(locationDrawTypeBox);
+        add(locationDrawTypeDescription);
+        add(new JLabel()); //FIXME
+
+
+        
+        
         add(cancel, "tag cancel");
         add(allocate, "tag apply");
         pack();

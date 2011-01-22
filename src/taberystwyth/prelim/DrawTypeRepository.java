@@ -5,13 +5,25 @@ import java.util.HashMap;
 public class DrawTypeRepository {
     private static DrawTypeRepository instance = new DrawTypeRepository();
     
-    public DrawTypeRepository getInstance(){
+    public static DrawTypeRepository getInstance(){
         return instance;
     }
     
-    HashMap<String, String> teamDrawTypeMap = new HashMap<String, String>();
-    HashMap<String, String> judgeDrawTypeMap = new HashMap<String, String>();
-    HashMap<String, String> locationDrawTypeMap = new HashMap<String, String>();
+    public HashMap<String, String> getTeamDrawTypeMap() {
+		return teamDrawTypeMap;
+	}
+
+	public HashMap<String, String> getJudgeDrawTypeMap() {
+		return judgeDrawTypeMap;
+	}
+
+	public HashMap<String, String> getLocationDrawTypeMap() {
+		return locationDrawTypeMap;
+	}
+
+	final HashMap<String, String> teamDrawTypeMap = new HashMap<String, String>();
+    final HashMap<String, String> judgeDrawTypeMap = new HashMap<String, String>();
+    final HashMap<String, String> locationDrawTypeMap = new HashMap<String, String>();
     
     private DrawTypeRepository(){
         /*

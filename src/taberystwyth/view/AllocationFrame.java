@@ -16,7 +16,7 @@ public class AllocationFrame extends JFrame {
 	JLabel drawTypeLabel = new JLabel("Type of Draw");
 	JComboBox drawTypeBox = new JComboBox();
 	
-	JButton cancel = new JButton("Canel");
+	JButton cancel = new JButton("Cancel");
 	JButton allocate = new JButton("Allocate");
 	
     
@@ -44,8 +44,8 @@ public class AllocationFrame extends JFrame {
         
         add(drawTypeLabel);
         add(drawTypeBox);
-        add(cancel);
-        add(allocate);
+        add(cancel, "tag cancel");
+        add(allocate, "tag apply");
         pack();
         setMinimumSize(getSize());
     }

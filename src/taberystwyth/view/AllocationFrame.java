@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import taberystwyth.controller.AllocationFrameListener;
@@ -22,17 +23,17 @@ public class AllocationFrame extends JFrame {
 	DrawTypeRepository repos = DrawTypeRepository.getInstance();
 	
 	JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
-	JLabel teamDrawTypeDescription = new JLabel();
+	JTextArea teamDrawTypeDescription = new JTextArea();
 	JComboBox teamDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
 	
 	JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
-	JLabel locationDrawTypeDescription = new JLabel();
+	JTextArea locationDrawTypeDescription = new JTextArea();
 	JComboBox locationDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
 
 	JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
-	JLabel judgeDrawTypeDescription = new JLabel();
+	JTextArea judgeDrawTypeDescription = new JTextArea();
 	JComboBox judgeDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
 
@@ -62,6 +63,16 @@ public class AllocationFrame extends JFrame {
             }
         });
         
+        
+        /*
+         * Set up description boxes
+         */
+        teamDrawTypeDescription.setWrapStyleWord(true);
+        locationDrawTypeDescription.setWrapStyleWord(true);
+        judgeDrawTypeDescription.setWrapStyleWord(true);
+
+        
+        
         /*
          * Set up comboboxes
          */      
@@ -80,7 +91,10 @@ public class AllocationFrame extends JFrame {
         teamDrawTypeBox.setModel(teamDrawTypes);
         judgeDrawTypeBox.setModel(judgeDrawTypes);
         locationDrawTypeBox.setModel(locationDrawTypes);
-
+        
+        /*
+         * Set up descriptions
+         */
         
         add(teamDrawTypeLabel);
         add(teamDrawTypeBox);
@@ -110,6 +124,18 @@ public class AllocationFrame extends JFrame {
          */
         cancel.addActionListener(listener);
         allocate.addActionListener(listener);
+        
+        updateDescriptions();
+    }
+    
+    public void updateDescriptions(){
+    	teamDrawTypeDescription.setText(
+    			repos.getTeamDrawTypeMap().get(teamDrawTypeBox.getSelectedItem()));
+    	judgeDrawTypeDescription.setText(
+    			repos.getJudgeDrawTypeMap().get(judgeDrawTypeBox.getSelectedItem()));
+    	locationDrawTypeDescription.setText(
+    			repos.getLocationDrawTypeMap().get(locationDrawTypeBox.getSelectedItem()));
+    	
     }
     
 }

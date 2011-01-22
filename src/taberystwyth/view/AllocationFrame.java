@@ -10,9 +10,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import taberystwyth.controller.AllocationFrameListener;
+
 import net.miginfocom.swing.MigLayout;
 
 public class AllocationFrame extends JFrame {
+	
+	AllocationFrameListener listener = new AllocationFrameListener();
 	
 	JLabel drawTypeLabel = new JLabel("Type of Draw");
 	JComboBox drawTypeBox = new JComboBox();
@@ -47,7 +51,7 @@ public class AllocationFrame extends JFrame {
          * Set up comboboxes
          */
         drawTypes.addElement("Normal");
-        
+        drawTypeBox.setModel(drawTypes);
         
         add(drawTypeLabel);
         add(drawTypeBox);
@@ -55,6 +59,12 @@ public class AllocationFrame extends JFrame {
         add(allocate, "tag apply");
         pack();
         setMinimumSize(getSize());
+        
+        /*
+         * Set up listener
+         */
+        cancel.addActionListener(listener);
+        allocate.addActionListener(listener);
     }
     
 }

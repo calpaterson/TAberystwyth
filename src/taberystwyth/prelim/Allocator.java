@@ -41,7 +41,8 @@ public class Allocator {
 	private Allocator() {
 	}
 	
-	public void allocate(){
+	public void allocate() throws SQLException, SwingTeamsRequiredException, 
+	LocationsRequiredException, JudgesRequiredException{
 		/*
 		 * Subquery used inside the loop the builds teams
 		 */
@@ -54,7 +55,6 @@ public class Allocator {
 		TreeMap<String,Integer> teamNames = new TreeMap<String,Integer>();
 		String query = "select name from teams;";
 		ResultSet rs = conn.executeQuery(query);
-		try {
 			while(rs.next()){
 				String teamName = rs.getString("name");
 				
@@ -81,29 +81,32 @@ public class Allocator {
 				teamNames.put(teamName,teamPoints);
 			}
 			rs.close();
-		} catch (SQLException e) {
-			conn.panic(e, "Unable to cycle through the list of teams");
+		
+		/*
+		 * Build the list of judges
+		 */
+		TreeMap<String, Integer> judgeNames = new TreeMap<String,Integer>();
+		query = "select name, rating from judges;";
+		rs = conn.executeQuery(query);
+		while (rs.next()){
+		    judgeNames.put(rs.getString("name"), rs.getInt("rating"));
 		}
 		
+			
 		/*
 		 * Build the list of locations
 		 */
 		TreeMap<String,Integer> locationNames = new TreeMap<String,Integer>();
 		query = "select name, rating from locations;";
 		rs = conn.executeQuery(query);
-		try {
 			while(rs.next()){
 				locationNames.put(rs.getString("name"), 
 						rs.getInt("rating"));
 			}
 			rs.close();
-		} catch (SQLException e){
-			conn.panic(e, "Unable to look through the list of locations");
-		}
 		
 		/*
-		 * Couple of pieces of behaviour to ensure that the number of teams is
-		 * divisible by four
+		 * Ensure there are enough teams
 		 */
 		int swingTeamsNeeded = 0;
 		if (teamNames.size() % 4 != 0){
@@ -111,19 +114,8 @@ public class Allocator {
 	         System.out.println("Teams: " + teamNames.size());
 	         System.out.println("Rem: " + teamNames.size() % 4);
 		}
-		if (swingTeamsNeeded != 0){
-			String complaint;
-			if (swingTeamsNeeded == 1){
-				complaint = "Number of teams not divisible by four.  " +
-				"You need to add a (single) swing team.";
-			} else {
-				complaint = "Number of teams not divisible by four.  " +
-				"You need to add " + swingTeamsNeeded + 
-				" swing teams.";
-			}
-			JOptionPane.showMessageDialog(OverviewFrame.getInstance(), 
-					complaint, "Add swing teams", JOptionPane.ERROR_MESSAGE);
-			return;
+		if (swingTeamsNeeded > 0){
+		    throw new SwingTeamsRequiredException(swingTeamsNeeded);
 		}
 		
 		/*
@@ -132,24 +124,18 @@ public class Allocator {
 		int locationsRequired = teamNames.size() / 4;
 		int locationsShort = locationsRequired - locationNames.size();
 		if (locationsShort > 0){
-			String complaint = "You need to add at least " + locationsShort +
-			"locations";
-			JOptionPane.showMessageDialog(OverviewFrame.getInstance(), 
-					complaint, "Add locations", JOptionPane.ERROR_MESSAGE);
-			return;
+			throw new LocationsRequiredException(locationsShort);
 		}
 		
 		/*
-		 * Printing!
+		 * Ensure there are enough judges
 		 */
-//		System.out.println("Allocator.allocate()");
-//		for (String team: teamNames.keySet()){
-//			System.out.println(team + ": " + teamNames.get(team));
-//		}
-//		for (String location: locationNames.keySet()){
-//			System.out.println(location + ": " + locationNames.get(location));
-//		}
-//		System.out.println(locationNames.firstKey());
+		int requiredJudges = teamNames.size() / 4;
+		if (judgeNames.size() < requiredJudges){
+		    throw new JudgesRequiredException(requiredJudges - 
+		            judgeNames.size());
+		}
+		
 	}
 
 	private int getCurrentRound() {

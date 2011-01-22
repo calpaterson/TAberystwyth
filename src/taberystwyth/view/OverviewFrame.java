@@ -94,8 +94,8 @@ public class OverviewFrame extends JFrame implements Observer {
                  */
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
-                /*jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
-                "tab"));*/
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
+                "tab"));
                 jfc.showDialog(this, "Open");
                 File selection = jfc.getSelectedFile();
                 try {

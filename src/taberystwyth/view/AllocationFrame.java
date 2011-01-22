@@ -3,6 +3,7 @@ package taberystwyth.view;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -15,6 +16,8 @@ public class AllocationFrame extends JFrame {
 	
 	JLabel drawTypeLabel = new JLabel("Type of Draw");
 	JComboBox drawTypeBox = new JComboBox();
+	DefaultComboBoxModel drawTypes = new DefaultComboBoxModel();
+	
 	
 	JButton cancel = new JButton("Cancel");
 	JButton allocate = new JButton("Allocate");

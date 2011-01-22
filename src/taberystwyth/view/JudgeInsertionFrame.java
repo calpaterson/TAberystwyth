@@ -83,6 +83,7 @@ public class JudgeInsertionFrame extends JFrame {
 		add(save, "tag apply");
 		
 		pack();
+		setMinimumSize(getSize());		
 		
 		clear.addActionListener(new JudgeInsertionFrameListener());
 		save.addActionListener(new JudgeInsertionFrameListener());

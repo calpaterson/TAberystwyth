@@ -75,8 +75,6 @@ public class OverviewFrameMenuListener implements ActionListener {
 			LocationInsertionFrame.getInstance().setVisible(true);
 		} else if (e.getActionCommand().equals("Judges")) {
 			JudgeInsertionFrame.getInstance().setVisible(true);
-		} else if (e.getActionCommand().equals("Draw Preliminary Round")){
-			Allocator.getInstance().allocate();
 		} else if (e.getActionCommand().equals("About")){
 		    AboutDialog.getInstance().setVisible(true);
 		//} else if (e.getActionCommand().equals("View Rounds")) {

@@ -98,18 +98,15 @@ public class AllocationFrame extends JFrame {
         
         add(teamDrawTypeLabel);
         add(teamDrawTypeBox);
-        add(teamDrawTypeDescription);
-        add(new JLabel()); //FIXME
+        add(teamDrawTypeDescription, "wrap");
         
         add(judgeDrawTypeLabel);
         add(judgeDrawTypeBox);
-        add(judgeDrawTypeDescription);
-        add(new JLabel()); //FIXME
+        add(judgeDrawTypeDescription, "wrap");
 
         add(locationDrawTypeLabel);
         add(locationDrawTypeBox);
-        add(locationDrawTypeDescription);
-        add(new JLabel()); //FIXME
+        add(locationDrawTypeDescription, "wrap");
 
 
         

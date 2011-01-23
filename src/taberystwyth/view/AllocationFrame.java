@@ -124,16 +124,16 @@ public class AllocationFrame extends JFrame {
 		 * Add to the frame
 		 */
 		add(teamDrawTypeLabel);
-		add(teamDrawTypeBox);
-		add(teamDrawTypeDescription, "wrap");
+		add(teamDrawTypeBox, "wrap");
+		add(teamDrawTypeDescription, "span");
 
 		add(judgeDrawTypeLabel);
-		add(judgeDrawTypeBox);
-		add(judgeDrawTypeDescription, "wrap");
+		add(judgeDrawTypeBox, "wrap");
+		add(judgeDrawTypeDescription, "span");
 
 		add(locationDrawTypeLabel);
-		add(locationDrawTypeBox);
-		add(locationDrawTypeDescription, "wrap");
+		add(locationDrawTypeBox, "wrap");
+		add(locationDrawTypeDescription, "span");
 
 		add(cancel, "tag cancel");
 		add(allocate, "tag apply");

@@ -17,6 +17,8 @@
 
 package taberystwyth.view;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -26,6 +28,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import taberystwyth.controller.AllocationFrameListener;
 import taberystwyth.prelim.DrawTypeRepository;
@@ -46,6 +49,8 @@ public class AllocationFrame extends JFrame {
 
 	DrawTypeRepository repos = DrawTypeRepository.getInstance();
 
+	JTextField motionField = new JTextField(20);
+	
 	JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
 	JTextArea teamDrawTypeDescription = new JTextArea(3, 20);
 	JComboBox teamDrawTypeBox = new JComboBox();
@@ -89,6 +94,11 @@ public class AllocationFrame extends JFrame {
 				AllocationFrame.getInstance().setVisible(false);
 			}
 		});
+		
+		/*
+		 * Disable the allocate button initially
+		 */
+		allocate.setEnabled(false);
 
 		/*
 		 * Set up description boxes
@@ -126,17 +136,20 @@ public class AllocationFrame extends JFrame {
 		/*
 		 * Add to the frame
 		 */
+		add(new JLabel("Motion: "));
+		add(motionField);
+		
 		add(teamDrawTypeLabel);
 		add(teamDrawTypeBox, "wrap");
-		add(teamDrawTypeDescription, "span");
+		add(teamDrawTypeDescription, "span, center");
 
 		add(judgeDrawTypeLabel);
 		add(judgeDrawTypeBox, "wrap");
-		add(judgeDrawTypeDescription, "span");
+		add(judgeDrawTypeDescription, "span, center");
 
 		add(locationDrawTypeLabel);
 		add(locationDrawTypeBox, "wrap");
-		add(locationDrawTypeDescription, "span");
+		add(locationDrawTypeDescription, "span, center");
 
 		add(cancel, "tag cancel");
 		add(allocate, "tag apply");
@@ -144,8 +157,26 @@ public class AllocationFrame extends JFrame {
 		setMinimumSize(getSize());
 
 		/*
-		 * Set up listener
+		 * Set up listeners
 		 */
+		motionField.addKeyListener(new KeyListener() {
+            private void checkMotionField(){
+                if (motionField.getText().equals("")){
+                    allocate.setEnabled(false);
+                } else {
+                    allocate.setEnabled(true);
+                }
+            }
+            public void keyTyped(KeyEvent e) {
+               checkMotionField();
+            }
+            public void keyReleased(KeyEvent e) {
+                checkMotionField();
+            }
+            public void keyPressed(KeyEvent e) {
+                checkMotionField();
+            }
+        });
 		cancel.addActionListener(listener);
 		allocate.addActionListener(listener);
 

@@ -114,6 +114,10 @@ public class AllocationFrame extends JFrame {
 		locationDrawTypeDescription.setBackground(getBackground());
 		judgeDrawTypeDescription.setBackground(getBackground());
 
+		teamDrawTypeDescription.setEditable(false);
+		locationDrawTypeDescription.setEditable(false);
+		judgeDrawTypeDescription.setEditable(false);
+
 		/*
 		 * Set up comboboxes
 		 */

@@ -94,8 +94,11 @@ public class AllocationFrame extends JFrame {
 		 * Set up description boxes
 		 */
 		teamDrawTypeDescription.setLineWrap(true);
+		teamDrawTypeDescription.setWrapStyleWord(true);
 		locationDrawTypeDescription.setLineWrap(true);
+		locationDrawTypeDescription.setWrapStyleWord(true);
 		judgeDrawTypeDescription.setLineWrap(true);
+		judgeDrawTypeDescription.setWrapStyleWord(true);
 
 		teamDrawTypeDescription.setBackground(getBackground());
 		locationDrawTypeDescription.setBackground(getBackground());

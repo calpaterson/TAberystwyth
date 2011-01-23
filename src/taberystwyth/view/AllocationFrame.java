@@ -23,17 +23,17 @@ public class AllocationFrame extends JFrame {
 	DrawTypeRepository repos = DrawTypeRepository.getInstance();
 	
 	JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
-	JTextArea teamDrawTypeDescription = new JTextArea();
+	JTextArea teamDrawTypeDescription = new JTextArea(3,20);
 	JComboBox teamDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
 	
 	JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
-	JTextArea locationDrawTypeDescription = new JTextArea();
+	JTextArea locationDrawTypeDescription = new JTextArea(3,20);
 	JComboBox locationDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
 
 	JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
-	JTextArea judgeDrawTypeDescription = new JTextArea();
+	JTextArea judgeDrawTypeDescription = new JTextArea(3,20);
 	JComboBox judgeDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
 
@@ -67,9 +67,9 @@ public class AllocationFrame extends JFrame {
         /*
          * Set up description boxes
          */
-        teamDrawTypeDescription.setWrapStyleWord(true);
-        locationDrawTypeDescription.setWrapStyleWord(true);
-        judgeDrawTypeDescription.setWrapStyleWord(true);
+        teamDrawTypeDescription.setLineWrap(true);
+        locationDrawTypeDescription.setLineWrap(true);
+        judgeDrawTypeDescription.setLineWrap(true);
 
         
         

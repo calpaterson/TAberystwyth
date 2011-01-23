@@ -96,9 +96,8 @@ public class AllocationFrame extends JFrame {
         locationDrawTypeBox.setModel(locationDrawTypes);
         
         /*
-         * Set up descriptions
+         * Add to the frame
          */
-        
         add(teamDrawTypeLabel);
         add(teamDrawTypeBox);
         add(teamDrawTypeDescription, "wrap");
@@ -110,9 +109,6 @@ public class AllocationFrame extends JFrame {
         add(locationDrawTypeLabel);
         add(locationDrawTypeBox);
         add(locationDrawTypeDescription, "wrap");
-
-
-        
         
         add(cancel, "tag cancel");
         add(allocate, "tag apply");
@@ -124,6 +120,10 @@ public class AllocationFrame extends JFrame {
          */
         cancel.addActionListener(listener);
         allocate.addActionListener(listener);
+        
+        teamDrawTypeBox.addItemListener(listener);
+        judgeDrawTypeBox.addItemListener(listener);
+        locationDrawTypeBox.addItemListener(listener);
         
         updateDescriptions();
     }

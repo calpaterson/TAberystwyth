@@ -2,6 +2,8 @@ package taberystwyth.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -12,7 +14,7 @@ import taberystwyth.prelim.LocationsRequiredException;
 import taberystwyth.prelim.SwingTeamsRequiredException;
 import taberystwyth.view.AllocationFrame;
 
-public class AllocationFrameListener implements ActionListener {
+public class AllocationFrameListener implements ActionListener, ItemListener{
 
 	public void actionPerformed(ActionEvent event) {
 		
@@ -56,6 +58,10 @@ public class AllocationFrameListener implements ActionListener {
 			System.out.println("Not Implemented");
 		}
 
+	}
+
+	public void itemStateChanged(ItemEvent e) {
+		AllocationFrame.getInstance().updateDescriptions();
 	}
 
 }

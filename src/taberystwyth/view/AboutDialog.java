@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import net.miginfocom.swing.MigLayout;
+
 public class AboutDialog extends JDialog {
     
     private static final long serialVersionUID = 1L;
@@ -28,9 +30,10 @@ public class AboutDialog extends JDialog {
     
     private AboutDialog(){
         super(OverviewFrame.getInstance(), "About", true);
+        setLayout(new MigLayout("wrap 1", "[center]"));
         
         /*
-         * Load the image and put it in a label
+         * Prepare the imageLabel
          */
         try {
             aduLogo = ImageIO.read(this.getClass().getResourceAsStream("/adu.jpeg"));
@@ -43,34 +46,34 @@ public class AboutDialog extends JDialog {
         JLabel imageLabel = new JLabel(new ImageIcon(aduLogo));
         imageLabel.setSize(200, 294);
         
-        Box box = Box.createVerticalBox();
-        box.add(Box.createGlue());
-    
-
-        
+        /*
+         * The captions
+         */
         JLabel name = new 
             JLabel("TAberystwyth v0.0, Bitch.");
         JLabel desc = new JLabel("A Debating Competition Organiser");
-        box.add(imageLabel,"Center");
-        box.add(name, "Center");
-        //box.add(desc);
-        box.add(Box.createGlue());
-        getContentPane().add(box);
 
-        JPanel panel = new JPanel();
-        JButton ok = new JButton("OK");
-        panel.add(ok);
-        getContentPane().add(panel, "South");
-
-        ok.addActionListener(new ActionListener() {
+        /*
+         * The close button
+         */
+        JButton close = new JButton("Close");;
+        close.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent evt) {
             setVisible(false);
           }
-
         });
 
+        /*
+         * Add everything
+         */
+        add(imageLabel);
+        add(name);
+        add(desc);
+        add(close);
+        
         setResizable(false);
         pack();
+        setLocationRelativeTo(OverviewFrame.getInstance());
     }
     
 }

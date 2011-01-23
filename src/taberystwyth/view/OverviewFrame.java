@@ -175,6 +175,7 @@ public class OverviewFrame extends JFrame implements Observer {
         add(holdingPanel, BorderLayout.CENTER);
         pack();
         setSize(new Dimension(500, 500));
+        setLocationRelativeTo(null);
         setVisible(true);
         
         /*

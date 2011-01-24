@@ -36,7 +36,7 @@ public class LocationInsertionFrame extends JFrame {
 	 */
 	private JTextField locationName = new JTextField(20);
 	private JLabel locationNameLabel = new JLabel("Name:");
-	private JTextField rating = new JTextField(2);
+	private JTextField rating = new JTextField(3);
 	private JLabel ratingLabel = new JLabel("Rating:");
 
 	/*

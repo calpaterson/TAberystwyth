@@ -42,7 +42,7 @@ public class JudgeInsertionFrame extends JFrame {
 	 */
 	private JTextField judgeName = new JTextField(20);
 	private JTextField institution = new JTextField(20);
-	private JTextField rating = new JTextField(2);
+	private JTextField rating = new JTextField(3);
 	
 	/*
 	 * Buttons

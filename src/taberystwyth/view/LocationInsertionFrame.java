@@ -23,6 +23,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
+import net.miginfocom.swing.MigLayout;
+
 import taberystwyth.controller.LocationInsertionFrameListener;
 
 public class LocationInsertionFrame extends JFrame {
@@ -32,9 +34,9 @@ public class LocationInsertionFrame extends JFrame {
 	/*
 	 * Textfields
 	 */
-	private JTextField locationName = new JTextField();
+	private JTextField locationName = new JTextField(20);
 	private JLabel locationNameLabel = new JLabel("Name:");
-	private JTextField rating = new JTextField();
+	private JTextField rating = new JTextField(2);
 	private JLabel ratingLabel = new JLabel("Rating:");
 
 	/*
@@ -58,7 +60,7 @@ public class LocationInsertionFrame extends JFrame {
 	}
 
 	private LocationInsertionFrame() {;
-		setLayout(new GridLayout(3, 2));
+		setLayout(new MigLayout("wrap 2", "[left]rel[right]"));
 		setTitle("Insert Location");
 
 		/*
@@ -72,7 +74,7 @@ public class LocationInsertionFrame extends JFrame {
 		});
 
 		add(locationNameLabel);
-		add(locationName);
+		add(locationName,"span");
 		add(ratingLabel);
 		add(rating);
 
@@ -86,6 +88,8 @@ public class LocationInsertionFrame extends JFrame {
 		save.addActionListener(listener);
 
 		pack();
+		setResizable(false);
+		setLocationRelativeTo(OverviewFrame.getInstance());
 	}
 
 }

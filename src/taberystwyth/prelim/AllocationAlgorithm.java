@@ -43,13 +43,25 @@ public abstract class AllocationAlgorithm {
 	 */
 	abstract ArrayList<String> allocate() throws SQLException;
 	
-    public TreeMap<String, Integer> getLocationMap() throws SQLException{
-        TreeMap<String,Integer> location2quality = 
-            new TreeMap<String,Integer>();
+	/**
+	 * Return a HashMap of locations keyed by rating
+	 * @return HashMap of locations keyed by rating
+	 * @throws SQLException
+	 */
+    public TreeMap<Integer, ArrayList<String>> getLocationMap() throws SQLException{
+    	
+        TreeMap<Integer,ArrayList<String>> location2quality = 
+            new TreeMap<Integer,ArrayList<String>>();
+        
         String query = "select name from locations;";
+        
         ResultSet rs = SQLConnection.getInstance().executeQuery(query);
         while (rs.next()){
-            location2quality.put(rs.getString("name"), rs.getInt("rating"));
+        	if(!location2quality.containsKey(rs.getInt("rating"))){
+        		location2quality.put(rs.getInt("rating"), new ArrayList<String>());
+        	}
+        	
+            location2quality.get(rs.getInt("rating")).add(rs.getString("name"));
         }
         return location2quality;
     }

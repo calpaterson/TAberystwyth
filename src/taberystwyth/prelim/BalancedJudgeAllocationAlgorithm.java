@@ -12,7 +12,6 @@ public class BalancedJudgeAllocationAlgorithm extends JudgeAllocationAlgorithm {
     @Override
     ArrayList<String> allocate() throws SQLException {
         TreeMap<Integer, ArrayList<String>> rating2judges = getJudgeMap();
-        TreeMap<String, Integer> location2rating = getLocationMap();
         
         /*
          * Build the list of chairs

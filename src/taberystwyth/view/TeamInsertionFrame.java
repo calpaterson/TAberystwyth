@@ -29,6 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import net.miginfocom.swing.MigLayout;
+
 import taberystwyth.controller.TeamFocusListener;
 import taberystwyth.controller.TeamInsertionListener;
 import taberystwyth.db.SQLConnection;
@@ -47,11 +49,11 @@ public class TeamInsertionFrame extends JFrame {
 
 	private JLabel speaker1ESLLabel = new JLabel("Esl?:");
 
-	private JTextField speaker1Institution = new JTextField();
+	private JTextField speaker1Institution = new JTextField(20);
 
 	private JLabel speaker1InstitutionLabel = new JLabel("Institution 1:");
 
-	private JTextField speaker1Name = new JTextField();
+	private JTextField speaker1Name = new JTextField(20);
 
 	private JLabel speaker1NameLabel = new JLabel("Speaker Name 1:");
 
@@ -63,11 +65,11 @@ public class TeamInsertionFrame extends JFrame {
 
 	private JLabel speaker2ESLLabel = new JLabel("Esl?:");
 
-	private JTextField speaker2Institution = new JTextField();
+	private JTextField speaker2Institution = new JTextField(20);
 
 	private JLabel speaker2InstitutionLabel = new JLabel("Institution 2:");
 
-	private JTextField speaker2Name = new JTextField();
+	private JTextField speaker2Name = new JTextField(20);
 
 	private JLabel speaker2NameLabel = new JLabel("Speaker Name 2:");
 
@@ -79,7 +81,7 @@ public class TeamInsertionFrame extends JFrame {
 
 	private JLabel swingLabel = new JLabel("Swing?");
 
-	private JTextField teamName = new JTextField();
+	private JTextField teamName = new JTextField(20);
 	private JLabel teamNameLabel = new JLabel("Team Name:");
 	
 	private TeamFocusListener  institutionDuplicator 
@@ -105,29 +107,25 @@ public class TeamInsertionFrame extends JFrame {
 			}
 		});
 		
-		setLayout(new GridLayout(13, 2));
+		setLayout(new MigLayout("wrap 2", "[left]rel[right]"));
 		setTitle("Insert Team");
 
 		add(teamNameLabel);
-		add(teamName);
+		add(teamName, "span");
 		add(swingLabel);
 		add(swing);
-		add(new JPanel());
-		add(new JPanel());
 		add(speaker1NameLabel);
-		add(speaker1Name);
+		add(speaker1Name, "span");
 		add(speaker1InstitutionLabel);
-		add(speaker1Institution);
+		add(speaker1Institution, "span");
 		add(speaker1ESLLabel);
 		add(speaker1ESL);
 		add(speaker1NoviceLabel);
 		add(speaker1Novice);
-		add(new JPanel());
-		add(new JPanel());
 		add(speaker2NameLabel);
-		add(speaker2Name);
+		add(speaker2Name, "span");
 		add(speaker2InstitutionLabel);
-		add(speaker2Institution);
+		add(speaker2Institution, "span");
 		add(speaker2ESLLabel);
 		add(speaker2ESL);
 		add(speaker2NoviceLabel);
@@ -138,7 +136,8 @@ public class TeamInsertionFrame extends JFrame {
 		add(clear);
 		add(save);
 		pack();
-		// this.setResizable(false);
+		setResizable(false);
+		setLocationRelativeTo(OverviewFrame.getInstance());
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
 	}

@@ -14,6 +14,10 @@ public class WUDCAllocationAlgorithm extends TeamAllocationAlgorithm {
     ArrayList<String> allocate() throws SQLException {
         ArrayList<String> returnValue = new ArrayList<String>();
         TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
+        
+        /**
+         * Shuffle the pools to get random positions FIXME
+         */
         for (Integer i: pools.keySet()){
             ArrayList<String> pool = pools.get(i);
             ArrayList<String> shuffledPool = new ArrayList<String>();
@@ -25,6 +29,12 @@ public class WUDCAllocationAlgorithm extends TeamAllocationAlgorithm {
         return returnValue;
     }
     
+    /**
+     * Get the pools after they have been leveled to be 
+     * divisble by four
+     * @return TreeMap of pools, each is divisble by four
+     * @throws SQLException
+     */
     private TreeMap<Integer, ArrayList<String>> getLeveledPools()
         throws SQLException{
         TreeMap<Integer, ArrayList<String>> pools = 

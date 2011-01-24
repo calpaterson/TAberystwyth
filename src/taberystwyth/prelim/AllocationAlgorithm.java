@@ -36,8 +36,10 @@ public abstract class AllocationAlgorithm {
     }
 
     /**
-	 * Run the algorithm
+	 * Returns a list of the objects in some 
+	 * sorted way.
      * @throws SQLException 
+     * @return A list of the objects
 	 */
 	abstract ArrayList<String> allocate() throws SQLException;
 	

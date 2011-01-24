@@ -18,8 +18,6 @@
 package taberystwyth.view;
 
 import java.io.*;
-import java.sql.ResultSet;
-
 import taberystwyth.db.SQLConnection;
 
 public class SlidesFactory {

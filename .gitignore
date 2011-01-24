@@ -1,3 +1,4 @@
 # Ignore any tab files:
 *.tab
 bin/
+.DS_Store

@@ -95,10 +95,18 @@ public class TeamInsertionListener implements ActionListener {
 					+ "\""
 					+ ", "
 					+ "\"" + frame.getTeamName().getText() + "\"" + ");";
-
 			conn.execute(speaker1Insert);
 			conn.execute(speaker2Insert);
 			conn.execute(teamInsert);
+			frame.getSpeaker1Name().setText("");
+			frame.getSpeaker1Institution().setText("");
+			frame.getSpeaker1ESL().setSelected(false);
+			frame.getSpeaker1Novice().setSelected(false);
+			frame.getSpeaker2Name().setText("");
+			frame.getSpeaker2Institution().setText("");
+			frame.getSpeaker2ESL().setSelected(false);
+			frame.getSpeaker2Novice().setSelected(false);
+			frame.getTeamName().setText("");
 		}
 		;
 	}

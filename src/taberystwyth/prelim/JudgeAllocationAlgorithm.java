@@ -1,5 +1,6 @@
 package taberystwyth.prelim;
 
+
 /**
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  * 
@@ -8,21 +9,6 @@ package taberystwyth.prelim;
  *
  */
 
-public abstract class JudgeAllocationAlgorithm implements AllocationAlgorithm {
-	String name;
-	String description;
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void allocate() {
-		// TODO Auto-generated method stub
-		
-	}
+public abstract class JudgeAllocationAlgorithm extends AllocationAlgorithm {
 
 }

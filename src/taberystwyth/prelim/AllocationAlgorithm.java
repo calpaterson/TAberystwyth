@@ -3,6 +3,15 @@
  */
 package taberystwyth.prelim;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.TreeMap;
+
+import taberystwyth.db.SQLConnection;
+
 /**
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  * 
@@ -11,21 +20,52 @@ package taberystwyth.prelim;
  * perform the allocation
  *
  */
-public interface AllocationAlgorithm {
+public abstract class AllocationAlgorithm {
 	
-	/**
-	 * @return The name of the algorithm
-	 */
-	String getName();
+    String name;
+    String description;
+    
+    
 	
-	/**
-	 * @return A description of the algorithm
-	 */
-	String getDescription();
-	
-	/**
+	public synchronized String getName() {
+        return name;
+    }
+
+    public synchronized String getDescription() {
+        return description;
+    }
+
+    /**
 	 * Run the algorithm
+     * @throws SQLException 
 	 */
-	void allocate(); 
+	abstract void allocate() throws SQLException;
+	
+    public TreeMap<String, Integer> getLocationMap() throws SQLException{
+        TreeMap<String,Integer> location2quality = 
+            new TreeMap<String,Integer>();
+        String query = "select name from locations;";
+        ResultSet rs = SQLConnection.getInstance().executeQuery(query);
+        while (rs.next()){
+            location2quality.put(rs.getString("name"), rs.getInt("rating"));
+        }
+        return location2quality;
+    }
+    
+    public TreeMap<Integer, ArrayList<String>> getJudgeMap() 
+            throws SQLException{
+        TreeMap<Integer, ArrayList<String>> quality2name = 
+            new TreeMap<Integer,ArrayList<String>>();
+        String query = "select name, rating from judges;";
+        ResultSet rs = SQLConnection.getInstance().executeQuery(query);
+        while (rs.next()){
+            if (quality2name.get(rs.getInt("rating")) == null){
+                quality2name.put(rs.getInt("rating"), 
+                        new ArrayList<String>(
+                                Arrays.asList(rs.getString("name"))));
+            }
+        }
+        return quality2name;
+    }
 
 }

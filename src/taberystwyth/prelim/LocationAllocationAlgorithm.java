@@ -1,5 +1,7 @@
 package taberystwyth.prelim;
 
+import java.sql.SQLException;
+
 /**
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  * 
@@ -8,21 +10,13 @@ package taberystwyth.prelim;
  *
  */
 
-public class LocationAllocationAlgorithm implements AllocationAlgorithm {
+public class LocationAllocationAlgorithm extends AllocationAlgorithm {
 	String name;
 	String description;
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void allocate() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    void allocate() throws SQLException {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

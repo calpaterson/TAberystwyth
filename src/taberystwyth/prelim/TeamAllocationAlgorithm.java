@@ -10,19 +10,9 @@ package taberystwyth.prelim;
  * Algorithms should inherit this class.
  *
  */
-public abstract class TeamAllocationAlgorithm implements AllocationAlgorithm {
-	String name;
-	String description;
-
-	public String getName() {
-		return name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void allocate() {
+public abstract class TeamAllocationAlgorithm extends AllocationAlgorithm {
+	@Override
+    public void allocate() {
 		// TODO Auto-generated method stub
 		
 	}

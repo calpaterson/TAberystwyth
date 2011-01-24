@@ -30,6 +30,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import taberystwyth.controller.OverviewFrameMenuListener;
+import taberystwyth.controller.TeamListListener;
 import taberystwyth.db.SQLConnection;
 
 public class OverviewFrame extends JFrame implements Observer {
@@ -139,6 +140,8 @@ public class OverviewFrame extends JFrame implements Observer {
         JList speakerList = new JList(speakerModel);
         JList judgeList = new JList(judgeModel);
         JList locationList = new JList(locationModel);
+        
+        speakerList.addMouseListener(new TeamListListener());
         
         /*
          * Add menu bar

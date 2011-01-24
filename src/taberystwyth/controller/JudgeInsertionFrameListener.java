@@ -33,15 +33,22 @@ public class JudgeInsertionFrameListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		frame = JudgeInsertionFrame.getInstance();
 		if (e.getActionCommand().equals("Save")){
-			String statement = "insert into judges (name, rating) values (" +
+			String statement = "insert into judges (name, institution,"+
+			                   "rating) values (" +
 							   "\"" +
 							   frame.getJudgeName().getText() +
+							   "\", \"" +
+							   frame.getInstitution().getText() +
 							   "\", \"" +
 							   frame.getRating().getText() +
 							   "\");";
 			conn.execute(statement);
+			frame.getJudgeName().setText("");
+			frame.getInstitution().setText("");
+			frame.getRating().setText("");
 		} else if (e.getActionCommand().equals("Clear")){
 			frame.getJudgeName().setText("");
+			frame.getInstitution().setText("");
 			frame.getRating().setText("");
 		}
 	}

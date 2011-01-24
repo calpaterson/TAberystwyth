@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -52,17 +53,17 @@ public class AllocationFrame extends JFrame {
 	JTextField motionField = new JTextField(20);
 	
 	JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
-	JTextArea teamDrawTypeDescription = new JTextArea(3, 20);
+	JTextArea teamDrawTypeDescription = new JTextArea(3, 32);
 	JComboBox teamDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
 
 	JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
-	JTextArea locationDrawTypeDescription = new JTextArea(3, 20);
+	JTextArea locationDrawTypeDescription = new JTextArea(3, 32);
 	JComboBox locationDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
 
 	JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
-	JTextArea judgeDrawTypeDescription = new JTextArea(3, 20);
+	JTextArea judgeDrawTypeDescription = new JTextArea(3, 32);
 	JComboBox judgeDrawTypeBox = new JComboBox();
 	DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
 
@@ -145,15 +146,15 @@ public class AllocationFrame extends JFrame {
 		
 		add(teamDrawTypeLabel);
 		add(teamDrawTypeBox, "wrap");
-		add(teamDrawTypeDescription, "span, center");
+		add(new JScrollPane(teamDrawTypeDescription), "span");
 
 		add(judgeDrawTypeLabel);
 		add(judgeDrawTypeBox, "wrap");
-		add(judgeDrawTypeDescription, "span, center");
+		add(new JScrollPane(judgeDrawTypeDescription), "span");
 
 		add(locationDrawTypeLabel);
 		add(locationDrawTypeBox, "wrap");
-		add(locationDrawTypeDescription, "span, center");
+		add(new JScrollPane(locationDrawTypeDescription), "span");
 
 		add(cancel, "tag cancel");
 		add(allocate, "tag apply");

@@ -160,7 +160,7 @@ public class AllocationFrame extends JFrame {
 		pack();
 		setMinimumSize(getSize());
 		setLocationRelativeTo(OverviewFrame.getInstance());
-
+		
 		/*
 		 * Set up listeners
 		 */

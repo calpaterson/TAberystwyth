@@ -116,10 +116,6 @@ public class SQLConnection extends Observable {
         InputStream schema = this.getClass().getResourceAsStream("/schema.sql");
         evaluateSQLFile(schema);
         
-        /*
-         * Set tab version
-         */
-        execute("insert into version values(" + schemaUnixTime + ");");
     }
     
     /**
@@ -267,29 +263,6 @@ public class SQLConnection extends Observable {
          * which is to ignore fk constraints
          */
         execute("PRAGMA foreign_keys = ON;");
-        
-        /*
-         * Get the version of the tab file
-         */
-        long tabVersion = 0;
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("select version from version;");
-        rs.next();
-        tabVersion = rs.getLong(1);
-        
-        /*
-         * Get the unixtime of the last modification of the schema file
-         */
-        long schemaVersion = new File("data/schema.sql").lastModified();
-        
-        /*
-         * If they don't match, bomb.
-         */
-        if (tabVersion != schemaVersion) {
-            System.out.println("tabVersion=" + tabVersion);
-            System.out.println("schemaVersion=" + schemaVersion);
-            throw new Exception("tab version not as expected");
-        }
         
         System.out.println("SQLConnection.setDatabase()");
         setChanged();

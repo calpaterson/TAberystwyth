@@ -11,8 +11,18 @@ public class WUDCAllocationAlgorithm extends TeamAllocationAlgorithm {
     Random randomGenerator = new Random(0L);
     
     @Override
-    void allocate() throws SQLException {
-        
+    ArrayList<String> allocate() throws SQLException {
+        ArrayList<String> returnValue = new ArrayList<String>();
+        TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
+        for (Integer i: pools.keySet()){
+            ArrayList<String> pool = pools.get(i);
+            ArrayList<String> shuffledPool = new ArrayList<String>();
+            while(!pool.isEmpty()){
+                shuffledPool.add(pool.get(randomGenerator.nextInt(pool.size())));
+            }
+            returnValue.addAll(shuffledPool);
+        }
+        return returnValue;
     }
     
     private TreeMap<Integer, ArrayList<String>> getLeveledPools()

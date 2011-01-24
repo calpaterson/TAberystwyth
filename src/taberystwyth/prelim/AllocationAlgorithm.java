@@ -39,7 +39,7 @@ public abstract class AllocationAlgorithm {
 	 * Run the algorithm
      * @throws SQLException 
 	 */
-	abstract void allocate() throws SQLException;
+	abstract ArrayList<String> allocate() throws SQLException;
 	
     public TreeMap<String, Integer> getLocationMap() throws SQLException{
         TreeMap<String,Integer> location2quality = 

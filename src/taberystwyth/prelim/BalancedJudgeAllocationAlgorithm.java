@@ -10,7 +10,7 @@ public class BalancedJudgeAllocationAlgorithm extends JudgeAllocationAlgorithm {
     }
 
     @Override
-    void allocate() throws SQLException {
+    ArrayList<String> allocate() throws SQLException {
         TreeMap<Integer, ArrayList<String>> rating2judges = getJudgeMap();
         TreeMap<String, Integer> location2rating = getLocationMap();
         
@@ -22,6 +22,7 @@ public class BalancedJudgeAllocationAlgorithm extends JudgeAllocationAlgorithm {
             ArrayList<String> value = rating2judges.get(rating2judges.firstKey());
             chairs.add(value.remove(0));
         }
+        return chairs; // FIXME
         
         
     }

@@ -43,7 +43,8 @@ public class LocationInsertionFrameListener implements ActionListener {
 							   frame.getRating().getText() +
 							   "\");";
 			conn.execute(statement);
-
+			frame.getLocationName().setText("");
+			frame.getRating().setText("");
 		}
 		if (e.getActionCommand().equals("Clear")){
 			frame.getLocationName().setText("");

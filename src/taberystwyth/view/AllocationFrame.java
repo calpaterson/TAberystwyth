@@ -159,6 +159,7 @@ public class AllocationFrame extends JFrame {
 		add(allocate, "tag apply");
 		pack();
 		setMinimumSize(getSize());
+		setLocationRelativeTo(OverviewFrame.getInstance());
 
 		/*
 		 * Set up listeners

@@ -17,8 +17,6 @@
 
 package taberystwyth.view;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -36,13 +34,15 @@ public class JudgeInsertionFrame extends JFrame {
 	 * Labels
 	 */
 	private JLabel judgeNameLabel = new JLabel("Name:");
+	private JLabel institutionLabel = new JLabel("Institution");
 	private JLabel ratingLabel = new JLabel("Rating:");
 	
 	/*
 	 * Textfields
 	 */
 	private JTextField judgeName = new JTextField(20);
-	private JTextField rating = new JTextField(4);
+	private JTextField institution = new JTextField(20);
+	private JTextField rating = new JTextField(2);
 	
 	/*
 	 * Buttons
@@ -60,7 +60,7 @@ public class JudgeInsertionFrame extends JFrame {
 	}
 	
 	private JudgeInsertionFrame(){
-		setLayout(new MigLayout("wrap 2, flowx, fillx", "[left]rel[right]"));
+		setLayout(new MigLayout("wrap 2", "[left]rel[right]"));
 		setTitle("Insert Judges");
 		
 		/*
@@ -74,7 +74,10 @@ public class JudgeInsertionFrame extends JFrame {
 		});
 		
 		add(judgeNameLabel);
-		add(judgeName, "grow");
+		add(judgeName, "span");
+		
+		add(institutionLabel);
+		add(institution, "span");
 		
 		add(ratingLabel);
 		add(rating, "");
@@ -83,14 +86,19 @@ public class JudgeInsertionFrame extends JFrame {
 		add(save, "tag apply");
 		
 		pack();
-		setMinimumSize(getSize());		
+		setResizable(false);
+		setLocationRelativeTo(OverviewFrame.getInstance());
 		
 		clear.addActionListener(new JudgeInsertionFrameListener());
 		save.addActionListener(new JudgeInsertionFrameListener());
 		
 	}
 
-	public synchronized JTextField getJudgeName() {
+	public synchronized JTextField getInstitution() {
+        return institution;
+    }
+
+    public synchronized JTextField getJudgeName() {
 		return judgeName;
 	}
 

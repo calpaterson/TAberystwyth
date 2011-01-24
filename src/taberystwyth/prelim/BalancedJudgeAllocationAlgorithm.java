@@ -7,21 +7,21 @@ import java.util.TreeMap;
 public class BalancedJudgeAllocationAlgorithm extends JudgeAllocationAlgorithm {
     public BalancedJudgeAllocationAlgorithm() {
         name = "Balanced";
+        description = "The top judges become the chairs of each room, " +
+        		"further judges are assigned to each room as wings giving " +
+        		"a balanced judging pool across all rooms";
     }
 
     @Override
     ArrayList<String> allocate() throws SQLException {
         TreeMap<Integer, ArrayList<String>> rating2judges = getJudgeMap();
+        ArrayList<String> judges = new ArrayList<String>();
         
-        /*
-         * Build the list of chairs
-         */
-        ArrayList<String> chairs = new ArrayList<String>();
-        while(chairs.size()<rating2judges.size()){
-            ArrayList<String> value = rating2judges.get(rating2judges.firstKey());
-            chairs.add(value.remove(0));
+        while(!rating2judges.isEmpty()){
+        	judges.addAll(rating2judges.remove(rating2judges.lastKey()));
         }
-        return chairs; // FIXME
+        
+        return judges;
         
         
     }

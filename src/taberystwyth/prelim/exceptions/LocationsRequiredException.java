@@ -1,17 +1,15 @@
-package taberystwyth.prelim;
+package taberystwyth.prelim.exceptions;
 
-public class SwingTeamsRequiredException extends Exception {
-
+public class LocationsRequiredException extends Exception {
     private static final long serialVersionUID = 1L;
     
     int required;
     
-    public SwingTeamsRequiredException(int required){
+    public LocationsRequiredException(int required){
         this.required = required;
     }
 
     public synchronized int getRequired() {
         return required;
     }
-    
 }

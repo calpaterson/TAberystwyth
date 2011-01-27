@@ -1,4 +1,4 @@
-package taberystwyth.prelim;
+package taberystwyth.prelim.exceptions;
 
 public class JudgesRequiredException extends Exception {
     private static final long serialVersionUID = 1L;

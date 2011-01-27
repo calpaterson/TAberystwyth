@@ -74,6 +74,7 @@ public class Allocator {
 			int highestTeamScore = pools.lastKey();
 
 			rank = 0;
+			// FIXME: What if highest team score is zero?  (Initial round)
 			for (int treeIndex = highestTeamScore; treeIndex > 0; --treeIndex) {
 				if (pools.containsKey(treeIndex)) {
 					ArrayList<String> pool = pools.get(treeIndex);

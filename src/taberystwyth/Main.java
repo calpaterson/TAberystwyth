@@ -30,7 +30,7 @@ public class Main {
             UIManager
                     .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             Class.forName("taberystwyth.db.SQLConnection");
-            Class.forName("taberystwyth.prelim.Allocator");
+            Class.forName("taberystwyth.allocation.Allocator");
             Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {
             e.printStackTrace();

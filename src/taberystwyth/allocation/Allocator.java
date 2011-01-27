@@ -148,7 +148,7 @@ public class Allocator {
                  * then pull up (randomly) a member from the pool directly
                  * below this one
                  */
-                for (int j = (i - 1); i > 0; --j){
+                for (int j = (i - 1); j > 0; --j){
                     if (pools.containsKey(j)){
                         ArrayList<String> lowerPool = pools.get(j);
 						int randomElementIndex = 

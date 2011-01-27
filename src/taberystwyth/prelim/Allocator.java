@@ -23,6 +23,9 @@ import java.util.TreeMap;
 import javax.swing.JOptionPane;
 
 import taberystwyth.db.SQLConnection;
+import taberystwyth.prelim.exceptions.JudgesRequiredException;
+import taberystwyth.prelim.exceptions.LocationsRequiredException;
+import taberystwyth.prelim.exceptions.SwingTeamsRequiredException;
 import taberystwyth.view.OverviewFrame;
 
 public class Allocator {

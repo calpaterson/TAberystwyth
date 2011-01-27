@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 import taberystwyth.prelim.Allocator;
-import taberystwyth.prelim.JudgesRequiredException;
-import taberystwyth.prelim.LocationsRequiredException;
-import taberystwyth.prelim.SwingTeamsRequiredException;
+import taberystwyth.prelim.exceptions.JudgesRequiredException;
+import taberystwyth.prelim.exceptions.LocationsRequiredException;
+import taberystwyth.prelim.exceptions.SwingTeamsRequiredException;
 import taberystwyth.view.AllocationFrame;
 
 public class AllocationFrameListener implements ActionListener, ItemListener{

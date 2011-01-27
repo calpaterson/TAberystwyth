@@ -19,6 +19,11 @@ import taberystwyth.db.SQLConnection;
  */
 public abstract class TeamAllocationAlgorithm extends AllocationAlgorithm {
 
+    private String firstProp;
+    private String secondProp;
+    private String firstOp;
+    private String secondOp;
+    
 	/**
 	 * Gets an unordered list of team names
 	 * @return List of teams
@@ -65,4 +70,8 @@ public abstract class TeamAllocationAlgorithm extends AllocationAlgorithm {
 		}
 		return teamScores;
 	}
+
+    public String getFirstProp() {
+        return firstProp;
+    }
 }

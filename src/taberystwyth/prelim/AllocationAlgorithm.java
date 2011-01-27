@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.Iterator;
 
 import taberystwyth.db.SQLConnection;
 
@@ -20,12 +21,11 @@ import taberystwyth.db.SQLConnection;
  * perform the allocation
  *
  */
-public abstract class AllocationAlgorithm {
+public abstract class AllocationAlgorithm 
+        implements Iterable<String>, Iterator<String> {
 	
-    String name;
-    String description;
-    
-    
+    protected String name;
+    protected String description;
 	
 	public synchronized String getName() {
         return name;
@@ -34,14 +34,14 @@ public abstract class AllocationAlgorithm {
     public synchronized String getDescription() {
         return description;
     }
-
+    
     /**
 	 * Returns a list of the objects in some 
 	 * sorted way.
      * @throws SQLException 
      * @return A list of the objects
 	 */
-	abstract ArrayList<String> allocate() throws SQLException;
+	abstract void allocate() throws SQLException;
 	
 	/**
 	 * Return a HashMap of locations keyed by rating

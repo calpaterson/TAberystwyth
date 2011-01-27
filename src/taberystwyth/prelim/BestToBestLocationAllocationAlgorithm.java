@@ -5,18 +5,23 @@ package taberystwyth.prelim;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 /**
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  * 
  */
-public class BestToBestAllocationAlgorithm extends LocationAllocationAlgorithm {
+public class BestToBestLocationAllocationAlgorithm 
+        extends LocationAllocationAlgorithm {
 
+    ArrayList<String> locations = new ArrayList<String>();
+    int index = 0;
+    
 	/**
 	 * Constructor
 	 */
-	protected BestToBestAllocationAlgorithm() {
+	protected BestToBestLocationAllocationAlgorithm() {
 		name = "Best to Best";
 		description = "The best teams are placed in the best rated locations";
 	}
@@ -27,13 +32,29 @@ public class BestToBestAllocationAlgorithm extends LocationAllocationAlgorithm {
 	 * @see taberystwyth.prelim.AllocationAlgorithm#allocate()
 	 */
 	@Override
-	ArrayList<String> allocate() throws SQLException {
+	public void allocate() throws SQLException {
 		TreeMap<Integer, ArrayList<String>> locationMap = getLocationMap();
-		ArrayList<String> locations = new ArrayList<String>();
+
 		while (!locationMap.isEmpty()) {
 			locations.addAll(locationMap.remove(locationMap.lastKey()));
 		}
-		return locations;
 	}
+
+    public Iterator<String> iterator() {
+        return this;
+    }
+
+    public boolean hasNext() {
+        return (index < locations.size() - 1);
+    }
+
+    public String next() {
+        index++;
+        return locations.get(index);
+    }
+
+    public void remove() {
+        // void
+    }
 
 }

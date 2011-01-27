@@ -8,10 +8,13 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-import taberystwyth.prelim.Allocator;
-import taberystwyth.prelim.exceptions.JudgesRequiredException;
-import taberystwyth.prelim.exceptions.LocationsRequiredException;
-import taberystwyth.prelim.exceptions.SwingTeamsRequiredException;
+import taberystwyth.allocation.Allocator;
+import taberystwyth.allocation.exceptions.JudgesRequiredException;
+import taberystwyth.allocation.exceptions.LocationsRequiredException;
+import taberystwyth.allocation.exceptions.SwingTeamsRequiredException;
+import taberystwyth.allocation.options.JudgeAllocation;
+import taberystwyth.allocation.options.LocationAllocation;
+import taberystwyth.allocation.options.TeamAllocation;
 import taberystwyth.view.AllocationFrame;
 
 public class AllocationFrameListener implements ActionListener, ItemListener{
@@ -24,7 +27,10 @@ public class AllocationFrameListener implements ActionListener, ItemListener{
 		
 		else if(event.getActionCommand().equals("Allocate")){
 			try {
-                Allocator.getInstance().allocate();
+			    // FIXME
+			    Allocator.getInstance().allocate(TeamAllocation.WUDC,
+			            JudgeAllocation.BALANCED, LocationAllocation.BEST_TO_BEST
+			            );
             } catch (SQLException e) {
                 /*
                  * This is a "proper" error...not much can be done

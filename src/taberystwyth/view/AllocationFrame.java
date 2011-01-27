@@ -32,7 +32,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import taberystwyth.controller.AllocationFrameListener;
-import taberystwyth.prelim.DrawTypeRepository;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -47,8 +46,6 @@ import net.miginfocom.swing.MigLayout;
 public class AllocationFrame extends JFrame {
 
 	AllocationFrameListener listener = new AllocationFrameListener();
-
-	DrawTypeRepository repos = DrawTypeRepository.getInstance();
 
 	JTextField motionField = new JTextField(20);
 	
@@ -122,7 +119,8 @@ public class AllocationFrame extends JFrame {
 		/*
 		 * Set up comboboxes
 		 */
-		for (String name : repos.getTeamDrawTypeMap().keySet()) {
+		// FIXME
+/*		for (String name : repos.getTeamDrawTypeMap().keySet()) {
 			teamDrawTypes.addElement(name);
 		}
 
@@ -132,7 +130,7 @@ public class AllocationFrame extends JFrame {
 
 		for (String name : repos.getLocationDrawTypeMap().keySet()) {
 			locationDrawTypes.addElement(name);
-		}
+		}*/
 
 		teamDrawTypeBox.setModel(teamDrawTypes);
 		judgeDrawTypeBox.setModel(judgeDrawTypes);
@@ -198,11 +196,12 @@ public class AllocationFrame extends JFrame {
 	 * the algorithms selected
 	 */
 	public void updateDescriptions() {
-		teamDrawTypeDescription.setText(repos.getTeamDrawTypeMap().get(
+	    // FIXME
+/*		teamDrawTypeDescription.setText(repos.getTeamDrawTypeMap().get(
 				teamDrawTypeBox.getSelectedItem()));
 		judgeDrawTypeDescription.setText(repos.getJudgeDrawTypeMap().get(
 				judgeDrawTypeBox.getSelectedItem()));
 		locationDrawTypeDescription.setText(repos.getLocationDrawTypeMap().get(
-				locationDrawTypeBox.getSelectedItem()));
+				locationDrawTypeBox.getSelectedItem()));*/
 	}
 }

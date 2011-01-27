@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import taberystwyth.db.SQLConnection;
-import taberystwyth.prelim.Allocator;
+import taberystwyth.allocation.Allocator;
 import taberystwyth.view.AboutDialog;
 import taberystwyth.view.AllocationFrame;
 import taberystwyth.view.JudgeInsertionFrame;

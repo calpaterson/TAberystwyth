@@ -82,12 +82,12 @@ create table speaker_results (
       
 -- Rooms (individual debates)
 create table rooms (
-       "round" smallint, -- not null,
-       "location" text, -- not null,
-       "first_prop" text, -- not null,
-       "first_op" text, -- not null,
-       "second_prop" text, -- not null,
-       "second_op" text, -- not null,
+       "round" smallint not null,
+       "location" text not null,
+       "first_prop" text not null,
+       "first_op" text not null,
+       "second_prop" text not null,
+       "second_op" text not null,
        primary key (round, location),
        foreign key (location) references location(name),
        foreign key (first_prop) references team(name),

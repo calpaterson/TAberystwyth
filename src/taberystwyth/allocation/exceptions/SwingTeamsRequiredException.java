@@ -1,4 +1,4 @@
-package taberystwyth.prelim.exceptions;
+package taberystwyth.allocation.exceptions;
 
 public class SwingTeamsRequiredException extends Exception {
 

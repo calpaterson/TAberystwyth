@@ -1,11 +1,11 @@
-package taberystwyth.prelim.exceptions;
+package taberystwyth.allocation.exceptions;
 
-public class LocationsRequiredException extends Exception {
+public class JudgesRequiredException extends Exception {
     private static final long serialVersionUID = 1L;
     
     int required;
     
-    public LocationsRequiredException(int required){
+    public JudgesRequiredException(int required){
         this.required = required;
     }
 

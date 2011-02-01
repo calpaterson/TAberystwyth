@@ -59,7 +59,7 @@ public class Allocator {
 		int nMatches = rs.getInt(1);
 		ArrayList<Match> matches = new ArrayList<Match>();
 		int rank = 0;
-		while (matches.size() > nMatches) {
+		while (matches.size() < nMatches) {
 			matches.add(new Match(rank));
 			++rank;
 		}
@@ -73,15 +73,28 @@ public class Allocator {
 
 			int highestTeamScore = pools.lastKey();
 
-			rank = 0;
 			// FIXME: What if highest team score is zero?  (Initial round)
-			for (int treeIndex = highestTeamScore; treeIndex > 0; --treeIndex) {
+			/*
+			 * For every possible (leveled) pool...
+			 */
+	        rank = 0;
+			for (int treeIndex = highestTeamScore; treeIndex >= 0; --treeIndex) {
+			    /*
+			     * ...if the pool exists
+			     */
 				if (pools.containsKey(treeIndex)) {
+				    /*
+				     * ...then build random rooms
+				     */
 					ArrayList<String> pool = pools.get(treeIndex);
-					for (int i = 0; i < (pools.get(i).size() / 4); ++i) {
+					int poolSizeDiv4 = pool.size() / 4;
+					for (int i = 0; i < poolSizeDiv4; ++i) {
 
 						Match match = matches.get(rank);
-
+						
+						/*
+						 * Give all of the teams a random position						
+						 */
 						match.setFirstProp(pool.remove(randomGenerator
 								.nextInt(pool.size())));
 						match.setFirstOp(pool.remove(randomGenerator
@@ -118,7 +131,8 @@ public class Allocator {
 					+ "first_op, second_prop, location, round values("
 					+ m.getFirstProp() + ", " + m.getSecondProp() + ", "
 					+ m.getFirstOp() + ", " + m.getSecondOp() + ", "
-					+ m.getLocation() + ", " + round;
+					+ m.getLocation() + ", " + round + ");";
+			System.out.println(insert);
 		}
 	}
 

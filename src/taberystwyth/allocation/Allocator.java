@@ -122,6 +122,13 @@ public class Allocator {
 		 * Allocate locations
 		 */
 		if (locationAlgo == LocationAllocation.RANDOM) {
+		    rs = conn.executeQuery(
+		            "select name from locations order by random();");
+		    int i = 0;
+		    while(rs.next()){
+		        matches.get(i).setLocation(rs.getString(1));
+		    }
+		    
 		} else if (locationAlgo == LocationAllocation.BEST_TO_BEST) {
 
 		}

@@ -29,7 +29,8 @@ public class AllocationFrameListener implements ActionListener, ItemListener{
 			try {
 			    // FIXME
 			    Allocator.getInstance().allocate(TeamAllocation.WUDC,
-			            JudgeAllocation.BALANCED, LocationAllocation.BEST_TO_BEST
+			            JudgeAllocation.BALANCED, 
+			            LocationAllocation.RANDOM
 			            );
             } catch (SQLException e) {
                 /*

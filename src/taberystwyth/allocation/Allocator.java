@@ -160,7 +160,7 @@ public final class Allocator {
          * Allocate Judges
          */
         if (judgeAlgo == JudgeAllocation.BALANCED) {
-            String query = "select name from judges order by rating desc";
+            query = "select name from judges order by rating desc";
             rs = conn.executeQuery(query);
             /*
              * Allocate wings in a round-robin way

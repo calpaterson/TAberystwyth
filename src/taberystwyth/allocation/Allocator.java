@@ -1,9 +1,25 @@
+/*
+ * This file is part of TAberystwyth, a debating competition organiser
+ * Copyright (C) 2010, Roberto Sarrionandia and Cal Paterson
+ * 
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package taberystwyth.allocation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeMap;
@@ -14,25 +30,38 @@ import taberystwyth.allocation.options.TeamAllocation;
 import taberystwyth.allocation.exceptions.*;
 import taberystwyth.db.SQLConnection;
 
+/**
+ * A singleton class for the allocation algorithm
+ * 
+ * @author Roberto Sarrionandia and Cal Paterson
+ */
 public final class Allocator {
     
-    Random randomGenerator = new Random(0L);
+    private static final long INITIAL_SEED = 0L;
+    private transient final Random randomGenerator = new Random(INITIAL_SEED);
     
-    SQLConnection conn = SQLConnection.getInstance();
-    ResultSet rs;
-    String query;
+    private transient final SQLConnection conn = SQLConnection.getInstance();
     
     private static Allocator instance = new Allocator();
     
+    /**
+     * Returns the (single instance) of this singleton
+     * 
+     * @return the instance
+     */
     public static Allocator getInstance() {
         return instance;
     }
     
+    /**
+     * Private constructor
+     */
     private Allocator() {/* VOID */
     };
     
     /**
-     * Allocate the matches
+     * Allocates teams, judges and locations to each other and puts the results
+     * in the database
      * 
      * @param teamAlgo
      * @param judgeAlgo
@@ -42,14 +71,29 @@ public final class Allocator {
      * @throws LocationsRequiredException
      * @throws JudgesRequiredException
      */
-    public void allocate(TeamAllocation teamAlgo, JudgeAllocation judgeAlgo,
-            LocationAllocation locationAlgo) throws SQLException,
+    public void allocate(final TeamAllocation teamAlgo,
+            final JudgeAllocation judgeAlgo,
+            final LocationAllocation locationAlgo) throws SQLException,
             SwingTeamsRequiredException, LocationsRequiredException,
             JudgesRequiredException {
+        
+        /*
+         * Two names that will be used repeatedly
+         */
+        ResultSet rs;
+        String query;
+        
         /*
          * Figure out the current round
          */
-        int round = 0; // FIXME
+        int round;
+        rs = conn.executeQuery("select max(round) from rooms;");
+        if (rs.next()) {
+            round = rs.getInt(1) + 1;
+        } else {
+            round = 0;
+        }
+        rs.close();
         
         /*
          * Generate matches
@@ -57,8 +101,8 @@ public final class Allocator {
         query = "select count(*) / 4 from teams;";
         rs = conn.executeQuery(query);
         rs.next();
-        int nMatches = rs.getInt(1);
-        ArrayList<Match> matches = new ArrayList<Match>();
+        final int nMatches = rs.getInt(1);
+        final ArrayList<Match> matches = new ArrayList<Match>();
         int rank = 0;
         while (matches.size() < nMatches) {
             matches.add(new Match(rank));
@@ -70,9 +114,9 @@ public final class Allocator {
          * Allocate teams
          */
         if (teamAlgo == TeamAllocation.WUDC) {
-            TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
+            final TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
             
-            int highestTeamScore = pools.lastKey();
+            final int highestTeamScore = pools.lastKey();
             
             // FIXME: What if highest team score is zero? (Initial round)
             /*
@@ -124,10 +168,10 @@ public final class Allocator {
             int index = 0;
             while (rs.next()) {
                 Match match = matches.get(index);
-                if (!match.hasChair()) {
-                    match.setChair(rs.getString(1));
+                if (match.hasChair()) {
+                    match.addWing(rs.getString(1));     
                 } else {
-                    match.addWing(rs.getString(1));
+                    match.setChair(rs.getString(1));
                 }
                 /*
                  * loop back over the matches
@@ -152,7 +196,7 @@ public final class Allocator {
             }
             
         } else if (locationAlgo == LocationAllocation.BEST_TO_BEST) {
-            
+            /* VOID */
         }
         
         for (Match m : matches) {
@@ -166,10 +210,10 @@ public final class Allocator {
                     + "room, isChair values(" + m.getChair() + ", " + round
                     + ", " + m.getLocation() + ", " + "1);";
             System.out.println(chairInsert);
-            for (String w: m.getWings()){
+            for (String w : m.getWings()) {
                 String wingInsert = "insert into judging_panels name, round, "
-                    + "room, isChair values(" + w + ", " + round
-                    + ", " + m.getLocation() + ", " + "0);";
+                        + "room, isChair values(" + w + ", " + round + ", "
+                        + m.getLocation() + ", " + "0);";
                 System.out.println(wingInsert);
             }
             
@@ -250,7 +294,7 @@ public final class Allocator {
     }
     
     /**
-     * Get a list of teams mapped to team points
+     * Returns a map of teams to team points
      * 
      * @return A HashMap of Team names and Team points
      * @throws SQLException
@@ -286,7 +330,6 @@ public final class Allocator {
             /*
              * Sum the team points according to positions taken in rounds
              */
-            boolean scoreCalculated = false;
             while (rs.next()) {
                 int position = rs.getInt("position");
                 if (position == 1) {
@@ -295,11 +338,9 @@ public final class Allocator {
                     teamPoints += 2;
                 } else if (position == 3) {
                     teamPoints += 1;
-                } else {
-                    // VOID
                 }
-                scoreCalculated = true;
             }
+            teamScores.put(name, teamPoints);
             
         }
         
@@ -320,20 +361,6 @@ public final class Allocator {
             teamNames.add(rs.getString("name"));
         }
         return teamNames;
-    }
-    
-    public TreeMap<Integer, ArrayList<String>> getJudgeMap()
-            throws SQLException {
-        TreeMap<Integer, ArrayList<String>> quality2name = new TreeMap<Integer, ArrayList<String>>();
-        String query = "select name, rating from judges;";
-        ResultSet rs = SQLConnection.getInstance().executeQuery(query);
-        while (rs.next()) {
-            if (quality2name.get(rs.getInt("rating")) == null) {
-                quality2name.put(rs.getInt("rating"), new ArrayList<String>(
-                        Arrays.asList(rs.getString("name"))));
-            }
-        }
-        return quality2name;
     }
     
 }

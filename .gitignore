@@ -2,3 +2,4 @@
 *.tab
 bin/
 .DS_Store
+reports/

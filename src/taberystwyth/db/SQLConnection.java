@@ -107,9 +107,6 @@ public class SQLConnection extends Observable {
          * This lump of code is required in order to get the last modification
          * time of a jar resource
          */
-        URL url = this.getClass().getResource("/schema.sql");
-        URLConnection urlConn = url.openConnection();
-        long schemaUnixTime = urlConn.getLastModified();
         
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());

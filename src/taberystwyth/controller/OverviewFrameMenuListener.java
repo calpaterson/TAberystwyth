@@ -44,31 +44,7 @@ public class OverviewFrameMenuListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("New Tab")){
-			JFileChooser fc = new JFileChooser();
-			int option = fc.showDialog(overviewFrame, "Create");
-			if (option == JFileChooser.APPROVE_OPTION){
-				File tab = fc.getSelectedFile();
-				try {
-					if(!tab.createNewFile()){
-						throw new IOException("File already exists");
-					}
-					// FIXME SQLConnection.getInstance().set(tab);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-		else if (e.getActionCommand().equals("Open Tab")){
-			JFileChooser fc = new JFileChooser();
-			int option = fc.showOpenDialog(overviewFrame);
-			if (option == JFileChooser.APPROVE_OPTION){
-				File tab = fc.getSelectedFile();
-				//SQLConnection.getInstance().set(tab); FIXME
-			}
-		}
-	    else if (e.getActionCommand().equals("Quit")) {
+	    if (e.getActionCommand().equals("Quit")) {
 			System.exit(0);
 		} else if (e.getActionCommand().equals("Teams")) {
 			TeamInsertionFrame.getInstance().setVisible(true);

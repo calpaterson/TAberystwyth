@@ -13,7 +13,7 @@ import taberystwyth.allocation.options.TeamAllocation;
 import taberystwyth.allocation.exceptions.*;
 import taberystwyth.db.SQLConnection;
 
-public class Allocator {
+public final class Allocator {
 
 	Random randomGenerator = new Random(0L);
 

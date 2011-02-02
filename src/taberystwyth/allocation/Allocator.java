@@ -146,8 +146,9 @@ public final class Allocator {
             rs = conn
                     .executeQuery("select name from locations order by random();");
             int i = 0;
-            while (rs.next()) {
+            while (rs.next() && i < matches.size()) {
                 matches.get(i).setLocation(rs.getString(1));
+                ++i;
             }
             
         } else if (locationAlgo == LocationAllocation.BEST_TO_BEST) {

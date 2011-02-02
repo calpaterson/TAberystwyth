@@ -23,8 +23,16 @@ import javax.swing.*;
 import taberystwyth.controller.DebugMenuListener;
 import taberystwyth.view.OverviewFrame;
 
+/**
+ * The Main class
+ * @author Roberto Sarrionandia and Cal Paterson
+ */
 public class Main {
     
+    /**
+     * The main method
+     * @param args arguments passed to the program
+     */
     public static void main(String[] args) {
         try {
             UIManager

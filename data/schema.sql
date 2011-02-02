@@ -101,7 +101,7 @@ create table judging_panels (
        "name" text not null,
        "round" smallint not null,
        "room" text not null,
-       "isChair" boolean not null,
+       "isChair" boolean not null default 0, -- 0 is false
        primary key (name, round, room),
        foreign key (name) references judge(name),
        foreign key (room) references locations(name)

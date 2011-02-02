@@ -8,7 +8,7 @@ public class Match {
     private String firstOp;
     private String secondOp;
     private String chair;
-    private ArrayList<String> wings;
+    private ArrayList<String> wings = new ArrayList<String>();
     private String location;
     private int rank;
     public Match(int rank) {
@@ -47,9 +47,6 @@ public class Match {
     public synchronized ArrayList<String> getWings() {
         return wings;
     }
-    public synchronized void setWings(ArrayList<String> wings) {
-        this.wings = wings;
-    }
     public synchronized String getLocation() {
         return location;
     }
@@ -61,5 +58,11 @@ public class Match {
     }
     public synchronized void setRank(int rank) {
         this.rank = rank;
+    }
+    public synchronized boolean hasChair(){
+        return chair != null;
+    }
+    public void addWing(String name) {
+        wings.add(name);        
     }
 }

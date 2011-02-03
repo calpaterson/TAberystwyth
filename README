@@ -4,7 +4,9 @@ TAberystwyth is a debating competition organiser.
 
 BUGS
 ====
-
+Supported characters in names
+ - apostrophes, many other characters like semicolons etc
+ - check all inserts match [0-z]+
 
 
 For v0.1

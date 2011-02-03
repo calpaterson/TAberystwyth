@@ -169,7 +169,7 @@ public final class Allocator {
             while (rs.next()) {
                 Match match = matches.get(index);
                 if (match.hasChair()) {
-                    match.addWing(rs.getString(1));     
+                    match.addWing(rs.getString(1));
                 } else {
                     match.setChair(rs.getString(1));
                 }
@@ -200,20 +200,26 @@ public final class Allocator {
         }
         
         for (Match m : matches) {
-            String roomInsert = "insert into rooms first_prop, second_prop,"
-                    + "first_op, second_prop, location, round values("
-                    + m.getFirstProp() + ", " + m.getSecondProp() + ", "
-                    + m.getFirstOp() + ", " + m.getSecondOp() + ", "
-                    + m.getLocation() + ", " + round + ");";
+            String roomInsert = "insert into rooms (first_prop, second_prop, "
+                    + "first_op, second_op, location, round) values(" + "'"
+                    + m.getFirstProp() + "'" + ", " + "'" + m.getSecondProp()
+                    + "', " + "'" + m.getFirstOp() + "', " + "'"
+                    + m.getSecondOp() + "', " + "'" + m.getLocation() + "', "
+                    + round + ");";
+            conn.execute(roomInsert);
             System.out.println(roomInsert);
-            String chairInsert = "insert into judging_panels name, round, "
-                    + "room, isChair values(" + m.getChair() + ", " + round
-                    + ", " + m.getLocation() + ", " + "1);";
+            String chairInsert = "insert into judging_panels (name, round, "
+                    + "room, isChair) values(" + "'" + m.getChair() + "'"
+                    + ", " + round + ", '" + m.getLocation() + "'" + ", "
+                    + "1);";
+            conn.execute(chairInsert);
             System.out.println(chairInsert);
             for (String w : m.getWings()) {
-                String wingInsert = "insert into judging_panels name, round, "
-                        + "room, isChair values(" + w + ", " + round + ", "
-                        + m.getLocation() + ", " + "0);";
+                String wingInsert = "insert into judging_panels (name, round, "
+                        + "room, isChair) values(" + "'" + w + "'" + ", "
+                        + round + ", " + "'" + m.getLocation() + "'" + ", "
+                        + "0);";
+                conn.execute(wingInsert);
                 System.out.println(wingInsert);
             }
             

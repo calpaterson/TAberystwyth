@@ -229,7 +229,7 @@ if __name__ == "__main__":
         name2 = random.choice(names)
         inst2 = random.choice(institutions)
         speaker2 = "insert into speakers (name, institution) values ('" + name2 + "', '" + inst2 + "');"
-        team = "insert into teams (name, speaker1, speaker2) values('" + inst1 + "+" + inst2 + "', '" + name1 + "', '" + name2 + "');"
+        team = "insert into teams (name, speaker1, speaker2) values('" + inst1 + " and " + inst2 + "', '" + name1 + "', '" + name2 + "');"
         print speaker1
         print speaker2
         print team

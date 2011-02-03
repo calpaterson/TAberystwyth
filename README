@@ -4,7 +4,8 @@ TAberystwyth is a debating competition organiser.
 
 BUGS
 ====
-- Some weirdness in tab versioning when inside a jar file
+
+
 
 For v0.1
 ========
@@ -16,6 +17,7 @@ For v0.1
 
 TODO
 ====
+- Create new random data generator in java
 - Data entry
     - results
     - wing/judge feedback
@@ -28,8 +30,6 @@ TODO
     - Judges
     - Locations
 - Algorithm
-    - Team allocation
-    - Judge allocation
     - Strikes
     - ESL
     - Novice
@@ -37,4 +37,7 @@ TODO
 - Configuration management
     - dotfiles on *nix
     - "%APPDATA%" on windows
-
+- Clean up SQL design 
+    - use prepared statements, not naked SQL
+    - close everything properly
+      - this might be causing the blank frame weirdness

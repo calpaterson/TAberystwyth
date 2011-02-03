@@ -81,8 +81,10 @@ public class XHTMLFactory {
          * Build the title and motion slides, these can be done with only the 
          * global substitutions
          */
-        writeWithSubstitutions(root, "draw-title-slide.xhtml");
-        writeWithSubstitutions(root, "motion-slide.xhtml");
+        writeWithSubstitutions(root, "draw-title-slide.xhtml", 
+                "draw-title-slide.xhtml");
+        writeWithSubstitutions(root, "motion-slide.xhtml", 
+                "motion-slide.xhtml");
         
         /*
          * Build the full tab
@@ -92,7 +94,50 @@ public class XHTMLFactory {
         /*
          * Build the match slides
          */
-        // FIXME: no idea
+        query = "select round, location, first_prop, first_op, second_prop" +
+            "second_op from rooms";
+        final int FIRST_PROP = 3;
+        final int FIRST_OP = 4;
+        final int SECOND_PROP = 5;
+        final int SECOND_OP = 6;
+        rs = sql.executeQuery(query);
+        while(rs.next()){         
+            /*
+             * Get the chair for this room
+             */
+            String chairQuery = "select (name) from judging_panels where " +
+                "isChair = 1";
+            ResultSet chairRS = sql.executeQuery(chairQuery);
+            chairRS.next();
+            String chair = chairRS.getString(1);
+            subs.put("<!--CHAIR-->", chair);
+            
+            /*
+             * Get the wings
+             */
+            String wingsQuery = "select (name) from judging_panels where " +
+                "isChair = 0 order by random()";
+            ResultSet wingsRS = sql.executeQuery(wingsQuery);
+            wingsRS.next();
+            String wings = wingsRS.getString(1);
+            while(wingsRS.next()){
+                wings += ", ";
+                wings += wingsRS.getString(1);
+            }
+            subs.put("<!--WINGS-->", wings);
+            
+            /*
+             * Get the teams
+             */
+            subs.put("<!--FIRST_PROP-->", rs.getString(FIRST_PROP));
+            subs.put("<!--FIRST_OP-->", rs.getString(FIRST_OP));
+            subs.put("<!--SECOND_PROP-->", rs.getString(SECOND_PROP));
+            subs.put("<!--SECOND_OP-->", rs.getString(SECOND_OP));
+            
+            // FIXME: There should be some deterministic ordering of slides
+            writeWithSubstitutions(root, "motion-slide.xhtml",
+                    round + "-" + chair + ".xhtml");
+        }
         
         /*
          * Build the scroller
@@ -107,9 +152,10 @@ public class XHTMLFactory {
         return null;
     }
 
-    private void writeWithSubstitutions(File root, String templateName) 
+    private void writeWithSubstitutions(File root, String templateName,
+            String outputName) 
         throws IOException{
-        File titlePage = new File(root, templateName);
+        File titlePage = new File(root, outputName);
         if(!titlePage.createNewFile()){
             throw new IOException("Was not able to create " + templateName);
         }

@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -56,8 +54,21 @@ public class SQLConnection extends Observable {
         return instance;
     }
     
+    /**
+     * This flag indicates whether observers are notified of updates.  If 
+     * there are a lot of updates going on very frequently, it's better to 
+     * disable change tracking, make the change and then call //FIXME
+     */
     private boolean changeTracking = true;
     
+    public synchronized boolean isChangeTracking() {
+        return changeTracking;
+    }
+
+    public synchronized void setChangeTracking(boolean changeTracking) {
+        this.changeTracking = changeTracking;
+    }
+
     /**
      * The current connection
      */

@@ -46,14 +46,18 @@ public class Main {
         
         /*
          * If the debug argument is passed, add the debug menu
+         * FIXME: Clean this up so that the overviewframe menu has an option
+         * to display the debug menu or not - this stuff shouldn't be here.
          */
         if (args.length > 0) {
             if (args[0].equals("--debug")) {
                 System.out.println("Entering Debug Mode");
                 
                 JMenu debugMenu = new JMenu("Debug");
-                debugMenu.addActionListener(new DebugMenuListener());
-                debugMenu.add(new JMenuItem("Load Example Data"));
+                JMenuItem generateMorningTab = 
+                    new JMenuItem("Generate Morning Tab");
+                generateMorningTab.addActionListener(new DebugMenuListener());
+                debugMenu.add(generateMorningTab);
                 
                 OverviewFrame.getInstance().getMenu().add(debugMenu);
             }

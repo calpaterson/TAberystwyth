@@ -113,5 +113,12 @@ create table motions (
        primary key ("round")
 );
 
+create table tournament_name (
+       "name" text not null,
+       primary key ("name")
+       -- FIXME: add a check constraint that ensures that it is not
+       -- possible to have more than one entry in this table
+);
+
 -- FIXME: Would be nice to have a check that there is only one chair per
 -- panel

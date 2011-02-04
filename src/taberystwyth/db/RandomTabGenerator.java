@@ -32,7 +32,7 @@ public class RandomTabGenerator {
     
     private Random gen = new Random();
     
-    private final int N_TEAMS = 100;
+    private static final int N_TEAMS = 100;
     
     private RandomTabGenerator() {
         /* VOID */

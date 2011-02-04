@@ -81,7 +81,7 @@ public class LocationInsertionFrame extends JFrame {
 		add(save);
 
 		LocationInsertionFrameListener listener = 
-			new LocationInsertionFrameListener(this);
+			LocationInsertionFrameListener.getInstance();
 		
 		clear.addActionListener(listener);
 		save.addActionListener(listener);

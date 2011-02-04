@@ -32,10 +32,17 @@ import taberystwyth.view.OverviewFrame;
 
 public class LocationInsertionFrameListener implements ActionListener {
     
-    private LocationInsertionFrame frame;
+    private LocationInsertionFrame frame = 
+        LocationInsertionFrame.getInstance();
     
-    public LocationInsertionFrameListener(LocationInsertionFrame frame) {
-        this.frame = frame;
+    private static LocationInsertionFrameListener instance = 
+        new LocationInsertionFrameListener();
+    
+    public static LocationInsertionFrameListener getInstance(){
+        return instance;
+    }
+    
+    private LocationInsertionFrameListener(){
     }
     
     private SQLConnection sql = SQLConnection.getInstance();

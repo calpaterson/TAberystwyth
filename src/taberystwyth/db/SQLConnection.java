@@ -55,20 +55,20 @@ public class SQLConnection extends Observable {
     }
     
     /**
-     * This flag indicates whether observers are notified of updates.  If 
-     * there are a lot of updates going on very frequently, it's better to 
-     * disable change tracking, make the change and then call //FIXME
+     * This flag indicates whether observers are notified of updates. If there
+     * are a lot of updates going on very frequently, it's better to disable
+     * change tracking, make the change and then call //FIXME
      */
     private boolean changeTracking = true;
     
     public synchronized boolean isChangeTracking() {
         return changeTracking;
     }
-
+    
     public synchronized void setChangeTracking(boolean changeTracking) {
         this.changeTracking = changeTracking;
     }
-
+    
     /**
      * The current connection
      */
@@ -77,7 +77,7 @@ public class SQLConnection extends Observable {
     /**
      * The current database file
      */
-    private File dbfile;
+    private File file;
     
     /**
      * Constructor
@@ -112,16 +112,17 @@ public class SQLConnection extends Observable {
             throw new IOException("tab already exists");
         }
         
-        dbfile = file;
+        this.file = file;
         
         /*
          * This lump of code is required in order to get the last modification
          * time of a jar resource
          */
-        
+
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
-        InputStream schema = this.getClass().getResourceAsStream("/schema.sql");
+        InputStream schema = this.getClass()
+                .getResourceAsStream("/schema.sql");
         evaluateSQLFile(schema);
         
     }
@@ -144,19 +145,18 @@ public class SQLConnection extends Observable {
             new BufferedReader(new InputStreamReader(file)).read(cbuf);
             
             /*
-             * FIXME: This block is some disgusting magic that loads all of
-             * the SQL statements in the given file
+             * FIXME: This block is some disgusting magic that loads all of the
+             * SQL statements in the given file
              */
             String fileContents = new String(cbuf);
             String[] statements = fileContents.split(";");
-            for (int i = 0; i < (statements.length - 1); ++i){
+            for (int i = 0; i < (statements.length - 1); ++i) {
                 statements[i] = statements[i].concat(";");
-                //System.out.println(statements[i]);
+                // System.out.println(statements[i]);
                 conn.createStatement().execute(statements[i]);
             }
         } catch (Exception e) {
-            panic(e,
-                    "Unable to evaluate SQL file");
+            panic(e, "Unable to evaluate SQL file");
         }
         System.out.println("SQLConnection.evaluateSQLFile()");
         setChanged();
@@ -169,32 +169,32 @@ public class SQLConnection extends Observable {
      * @param statement
      *            statement
      * @return success or failure
+     * @throws SQLException 
      */
-    public synchronized boolean execute(String statement) {
+    @Deprecated
+    public synchronized boolean execute(String statement){
         boolean returnValue = false;
-        try {
-            /*
-             * Order seems to be important here because the semantics of sqlite
-             * are quite odd. Closing the connection is required in order to
-             * flush updates to the database file
-             */
-            Statement stmt = conn.createStatement();
-            returnValue = stmt.execute(statement);
-            stmt.close();
-            conn.close();
-            conn = DriverManager.getConnection("jdbc:sqlite:"
-                    + dbfile.getAbsolutePath());
-        } catch (SQLException e) {
-            panic(e,
-                    "Unable to execute this statement against the database:\n"
-                            + statement);
+        /*
+         * Order seems to be important here because the semantics of sqlite are
+         * quite odd. Closing the connection is required in order to flush
+         * updates to the database file
+         */
+        try{
+        Statement stmt = conn.createStatement();
+        returnValue = stmt.execute(statement);
+        stmt.close();
+        conn.close();
+        conn = DriverManager.getConnection("jdbc:sqlite:"
+                + file.getAbsolutePath());
+        } catch (SQLException e2){
+            
         }
         System.out.println("SQLConnection.execute()");
         setChanged();
         notifyObservers();
         return returnValue;
     }
-    
+
     /**
      * Execute an SQL query against the database
      * 
@@ -213,12 +213,7 @@ public class SQLConnection extends Observable {
         }
         return returnValue;
     }
-    
-    public synchronized void initialise() {
-        // TODO Auto-generated method stub
-        
-    }
-    
+
     /**
      * There are so many instances where an unfixable situation arises in this
      * file that I have defined this shorthand.
@@ -262,7 +257,7 @@ public class SQLConnection extends Observable {
         /*
          * First, load the file
          */
-        dbfile = file;
+        this.file = file;
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
         
@@ -275,6 +270,27 @@ public class SQLConnection extends Observable {
         System.out.println("SQLConnection.setDatabase()");
         setChanged();
         notifyObservers();
+    }
+    
+    /**
+     * This method closes the current connection and opens a new one.
+     * 
+     * This is complete hack but is absolutely required because if this isn't
+     * done then sqlite won't notice any updates that are done to the code.
+     * @throws SQLException
+     */
+    public void cycleConn() throws SQLException{
+        synchronized(this){
+            conn.close();
+            conn = DriverManager.getConnection("jdbc:sqlite:"
+                    + file.getAbsolutePath());
+            Statement statement = conn.createStatement();
+            statement.execute("PRAGMA foreign_keys = ON;");
+        }
+    }
+
+    public Connection getConn() {
+        return conn;
     }
     
 }

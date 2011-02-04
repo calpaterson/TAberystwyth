@@ -18,6 +18,7 @@
 
 package taberystwyth.db;
 
+import java.sql.SQLException;
 import java.util.Random;
 
 public class RandomTabGenerator {
@@ -25,7 +26,7 @@ public class RandomTabGenerator {
     
     private static RandomTabGenerator instance = new RandomTabGenerator();
     
-    public static RandomTabGenerator getInstance(){
+    public static RandomTabGenerator getInstance() {
         return instance;
     }
     
@@ -37,11 +38,11 @@ public class RandomTabGenerator {
         /* VOID */
     }
     
-    public void generate(){
+    public void generate() {
         synchronized (sql) {
             sql.setChangeTracking(false);
             int i = 0;
-            while (i < N_TEAMS){
+            while (i < N_TEAMS) {
                 genTeam();
                 ++i;
             }
@@ -49,26 +50,40 @@ public class RandomTabGenerator {
         }
     }
     
-    private String genTeam(){
-        String speaker1 = genSpeaker();
-        String speaker2 = genSpeaker();
-        String name = speaker1 + " and " + speaker2;
-        sql.execute("insert into teams (name, speaker1, speaker2) values(" 
-                + "'" + name + "', '" + speaker1 + "', '" + speaker2 + "');");
-        return name;
+    private String genTeam() {
+        String speaker1;
+        String speaker2;
+        while (true) {
+            try {
+                speaker1 = genSpeaker();
+                speaker2 = genSpeaker();
+                String name = speaker1 + " and " + speaker2;
+                sql.execute("insert into teams (name, speaker1, speaker2) values("
+                        + "'"
+                        + name
+                        + "', '"
+                        + speaker1
+                        + "', '"
+                        + speaker2
+                        + "');");
+                return name;
+            } catch (SQLException e) {
+                // FIXME: remove failed inserts
+            }
+        }
     }
     
-    private String genSpeaker() {
+    private String genSpeaker() throws SQLException {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
-        sql.execute("insert into speakers (name, institution) values("
-                + "'" + name + "','" + institution + "');");
+        sql.execute("insert into speakers (name, institution) values(" + "'"
+                + name + "','" + institution + "');");
         return name;
     }
     
-    private String genName(){
-        return firstNames[gen.nextInt(firstNames.length)] + " " 
-            + gen.nextInt(25);
+    private String genName() {
+        return firstNames[gen.nextInt(firstNames.length)] + " "
+                + gen.nextInt(25);
     }
     
     private String[] institutions = {

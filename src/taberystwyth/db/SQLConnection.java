@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
@@ -242,8 +243,7 @@ public class SQLConnection extends Observable implements Runnable {
      * superclasses' setChanged method
      */
     @Override
-    @Deprecated //FIXME: This should be protected but there are still uses
-    public synchronized void setChanged() {
+    protected synchronized void setChanged() {
         /*
          * We might not be tracking changes at the moment (ie: we are loading
          * the schema into a new tab. If so, do not track changes).
@@ -318,6 +318,17 @@ public class SQLConnection extends Observable implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+    
+    @Override
+    public void addObserver(Observer observer){
+        super.addObserver(observer);
+        /*
+         * setChanged() is not designed for this kind of use, but the 
+         * intention here is that this ensures that in the next loop 
+         * the observers are told to repull
+         */
+        setChanged();
     }
     
 }

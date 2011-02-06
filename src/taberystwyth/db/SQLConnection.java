@@ -34,11 +34,17 @@ import javax.swing.JOptionPane;
 
 /**
  * A clever wrapper for the Connection class that provides Observer/Observable
- * for notification about changes as well as singleton behavior
+ * for notification about changes as well as singleton behaviour
  * 
  * @author Cal Paterson
  */
 public class SQLConnection extends Observable implements Runnable {
+    
+    /**
+     * The frequency (in milliseconds) with which this singleton notifies
+     * observers 
+     */
+    private static final int NOTIFY_FREQUENCY = 100;
     
     /**
      * The instance of this (singleton) object
@@ -303,7 +309,7 @@ public class SQLConnection extends Observable implements Runnable {
         while(true){
             try {
                 System.out.println("Sleeping");
-                Thread.sleep(100); //FIXME: finalise
+                Thread.sleep(NOTIFY_FREQUENCY); //FIXME: finalise
                 notifyObservers();
             } catch (InterruptedException e) {
                 /*

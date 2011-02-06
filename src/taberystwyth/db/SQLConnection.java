@@ -268,6 +268,7 @@ public class SQLConnection extends Observable {
         Statement st = conn.createStatement();
         st.execute("PRAGMA foreign_keys = ON;");
         st.close();
+        cycleConn();
         
         System.out.println("SQLConnection.setDatabase()");
         setChanged();

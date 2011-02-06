@@ -32,9 +32,6 @@ import taberystwyth.view.OverviewFrame;
 
 public class LocationInsertionFrameListener implements ActionListener {
     
-    private LocationInsertionFrame frame = 
-        LocationInsertionFrame.getInstance();
-    
     private static LocationInsertionFrameListener instance = 
         new LocationInsertionFrameListener();
     
@@ -48,6 +45,8 @@ public class LocationInsertionFrameListener implements ActionListener {
     private SQLConnection sql = SQLConnection.getInstance();
     
     public void actionPerformed(ActionEvent e) {
+        LocationInsertionFrame frame = 
+            LocationInsertionFrame.getInstance();
         if (e.getActionCommand().equals("Save")) {
             synchronized (SQLConnection.getInstance()) {
                 Connection conn = sql.getConn();

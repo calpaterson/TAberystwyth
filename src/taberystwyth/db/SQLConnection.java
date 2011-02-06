@@ -265,7 +265,9 @@ public class SQLConnection extends Observable {
          * This line is required in order to unfuck sqlites' default behaviour,
          * which is to ignore fk constraints
          */
-        execute("PRAGMA foreign_keys = ON;");
+        Statement st = conn.createStatement();
+        st.execute("PRAGMA foreign_keys = ON;");
+        st.close();
         
         System.out.println("SQLConnection.setDatabase()");
         setChanged();

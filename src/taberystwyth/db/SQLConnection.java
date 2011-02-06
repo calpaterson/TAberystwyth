@@ -236,6 +236,8 @@ public class SQLConnection extends Observable {
      * An override that changes the visibility (the thread-safety) of the
      * superclasses' setChanged method
      */
+    @Override
+    @Deprecated //FIXME: This should be protected but there are still uses
     public synchronized void setChanged() {
         /*
          * We might not be tracking changes at the moment (ie: we are loading

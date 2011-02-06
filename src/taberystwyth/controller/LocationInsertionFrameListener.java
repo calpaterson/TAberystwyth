@@ -58,9 +58,9 @@ public class LocationInsertionFrameListener implements ActionListener {
                             Integer.parseInt((frame.getRating().getText())));
                     p.execute();
                     p.close();
-                    System.out.println("entered team");
                     sql.cycleConn();
                     System.out.println("cycled conn");
+                    sql.setChanged();
                     sql.notifyObservers();
                     System.out.println("notified obs");
                 } catch (SQLException e1) {

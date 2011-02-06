@@ -183,7 +183,7 @@ public class OverviewFrame extends JFrame implements Observer {
          */
         SQLConnection.getInstance().addObserver(this);
         SQLConnection.getInstance().setChanged();
-        SQLConnection.getInstance().notifyObservers();
+        SQLConnection.getInstance().start();
     }
     
     private void refreshTeams() {

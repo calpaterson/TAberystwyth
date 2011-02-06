@@ -59,10 +59,6 @@ public class LocationInsertionFrameListener implements ActionListener {
                     p.execute();
                     p.close();
                     sql.cycleConn();
-                    System.out.println("cycled conn");
-                    sql.setChanged();
-                    sql.notifyObservers();
-                    System.out.println("notified obs");
                 } catch (SQLException e1) {
                     JOptionPane
                             .showMessageDialog(

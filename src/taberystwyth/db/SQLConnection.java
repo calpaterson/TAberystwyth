@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  * 
  * @author Cal Paterson
  */
-public class SQLConnection extends Observable {
+public class SQLConnection extends Observable implements Runnable {
     
     /**
      * The instance of this (singleton) object
@@ -94,8 +94,12 @@ public class SQLConnection extends Observable {
         }
         
         /*
-         * No initialisation here - that is done by WelcomeDialog
+         * No initialisation here
          */
+    }
+    
+    public void start() {
+       new Thread(instance).start();
     }
     
     /**
@@ -113,11 +117,6 @@ public class SQLConnection extends Observable {
         }
         
         this.file = file;
-        
-        /*
-         * This lump of code is required in order to get the last modification
-         * time of a jar resource
-         */
 
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
@@ -292,10 +291,27 @@ public class SQLConnection extends Observable {
             Statement statement = conn.createStatement();
             statement.execute("PRAGMA foreign_keys = ON;");
         }
+        setChanged();
     }
 
     public Connection getConn() {
         return conn;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            try {
+                System.out.println("Sleeping");
+                Thread.sleep(100); //FIXME: finalise
+                notifyObservers();
+            } catch (InterruptedException e) {
+                /*
+                 * If we are interrupted, then do nothing
+                 */
+                e.printStackTrace();
+            }
+        }
     }
     
 }

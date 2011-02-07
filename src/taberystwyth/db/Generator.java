@@ -31,8 +31,11 @@ import org.apache.log4j.Logger;
 final public class Generator {
     
     /** The Constant log. */
-    private final static Logger LOG = Logger
-            .getLogger(Generator.class);
+    private final static Logger LOG = Logger.getLogger(Generator.class);
+    
+    public static synchronized Logger getLog() {
+        return LOG;
+    }
     
     /** The instance of SQLConnection. */
     private SQLConnection sql = SQLConnection.getInstance();
@@ -53,13 +56,13 @@ final public class Generator {
     private Random gen = new Random();
     
     /** The Constant N_TEAMS. */
-    private static final int N_TEAMS = 12;
+    public static final int N_TEAMS = 12;
     
     /** The Constant N_LOCATIONS. */
-    private static final int N_LOCATIONS = 4;
+    public static final int N_LOCATIONS = 4;
     
     /** The Constant N_JUDGES. */
-    private static final int N_JUDGES = 30;
+    public static final int N_JUDGES = 30;
     
     /**
      * Instantiates a new random tab generator.
@@ -69,38 +72,13 @@ final public class Generator {
     }
     
     /**
-     * Generate a random tab.
-     */
-    public void generate() {
-        synchronized (sql) {
-            sql.setChangeTracking(false);
-            int i = 0;
-            while (i < N_TEAMS) {
-                String team = genTeam();
-                LOG.debug("Team generated: " + team);
-                ++i;
-            }
-            
-            int j = 0;
-            while (j < N_JUDGES) {
-                String judge = genJudge();
-                LOG.debug("Judge generated: " + judge);
-                ++j;
-            }
-            
-            genLocations();
-            sql.setChangeTracking(true);
-        }
-    }
-    
-    /**
      * Gen judge.
      * 
      * @return the string
      */
     @SuppressWarnings("null")
     // This is for the variable conn only
-    private String genJudge() {
+    public String genJudge() {
         while (true) {
             Connection conn = null;
             try {
@@ -121,6 +99,7 @@ final public class Generator {
                     
                     conn.commit();
                     sql.cycleConn();
+                    LOG.debug("Judge generated: " + name);
                     return name;
                 }
             } catch (SQLException e) {
@@ -141,7 +120,7 @@ final public class Generator {
      */
     @SuppressWarnings("null")
     // This is for the variable conn only
-    private void genLocations() {
+    public void genLocation() {
         while (true) {
             Connection conn = null;
             try {
@@ -149,16 +128,13 @@ final public class Generator {
                     conn = sql.getConn();
                     conn.setAutoCommit(false);
                     String s = "insert into locations (name, rating) values (?, ?);";
-                    for (int i = 0; i < N_LOCATIONS; ++i) {
-                        String location = locations[gen
-                                .nextInt(locations.length)];
-                        PreparedStatement p = conn.prepareStatement(s);
-                        p.setString(1, location);
-                        p.setInt(2, 50);
-                        p.execute();
-                        p.close();
-                        LOG.info("Location generated: " + location);
-                    }
+                    String location = locations[gen.nextInt(locations.length)];
+                    PreparedStatement p = conn.prepareStatement(s);
+                    p.setString(1, location);
+                    p.setInt(2, 50);
+                    p.execute();
+                    p.close();
+                    LOG.info("Location generated: " + location);
                     conn.commit();
                     sql.cycleConn();
                     return;
@@ -182,7 +158,7 @@ final public class Generator {
      */
     @SuppressWarnings("null")
     // This is for the variable conn only
-    private String genTeam() {
+    public String genTeam() {
         while (true) {
             Connection conn = null;
             try {
@@ -218,6 +194,7 @@ final public class Generator {
                      * Boilerplate end code
                      */
                     sql.cycleConn();
+                    LOG.debug("Team generated: " + name);
                 }
                 return name;
             } catch (SQLException e) {

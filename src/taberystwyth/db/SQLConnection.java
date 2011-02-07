@@ -41,9 +41,9 @@ import org.apache.log4j.Logger;
  * 
  * @author Cal Paterson
  */
-public class SQLConnection extends Observable implements Runnable {
+final public class SQLConnection extends Observable implements Runnable {
     
-    private static final Logger log = Logger.getLogger(SQLConnection.class);
+    private static final Logger LOG = Logger.getLogger(SQLConnection.class);
     
     /**
      * The frequency (in milliseconds) with which this singleton notifies
@@ -101,7 +101,7 @@ public class SQLConnection extends Observable implements Runnable {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            log.fatal("Unable to load database driver");
+            LOG.fatal("Unable to load database driver");
             panic(e, "Unable to load the database driver."
                     + "Perhaps your computer architecture is not supported?");
         }
@@ -160,7 +160,12 @@ public class SQLConnection extends Observable implements Runnable {
         try {
             isr = new InputStreamReader(file);
             br = new BufferedReader(new InputStreamReader(file));
-            br.read(cbuf);
+            boolean endOfStreamReached = br.read(cbuf) == -1;
+            if (!endOfStreamReached){
+                String message = "Internal array cbuf not long enough to read sql";
+                LOG.error(message);
+                throw new IOException(message);
+            }
             
             /*
              * FIXME: This block is some disgusting magic that loads all of the
@@ -173,7 +178,7 @@ public class SQLConnection extends Observable implements Runnable {
                 // System.out.println(statements[i]);
                 conn.createStatement().execute(statements[i]);
             }
-            log.info("Evaluated SQL file");
+            LOG.info("Evaluated SQL file");
             /*
              * FIXME: Change this method's argument type to File, so that the 
              * log can hold the absolute file path
@@ -219,7 +224,7 @@ public class SQLConnection extends Observable implements Runnable {
         } catch (SQLException e2){
             
         }
-        log.info("Executed: " + statement);
+        LOG.info("Executed: " + statement);
         setChanged();
         notifyObservers();
         return returnValue;
@@ -237,7 +242,7 @@ public class SQLConnection extends Observable implements Runnable {
         try {
             Statement stmt = conn.createStatement();
             returnValue = stmt.executeQuery(query);
-            log.info("Executed query: " + query);
+            LOG.info("Executed query: " + query);
         } catch (SQLException e) {
             panic(e, "Unable to execute this query against the database:\n"
                     + query);
@@ -302,7 +307,7 @@ public class SQLConnection extends Observable implements Runnable {
         st.close();
         cycleConn();
         
-        log.info("Database set to " + file.getAbsolutePath());
+        LOG.info("Database set to " + file.getAbsolutePath());
         
         setChanged();
         notifyObservers();
@@ -323,7 +328,7 @@ public class SQLConnection extends Observable implements Runnable {
             Statement statement = conn.createStatement();
             statement.execute("PRAGMA foreign_keys = ON;");
             statement.close();
-            log.info("Cycled connection");
+            LOG.info("Cycled connection");
         }
         setChanged();
     }
@@ -342,7 +347,7 @@ public class SQLConnection extends Observable implements Runnable {
                 /*
                  * If we are interrupted, then do nothing
                  */
-                log.warn("Interrupted", e);
+                LOG.warn("Interrupted", e);
             }
         }
     }
@@ -350,7 +355,7 @@ public class SQLConnection extends Observable implements Runnable {
     @Override
     public void addObserver(Observer observer){
         super.addObserver(observer);
-        log.info("Observer added: " + observer);
+        LOG.info("Observer added: " + observer);
         /*
          * setChanged() is not designed for this kind of use, but the 
          * intention here is that this ensures that in the next loop 

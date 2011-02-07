@@ -31,7 +31,7 @@ import taberystwyth.controller.TeamFocusListener;
 import taberystwyth.controller.TeamInsertionListener;
 import taberystwyth.db.SQLConnection;
 
-public class TeamInsertionFrame extends JFrame {
+final public class TeamInsertionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JButton clear = new JButton("Clear");
 

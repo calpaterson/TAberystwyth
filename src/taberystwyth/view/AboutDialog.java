@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 
-public class AboutDialog extends JDialog {
+final public class AboutDialog extends JDialog {
     
     private static final long serialVersionUID = 1L;
     

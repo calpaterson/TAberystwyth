@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 
 import taberystwyth.db.SQLConnection;
 
-public class XHTMLFactory {
+public final class XHTMLFactory {
     
     private HashMap<String, String> subs = 
         new HashMap<String, String>();
@@ -164,6 +164,8 @@ public class XHTMLFactory {
         InputStream template = 
             this.getClass().getResourceAsStream(templateName);
         br.write(applySubstitutionMap(template));
+        br.close();
+        fr.close();
     }
     
     private String applySubstitutionMap(InputStream input){

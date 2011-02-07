@@ -26,7 +26,7 @@ import net.miginfocom.swing.MigLayout;
 
 import taberystwyth.controller.JudgeInsertionFrameListener;
 
-public class JudgeInsertionFrame extends JFrame {
+final public class JudgeInsertionFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	

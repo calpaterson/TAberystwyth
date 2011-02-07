@@ -18,6 +18,7 @@
 package taberystwyth.allocation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Match class represents what is currently referred to as a "room" in the
@@ -41,7 +42,7 @@ public class Match {
     private String chair;
     
     /** The wings. */
-    private ArrayList<String> wings = new ArrayList<String>();
+    private List<String> wings = new ArrayList<String>();
     
     /** The location. */
     private String location;
@@ -153,7 +154,7 @@ public class Match {
      *
      * @return the wings
      */
-    public synchronized ArrayList<String> getWings() {
+    public synchronized List<String> getWings() {
         return wings;
     }
     

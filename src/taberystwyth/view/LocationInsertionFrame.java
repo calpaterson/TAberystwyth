@@ -26,7 +26,7 @@ import net.miginfocom.swing.MigLayout;
 
 import taberystwyth.controller.LocationInsertionFrameListener;
 
-public class LocationInsertionFrame extends JFrame {
+final public class LocationInsertionFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 

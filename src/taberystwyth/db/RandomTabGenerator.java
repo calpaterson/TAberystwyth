@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
 /**
  * The Class RandomTabGenerator.
  */
-public class RandomTabGenerator {
+final public class RandomTabGenerator {
     
     /** The Constant log. */
-    private final static Logger log = 
+    private final static Logger LOG = 
         Logger.getLogger(RandomTabGenerator.class);
     
     /** The instance of SQLConnection. */
@@ -77,14 +77,14 @@ public class RandomTabGenerator {
             int i = 0;
             while (i < N_TEAMS) {
                 String team = genTeam();
-                log.debug("Team generated: " + team);
+                LOG.debug("Team generated: " + team);
                 ++i;
             }
             
             int j = 0;
             while(j < N_JUDGES) {
                 String judge = genJudge();
-                log.debug("Judge generated: " + judge);
+                LOG.debug("Judge generated: " + judge);
                 ++j;
             }
             
@@ -121,12 +121,12 @@ public class RandomTabGenerator {
                     return name;
                 }
             } catch (SQLException e){
-                log.error("SQL Exception", e);
+                LOG.error("SQL Exception", e);
                 e.printStackTrace();
                 try {
                     conn.rollback();
                 } catch (Exception e1) {
-                    log.error("Exception while rolling back!", e1);
+                    LOG.error("Exception while rolling back!", e1);
                     e1.printStackTrace();
                 }
             }
@@ -152,7 +152,7 @@ public class RandomTabGenerator {
                         p.setInt(2, 50);
                         p.execute();
                         p.close();
-                        log.info("Location generated: " + location);
+                        LOG.info("Location generated: " + location);
                     }   
                     conn.commit();
                     sql.cycleConn();
@@ -160,10 +160,10 @@ public class RandomTabGenerator {
                 }
             } catch (SQLException e) {
                 try {
-                    log.error("SQL Exception", e);
+                    LOG.error("SQL Exception", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    log.error("Exception while trying to roll back", e1);
+                    LOG.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
                 }
             }
@@ -216,10 +216,10 @@ public class RandomTabGenerator {
                 return name;
             } catch (SQLException e) {
                 try {
-                    log.error("SQL Exception", e);
+                    LOG.error("SQL Exception", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    log.error("Exception while trying to roll back", e1);
+                    LOG.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
                 }
             }

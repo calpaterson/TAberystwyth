@@ -43,7 +43,7 @@ import net.miginfocom.swing.MigLayout;
  * @author Cal Paterson
  * 
  */
-public class AllocationFrame extends JFrame {
+final public class AllocationFrame extends JFrame {
 
 	AllocationFrameListener listener = new AllocationFrameListener();
 

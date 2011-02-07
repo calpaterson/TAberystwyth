@@ -35,13 +35,13 @@ import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.controller.TeamListListener;
 import taberystwyth.db.SQLConnection;
 
-public class OverviewFrame extends JFrame implements Observer {
+final public class OverviewFrame extends JFrame implements Observer {
     
     private static final long serialVersionUID = 1L;
     private OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(
             this);
     
-    private final static Logger log = Logger.getLogger(OverviewFrame.class);
+    private final static Logger LOG = Logger.getLogger(OverviewFrame.class);
     
     /*
      * Models
@@ -224,7 +224,7 @@ public class OverviewFrame extends JFrame implements Observer {
         }
     }
     
-    private String getInstitution(String teamName) {
+    private String getInstitution(final String teamName) {
         String query = null;
         String returnValue = null;
         SQLConnection conn = SQLConnection.getInstance();
@@ -234,7 +234,7 @@ public class OverviewFrame extends JFrame implements Observer {
              */
             // FIXME: small hack here to ensure that the teamname (which might
             // contain a ' is properly escaped:
-            teamName = teamName.replaceAll("'", "''");
+            String teamName_ = teamName.replaceAll("'", "''");
             query = "select speaker1, speaker2 from teams where teams.name = '"
                     + teamName + "';";
             ResultSet rs = conn.executeQuery(query);
@@ -280,7 +280,7 @@ public class OverviewFrame extends JFrame implements Observer {
     }
     
     public void update(Observable o, Object arg) {
-        log.info("Updating view");
+        LOG.info("Updating view");
         refreshTeams();
         refreshJudges();
         refreshLocation();

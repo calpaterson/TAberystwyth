@@ -31,9 +31,13 @@ import taberystwyth.view.OverviewFrame;
  * 
  * @author Roberto Sarrionandia and Cal Paterson
  */
-public class Main {
+public final class Main {
     
-    private static final Logger log = Logger.getLogger(Main.class);
+    private static final Logger LOG = Logger.getLogger(Main.class);
+    
+    private Main(){
+        /* VOID */
+    }
     
     /**
      * The main method
@@ -41,7 +45,7 @@ public class Main {
      * @param args
      *            arguments passed to the program
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         /*
          * Set up logging
          */
@@ -55,10 +59,9 @@ public class Main {
             UIManager
                     .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e1) {
-            log.error(
+            LOG.error(
                     "Unable to set the system look and feel, will carry on with the default.",
                     e1);
-            e1.printStackTrace();
         }
         
         try {
@@ -67,8 +70,7 @@ public class Main {
             Class.forName("taberystwyth.allocation.Allocator");
             Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {
-            log.fatal("Unable to load the singleton classes.", e);
-            e.printStackTrace();
+            LOG.fatal("Unable to load the singleton classes.", e);
             return;
         }
         
@@ -77,18 +79,16 @@ public class Main {
          * this up so that the overviewframe menu has an option to display the
          * debug menu or not - this stuff shouldn't be here.
          */
-        if (args.length > 0) {
-            if (args[0].equals("--debug")) {
-                log.info("Entering debug mode.");
+        if (args.length > 0 && args[0].equals("--debug")) {
+                LOG.info("Entering debug mode.");
                 
-                JMenu debugMenu = new JMenu("Debug");
-                JMenuItem generateMorningTab = new JMenuItem(
+                final JMenu debugMenu = new JMenu("Debug");
+                final JMenuItem generateMorningTab = new JMenuItem(
                         "Generate Morning Tab");
                 generateMorningTab.addActionListener(new DebugMenuListener());
                 debugMenu.add(generateMorningTab);
                 
                 OverviewFrame.getInstance().getMenu().add(debugMenu);
-            }
         }
     }
     

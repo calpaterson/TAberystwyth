@@ -30,7 +30,7 @@ import taberystwyth.db.SQLConnection;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
 
-public class LocationInsertionFrameListener implements ActionListener {
+public final class LocationInsertionFrameListener implements ActionListener {
     
     private static LocationInsertionFrameListener instance = 
         new LocationInsertionFrameListener();

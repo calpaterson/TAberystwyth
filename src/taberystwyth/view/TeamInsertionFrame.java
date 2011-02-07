@@ -35,7 +35,7 @@ final public class TeamInsertionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JButton clear = new JButton("Clear");
 
-	private SQLConnection conn = SQLConnection.getInstance();
+	private transient SQLConnection conn = SQLConnection.getInstance();
 
 	private TeamInsertionListener listener = new TeamInsertionListener(this);
 

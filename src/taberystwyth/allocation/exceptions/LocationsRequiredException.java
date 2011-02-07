@@ -9,14 +9,15 @@ public class LocationsRequiredException extends Exception {
     private static final long serialVersionUID = 1L;
     
     /** The number of locations that need to be added. */
-    int required;
+    private int required;
     
     /**
      * Instantiates a new LocationsRequiredException.
      *
      * @param required the required
      */
-    public LocationsRequiredException(int required){
+    public LocationsRequiredException(final int required){
+        super();
         this.required = required;
     }
 
@@ -25,7 +26,7 @@ public class LocationsRequiredException extends Exception {
      *
      * @return the required
      */
-    public synchronized int getRequired() {
+    public int getRequired() {
         return required;
     }
 }

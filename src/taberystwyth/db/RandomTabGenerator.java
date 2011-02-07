@@ -78,18 +78,18 @@ public class RandomTabGenerator {
     
     private void genLocations() {
         while (true) {
-            Connection conn = sql.getConn();
+            Connection conn = null;
             try {
                 synchronized (sql) {
+                    conn = sql.getConn();
                     conn.setAutoCommit(false);
                     String s = "insert into locations (name, rating) values (?, ?);";
                     for (int i = 0; i < N_LOCATIONS; ++i) {
                         PreparedStatement p = conn.prepareStatement(s);
-                        p.setString(1, locations[i]);
+                        p.setString(1, locations[gen.nextInt(locations.length)]);
                         p.setInt(2, 50);
                         p.execute();
                         p.close();
-                        System.out.println(locations[i] + " generated");
                     }   
                     conn.commit();
                     sql.cycleConn();
@@ -117,11 +117,12 @@ public class RandomTabGenerator {
                 String speaker1;
                 String speaker2;
                 String name;
+                Connection conn;
                 synchronized (sql) {
                     /*
                      * Get the connection, stop auto commit
                      */
-                    Connection conn = sql.getConn();
+                    conn = sql.getConn();
                     conn.setAutoCommit(false);
                     
                     /*

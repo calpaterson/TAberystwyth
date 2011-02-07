@@ -75,7 +75,6 @@ public class SQLConnection extends Observable implements Runnable {
     public synchronized void setChangeTracking(boolean changeTracking) {
         this.changeTracking = changeTracking;
         setChanged();
-        notifyObservers();
     }
     
     /**
@@ -311,7 +310,6 @@ public class SQLConnection extends Observable implements Runnable {
     public void run() {
         while(true){
             try {
-                System.out.println("Sleeping");
                 Thread.sleep(NOTIFY_FREQUENCY); //FIXME: finalise
                 notifyObservers();
             } catch (InterruptedException e) {

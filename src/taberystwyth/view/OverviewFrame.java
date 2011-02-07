@@ -65,7 +65,7 @@ final public class OverviewFrame extends JFrame implements Observer {
         boolean problem = true;
         while (problem == true) {
             Object[] options = { "Create a new tab", "Open an existing tab",
-                    "Cancel" };
+                    "Close this program" };
             int n = JOptionPane.showOptionDialog(this,
                     "Create a new tab or open an existing one?",
                     "TAberystwyth", JOptionPane.YES_NO_CANCEL_OPTION,

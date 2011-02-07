@@ -26,26 +26,26 @@ import java.util.Random;
 import org.apache.log4j.Logger;
 
 /**
- * The Class RandomTabGenerator.
+ * The Class Generator.
  */
-final public class RandomTabGenerator {
+final public class Generator {
     
     /** The Constant log. */
-    private final static Logger LOG = 
-        Logger.getLogger(RandomTabGenerator.class);
+    private final static Logger LOG = Logger
+            .getLogger(Generator.class);
     
     /** The instance of SQLConnection. */
     private SQLConnection sql = SQLConnection.getInstance();
     
     /** The instance. */
-    private static RandomTabGenerator instance = new RandomTabGenerator();
+    private static Generator instance = new Generator();
     
     /**
-     * Gets the single instance of RandomTabGenerator.
+     * Gets the single instance of Generator.
      * 
-     * @return single instance of RandomTabGenerator
+     * @return single instance of Generator
      */
-    public static RandomTabGenerator getInstance() {
+    public static Generator getInstance() {
         return instance;
     }
     
@@ -56,7 +56,7 @@ final public class RandomTabGenerator {
     private static final int N_TEAMS = 12;
     
     /** The Constant N_LOCATIONS. */
-    private static final int N_LOCATIONS = 4; 
+    private static final int N_LOCATIONS = 4;
     
     /** The Constant N_JUDGES. */
     private static final int N_JUDGES = 30;
@@ -64,7 +64,7 @@ final public class RandomTabGenerator {
     /**
      * Instantiates a new random tab generator.
      */
-    private RandomTabGenerator() {
+    private Generator() {
         /* VOID */
     }
     
@@ -82,7 +82,7 @@ final public class RandomTabGenerator {
             }
             
             int j = 0;
-            while(j < N_JUDGES) {
+            while (j < N_JUDGES) {
                 String judge = genJudge();
                 LOG.debug("Judge generated: " + judge);
                 ++j;
@@ -95,23 +95,26 @@ final public class RandomTabGenerator {
     
     /**
      * Gen judge.
-     *
+     * 
      * @return the string
      */
-    @SuppressWarnings("null") // This is for the variable conn only
+    @SuppressWarnings("null")
+    // This is for the variable conn only
     private String genJudge() {
-        while(true){
+        while (true) {
             Connection conn = null;
             try {
-                synchronized (sql){
+                synchronized (sql) {
                     conn = sql.getConn();
                     conn.setAutoCommit(false);
                     
                     String name = genName();
                     
-                    PreparedStatement p = conn.prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
+                    PreparedStatement p = conn
+                            .prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
                     p.setString(1, name);
-                    p.setString(2, institutions[gen.nextInt(institutions.length)]);
+                    p.setString(2,
+                            institutions[gen.nextInt(institutions.length)]);
                     p.setInt(3, 50);
                     p.execute();
                     p.close();
@@ -120,7 +123,7 @@ final public class RandomTabGenerator {
                     sql.cycleConn();
                     return name;
                 }
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 LOG.error("SQL Exception", e);
                 e.printStackTrace();
                 try {
@@ -136,7 +139,8 @@ final public class RandomTabGenerator {
     /**
      * Gen locations.
      */
-    @SuppressWarnings("null") // This is for the variable conn only
+    @SuppressWarnings("null")
+    // This is for the variable conn only
     private void genLocations() {
         while (true) {
             Connection conn = null;
@@ -146,14 +150,15 @@ final public class RandomTabGenerator {
                     conn.setAutoCommit(false);
                     String s = "insert into locations (name, rating) values (?, ?);";
                     for (int i = 0; i < N_LOCATIONS; ++i) {
-                        String location = locations[gen.nextInt(locations.length)];
+                        String location = locations[gen
+                                .nextInt(locations.length)];
                         PreparedStatement p = conn.prepareStatement(s);
                         p.setString(1, location);
                         p.setInt(2, 50);
                         p.execute();
                         p.close();
                         LOG.info("Location generated: " + location);
-                    }   
+                    }
                     conn.commit();
                     sql.cycleConn();
                     return;
@@ -172,10 +177,11 @@ final public class RandomTabGenerator {
     
     /**
      * Generate a random team.
-     *
+     * 
      * @return the name of the team
      */
-    @SuppressWarnings("null") // This is for the variable conn only
+    @SuppressWarnings("null")
+    // This is for the variable conn only
     private String genTeam() {
         while (true) {
             Connection conn = null;
@@ -252,12 +258,12 @@ final public class RandomTabGenerator {
     
     /**
      * Generate a random name.
-     *
+     * 
      * @return the string
      */
     private String genName() {
         return firstNames[gen.nextInt(firstNames.length)] + " "
-                + gen.nextInt(25);
+                + surnames[gen.nextInt(surnames.length)];
     }
     
     /** The institutions. */
@@ -409,5 +415,10 @@ final public class RandomTabGenerator {
             "Stonehenge, Avebury and Associated Sites",
             "Studley Royal Park and Fountains Abbey", "Tower of London",
             "Westminster Palace, Westminster Abbey" };
+    
+    String[] surnames = { "Jones", "Williams", "Davies", "Evans", "Thomas",
+            "Roberts", "Lewis", "Hughes", "Morgan", "Griffiths", "Edwards",
+            "Smith", "James", "Rees", "Jenkins", "Owen", "Price", "Phillips",
+            "Morris", "Richards" };
     
 }

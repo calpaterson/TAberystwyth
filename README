@@ -9,9 +9,6 @@ The entire SQL approach needs to be redone
  transactions (and work out the sqlite weirdness to boot)
  - Must provide prep'd statements to callers 
  - Must provide closing
-Supported characters in names
- - apostrophes, many other characters like semicolons etc
- - check all inserts match [0-z]+
 
 For v0.1
 ========
@@ -20,10 +17,8 @@ For v0.1
 - Refuse to open if there is already an instance on the current machine
  - This causes the confusing situation where the second instance appears but has missing data
 
-
 TODO
 ====
-- Create new random data generator in java
 - Data entry
     - results
     - wing/judge feedback
@@ -43,7 +38,3 @@ TODO
 - Configuration management
     - dotfiles on *nix
     - "%APPDATA%" on windows
-- Clean up SQL design 
-    - use prepared statements, not naked SQL
-    - close everything properly
-      - this might be causing the blank frame weirdness

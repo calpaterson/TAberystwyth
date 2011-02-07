@@ -57,6 +57,8 @@ public class RandomTabGenerator {
     
     private static final int N_LOCATIONS = 4; 
     
+    private static final int N_JUDGES = 30;
+    
     /**
      * Instantiates a new random tab generator.
      */
@@ -73,11 +75,54 @@ public class RandomTabGenerator {
             int i = 0;
             while (i < N_TEAMS) {
                 String team = genTeam();
-                log.info("Team generated: " + team);
+                log.debug("Team generated: " + team);
                 ++i;
             }
+            
+            int j = 0;
+            while(j < N_JUDGES) {
+                String judge = genJudge();
+                log.debug("Judge generated: " + judge);
+                ++j;
+            }
+            
             genLocations();
             sql.setChangeTracking(true);
+        }
+    }
+    
+    private String genJudge() {
+        while(true){
+            Connection conn = null;
+            try {
+                synchronized (sql){
+                    conn = sql.getConn();
+                    conn.setAutoCommit(false);
+                    
+                    String name = genName();
+                    
+                    PreparedStatement p = conn.prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
+                    p.setString(1, name);
+                    p.setString(2, institutions[gen.nextInt(institutions.length)]);
+                    p.setInt(3, 50);
+                    p.execute();
+                    p.close();
+                    
+                    conn.commit();
+                    sql.cycleConn();
+                    return name;
+                }
+            } catch (SQLException e){
+                log.error("SQL Exception", e);
+                e.printStackTrace();
+                try {
+                    conn.rollback();
+                } catch (Exception e1) {
+                    log.error("Exception while rolling back!", e1);
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
         }
     }
     

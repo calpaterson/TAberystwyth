@@ -17,6 +17,8 @@
  */
 package taberystwyth.allocation;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public final class Allocator {
     private static final long INITIAL_SEED = 0L;
     private transient final Random randomGenerator = new Random(INITIAL_SEED);
     
-    private transient final SQLConnection conn = SQLConnection.getInstance();
+    private transient final SQLConnection sql = SQLConnection.getInstance();
     
     private static Allocator instance = new Allocator();
     
@@ -62,15 +64,22 @@ public final class Allocator {
     
     /**
      * Allocates teams, judges and locations to each other and puts the results
-     * in the database
+     * in the database.
      * 
      * @param teamAlgo
+     *            the team algo
      * @param judgeAlgo
+     *            the judge algo
      * @param locationAlgo
+     *            the location algo
      * @throws SQLException
+     *             the sQL exception
      * @throws SwingTeamsRequiredException
+     *             the swing teams required exception
      * @throws LocationsRequiredException
+     *             the locations required exception
      * @throws JudgesRequiredException
+     *             the judges required exception
      */
     public void allocate(final TeamAllocation teamAlgo,
             final JudgeAllocation judgeAlgo,
@@ -88,7 +97,7 @@ public final class Allocator {
          * Figure out the current round
          */
         int round;
-        rs = conn.executeQuery("select max(round) from rooms;");
+        rs = sql.executeQuery("select max(round) from rooms;");
         if (rs.next()) {
             round = rs.getInt(1) + 1;
         } else {
@@ -100,7 +109,7 @@ public final class Allocator {
          * Generate matches
          */
         query = "select count(*) / 4 from teams;";
-        rs = conn.executeQuery(query);
+        rs = sql.executeQuery(query);
         rs.next();
         final int nMatches = rs.getInt(1);
         final ArrayList<Match> matches = new ArrayList<Match>();
@@ -162,7 +171,7 @@ public final class Allocator {
          */
         if (judgeAlgo == JudgeAllocation.BALANCED) {
             query = "select name from judges order by rating desc";
-            rs = conn.executeQuery(query);
+            rs = sql.executeQuery(query);
             /*
              * Allocate wings in a round-robin way
              */
@@ -188,7 +197,7 @@ public final class Allocator {
          * Allocate locations
          */
         if (locationAlgo == LocationAllocation.RANDOM) {
-            rs = conn
+            rs = sql
                     .executeQuery("select name from locations order by random();");
             int i = 0;
             while (rs.next() && i < matches.size()) {
@@ -201,24 +210,52 @@ public final class Allocator {
         }
         
         for (Match m : matches) {
-            String roomInsert = "insert into rooms (first_prop, second_prop, "
+            synchronized(sql){
+                Connection conn = sql.getConn();
+                conn.setAutoCommit(false);
+                
+                String s = "insert into rooms (first_prop, second_prop, first_op, second_op, location, round) values (?,?,?,?,?,?);";
+                PreparedStatement p = conn.prepareStatement(s);
+                p.setString(1, m.getFirstProp());
+                p.setString(2, m.getSecondProp());
+                p.setString(3, m.getFirstOp());
+                p.setString(4, m.getSecondOp());
+                p.setString(5, m.getLocation());
+                p.setInt(6, round);
+                p.execute();
+                p.close();
+                
+                conn.commit();
+                sql.cycleConn();
+            }
+
+/*            String roomInsert = "insert into rooms (first_prop, second_prop, "
                     + "first_op, second_op, location, round) values(" + "'"
                     + m.getFirstProp() + "'" + ", " + "'" + m.getSecondProp()
                     + "', " + "'" + m.getFirstOp() + "', " + "'"
                     + m.getSecondOp() + "', " + "'" + m.getLocation() + "', "
                     + round + ");";
-            conn.execute(roomInsert);
+            sql.execute(roomInsert);*/
             String chairInsert = "insert into judging_panels (name, round, "
                     + "room, isChair) values(" + "'" + m.getChair() + "'"
                     + ", " + round + ", '" + m.getLocation() + "'" + ", "
                     + "1);";
-            conn.execute(chairInsert);
+            sql.execute(chairInsert);
             for (String w : m.getWings()) {
                 String wingInsert = "insert into judging_panels (name, round, "
-                        + "room, isChair) values(" + "'" + w + "'" + ", "
-                        + round + ", " + "'" + m.getLocation() + "'" + ", "
+                        + "room, isChair) values("
+                        + "'"
+                        + w
+                        + "'"
+                        + ", "
+                        + round
+                        + ", "
+                        + "'"
+                        + m.getLocation()
+                        + "'"
+                        + ", "
                         + "0);";
-                conn.execute(wingInsert);
+                sql.execute(wingInsert);
             }
             
         }
@@ -283,7 +320,7 @@ public final class Allocator {
         /*
          * For each team, add it to the map of pools
          */
-        for (Entry<String,Integer> entry : points.entrySet()) {
+        for (Entry<String, Integer> entry : points.entrySet()) {
             String team = entry.getKey();
             int innerPoints = points.get(team);
             /*

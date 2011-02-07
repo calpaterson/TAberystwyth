@@ -43,6 +43,11 @@ import org.apache.log4j.Logger;
  */
 final public class SQLConnection extends Observable implements Runnable {
     
+    /**
+     * The instance of this (singleton) object
+     */
+    private static SQLConnection instance = new SQLConnection();
+    
     private static final Logger LOG = Logger.getLogger(SQLConnection.class);
     
     /**
@@ -50,11 +55,6 @@ final public class SQLConnection extends Observable implements Runnable {
      * observers 
      */
     private static final int NOTIFY_FREQUENCY = 100;
-    
-    /**
-     * The instance of this (singleton) object
-     */
-    private static SQLConnection instance = new SQLConnection();
     
     /**
      * Returns the instance of this (singleton) object
@@ -71,15 +71,6 @@ final public class SQLConnection extends Observable implements Runnable {
      * change tracking, make the change and then call //FIXME
      */
     private boolean changeTracking = true;
-    
-    public synchronized boolean isChangeTracking() {
-        return changeTracking;
-    }
-    
-    public synchronized void setChangeTracking(boolean changeTracking) {
-        this.changeTracking = changeTracking;
-        setChanged();
-    }
     
     /**
      * The current connection
@@ -109,36 +100,6 @@ final public class SQLConnection extends Observable implements Runnable {
         /*
          * No initialisation here
          */
-    }
-    
-    public void start() {
-       Thread thread = new Thread(instance);
-       thread.setName("SQL");
-       thread.start();
-    }
-    
-    /**
-     * Creates a tab in a given location
-     * 
-     * @param file
-     *            the given location
-     * @throws IOException
-     * @throws SQLException
-     */
-    public synchronized void create(File file) throws IOException,
-            SQLException {
-        if (file.exists()) {
-            throw new IOException("tab already exists");
-        }
-        
-        this.file = file;
-
-        conn = DriverManager.getConnection("jdbc:sqlite:"
-                + file.getAbsolutePath());
-        InputStream schema = this.getClass()
-                .getResourceAsStream("/schema.sql");
-        evaluateSQLFile(schema);
-        
     }
     
     /**
@@ -197,6 +158,77 @@ final public class SQLConnection extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
+    
+    /**
+     * An override that changes the visibility (the thread-safety) of the
+     * superclasses' setChanged method
+     */
+    @Override
+    protected synchronized void setChanged() {
+        /*
+         * We might not be tracking changes at the moment (ie: we are loading
+         * the schema into a new tab. If so, do not track changes).
+         */
+        if (changeTracking) {
+            super.setChanged();
+        }
+    }
+    
+    @Override
+    public void addObserver(Observer observer){
+        super.addObserver(observer);
+        LOG.info("Observer added: " + observer);
+        /*
+         * setChanged() is not designed for this kind of use, but the 
+         * intention here is that this ensures that in the next loop 
+         * the observers are told to repull
+         */
+        setChanged();
+    }
+    
+    /**
+     * Creates a tab in a given location
+     * 
+     * @param file
+     *            the given location
+     * @throws IOException
+     * @throws SQLException
+     */
+    public synchronized void create(File file) throws IOException,
+            SQLException {
+        if (file.exists()) {
+            throw new IOException("tab already exists");
+        }
+        
+        this.file = file;
+
+        conn = DriverManager.getConnection("jdbc:sqlite:"
+                + file.getAbsolutePath());
+        InputStream schema = this.getClass()
+                .getResourceAsStream("/schema.sql");
+        evaluateSQLFile(schema);
+        
+    }
+    
+    /**
+     * This method closes the current connection and opens a new one.
+     * 
+     * This is complete hack but is absolutely required because if this isn't
+     * done then sqlite won't notice any updates that are done to the code.
+     * @throws SQLException
+     */
+    public void cycleConn() throws SQLException{
+        synchronized(this){
+            conn.close();
+            conn = DriverManager.getConnection("jdbc:sqlite:"
+                    + file.getAbsolutePath());
+            Statement statement = conn.createStatement();
+            statement.execute("PRAGMA foreign_keys = ON;");
+            statement.close();
+            LOG.info("Cycled connection");
+        }
+        setChanged();
+    }
 
     /**
      * Execute an SQL query against the database
@@ -205,6 +237,7 @@ final public class SQLConnection extends Observable implements Runnable {
      *            query
      * @return resultset
      */
+    @Deprecated
     public synchronized ResultSet executeQuery(String query) {
         ResultSet returnValue = null;
         try {
@@ -218,6 +251,14 @@ final public class SQLConnection extends Observable implements Runnable {
         return returnValue;
     }
 
+    public Connection getConn() {
+        return conn;
+    }
+    
+    public synchronized boolean isChangeTracking() {
+        return changeTracking;
+    }
+    
     /**
      * There are so many instances where an unfixable situation arises in this
      * file that I have defined this shorthand.
@@ -236,21 +277,21 @@ final public class SQLConnection extends Observable implements Runnable {
         System.exit(255);
     }
     
-    /**
-     * An override that changes the visibility (the thread-safety) of the
-     * superclasses' setChanged method
-     */
     @Override
-    protected synchronized void setChanged() {
-        /*
-         * We might not be tracking changes at the moment (ie: we are loading
-         * the schema into a new tab. If so, do not track changes).
-         */
-        if (changeTracking) {
-            super.setChanged();
+    public void run() {
+        while(true){
+            try {
+                Thread.sleep(NOTIFY_FREQUENCY); //FIXME: finalise
+                notifyObservers();
+            } catch (InterruptedException e) {
+                /*
+                 * If we are interrupted, then do nothing
+                 */
+                LOG.warn("Interrupted", e);
+            }
         }
     }
-    
+
     /**
      * Set the database file, and loads the schema into it if required.
      * 
@@ -280,56 +321,16 @@ final public class SQLConnection extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
-    
-    /**
-     * This method closes the current connection and opens a new one.
-     * 
-     * This is complete hack but is absolutely required because if this isn't
-     * done then sqlite won't notice any updates that are done to the code.
-     * @throws SQLException
-     */
-    public void cycleConn() throws SQLException{
-        synchronized(this){
-            conn.close();
-            conn = DriverManager.getConnection("jdbc:sqlite:"
-                    + file.getAbsolutePath());
-            Statement statement = conn.createStatement();
-            statement.execute("PRAGMA foreign_keys = ON;");
-            statement.close();
-            LOG.info("Cycled connection");
-        }
+
+    public synchronized void setChangeTracking(boolean changeTracking) {
+        this.changeTracking = changeTracking;
         setChanged();
     }
-
-    public Connection getConn() {
-        return conn;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            try {
-                Thread.sleep(NOTIFY_FREQUENCY); //FIXME: finalise
-                notifyObservers();
-            } catch (InterruptedException e) {
-                /*
-                 * If we are interrupted, then do nothing
-                 */
-                LOG.warn("Interrupted", e);
-            }
-        }
-    }
     
-    @Override
-    public void addObserver(Observer observer){
-        super.addObserver(observer);
-        LOG.info("Observer added: " + observer);
-        /*
-         * setChanged() is not designed for this kind of use, but the 
-         * intention here is that this ensures that in the next loop 
-         * the observers are told to repull
-         */
-        setChanged();
+    public void start() {
+       Thread thread = new Thread(instance);
+       thread.setName("SQL");
+       thread.start();
     }
     
 }

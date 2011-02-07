@@ -29,6 +29,8 @@ import java.util.Observer;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.log4j.Logger;
+
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.controller.TeamListListener;
 import taberystwyth.db.SQLConnection;
@@ -36,8 +38,10 @@ import taberystwyth.db.SQLConnection;
 public class OverviewFrame extends JFrame implements Observer {
     
     private static final long serialVersionUID = 1L;
-    OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(
+    private OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(
             this);
+    
+    private final static Logger log = Logger.getLogger(OverviewFrame.class);
     
     /*
      * Models
@@ -276,7 +280,7 @@ public class OverviewFrame extends JFrame implements Observer {
     }
     
     public void update(Observable o, Object arg) {
-        System.out.println("OverviewFrame.update()");
+        log.info("Updating view");
         refreshTeams();
         refreshJudges();
         refreshLocation();

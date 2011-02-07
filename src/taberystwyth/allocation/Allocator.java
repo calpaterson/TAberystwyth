@@ -208,20 +208,17 @@ public final class Allocator {
                     + m.getSecondOp() + "', " + "'" + m.getLocation() + "', "
                     + round + ");";
             conn.execute(roomInsert);
-            System.out.println(roomInsert);
             String chairInsert = "insert into judging_panels (name, round, "
                     + "room, isChair) values(" + "'" + m.getChair() + "'"
                     + ", " + round + ", '" + m.getLocation() + "'" + ", "
                     + "1);";
             conn.execute(chairInsert);
-            System.out.println(chairInsert);
             for (String w : m.getWings()) {
                 String wingInsert = "insert into judging_panels (name, round, "
                         + "room, isChair) values(" + "'" + w + "'" + ", "
                         + round + ", " + "'" + m.getLocation() + "'" + ", "
                         + "0);";
                 conn.execute(wingInsert);
-                System.out.println(wingInsert);
             }
             
         }

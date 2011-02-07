@@ -33,6 +33,8 @@ import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 /**
  * A clever wrapper for the Connection class that provides Observer/Observable
  * for notification about changes as well as singleton behaviour
@@ -40,6 +42,8 @@ import javax.swing.JOptionPane;
  * @author Cal Paterson
  */
 public class SQLConnection extends Observable implements Runnable {
+    
+    private static final Logger log = Logger.getLogger(SQLConnection.class);
     
     /**
      * The frequency (in milliseconds) with which this singleton notifies
@@ -97,6 +101,7 @@ public class SQLConnection extends Observable implements Runnable {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
+            log.fatal("Unable to load database driver");
             panic(e, "Unable to load the database driver."
                     + "Perhaps your computer architecture is not supported?");
         }
@@ -107,7 +112,9 @@ public class SQLConnection extends Observable implements Runnable {
     }
     
     public void start() {
-       new Thread(instance).start();
+       Thread thread = new Thread(instance);
+       thread.setName("SQL");
+       thread.start();
     }
     
     /**
@@ -166,6 +173,11 @@ public class SQLConnection extends Observable implements Runnable {
                 // System.out.println(statements[i]);
                 conn.createStatement().execute(statements[i]);
             }
+            log.info("Evaluated SQL file");
+            /*
+             * FIXME: Change this method's argument type to File, so that the 
+             * log can hold the absolute file path
+             */
         } catch (Exception e) {
             panic(e, "Unable to evaluate SQL file");
         } finally {
@@ -177,7 +189,6 @@ public class SQLConnection extends Observable implements Runnable {
                 e.printStackTrace();
             }
         }
-        System.out.println("SQLConnection.evaluateSQLFile()");
         setChanged();
         notifyObservers();
     }
@@ -208,7 +219,7 @@ public class SQLConnection extends Observable implements Runnable {
         } catch (SQLException e2){
             
         }
-        System.out.println("SQLConnection.execute()");
+        log.info("Executed: " + statement);
         setChanged();
         notifyObservers();
         return returnValue;
@@ -226,6 +237,7 @@ public class SQLConnection extends Observable implements Runnable {
         try {
             Statement stmt = conn.createStatement();
             returnValue = stmt.executeQuery(query);
+            log.info("Executed query: " + query);
         } catch (SQLException e) {
             panic(e, "Unable to execute this query against the database:\n"
                     + query);
@@ -290,7 +302,8 @@ public class SQLConnection extends Observable implements Runnable {
         st.close();
         cycleConn();
         
-        System.out.println("SQLConnection.setDatabase()");
+        log.info("Database set to " + file.getAbsolutePath());
+        
         setChanged();
         notifyObservers();
     }
@@ -310,6 +323,7 @@ public class SQLConnection extends Observable implements Runnable {
             Statement statement = conn.createStatement();
             statement.execute("PRAGMA foreign_keys = ON;");
             statement.close();
+            log.info("Cycled connection");
         }
         setChanged();
     }
@@ -328,7 +342,7 @@ public class SQLConnection extends Observable implements Runnable {
                 /*
                  * If we are interrupted, then do nothing
                  */
-                e.printStackTrace();
+                log.warn("Interrupted", e);
             }
         }
     }
@@ -336,6 +350,7 @@ public class SQLConnection extends Observable implements Runnable {
     @Override
     public void addObserver(Observer observer){
         super.addObserver(observer);
+        log.info("Observer added: " + observer);
         /*
          * setChanged() is not designed for this kind of use, but the 
          * intention here is that this ensures that in the next loop 

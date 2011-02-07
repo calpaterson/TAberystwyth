@@ -33,7 +33,7 @@ import taberystwyth.view.OverviewFrame;
  */
 public class Main {
     
-    static Logger logger = Logger.getLogger(Main.class);
+    private static final Logger log = Logger.getLogger(Main.class);
     
     /**
      * The main method
@@ -55,7 +55,7 @@ public class Main {
             UIManager
                     .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e1) {
-            logger.error(
+            log.error(
                     "Unable to set the system look and feel, will carry on with the default.",
                     e1);
             e1.printStackTrace();
@@ -67,7 +67,7 @@ public class Main {
             Class.forName("taberystwyth.allocation.Allocator");
             Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {
-            logger.fatal("Unable to load the singleton classes.", e);
+            log.fatal("Unable to load the singleton classes.", e);
             e.printStackTrace();
             return;
         }
@@ -79,7 +79,7 @@ public class Main {
          */
         if (args.length > 0) {
             if (args[0].equals("--debug")) {
-                logger.info("Entering debug mode.");
+                log.info("Entering debug mode.");
                 
                 JMenu debugMenu = new JMenu("Debug");
                 JMenuItem generateMorningTab = new JMenuItem(

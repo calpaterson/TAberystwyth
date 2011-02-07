@@ -60,10 +60,6 @@ public class AllocationFrameListener implements ActionListener, ItemListener{
                         JOptionPane.INFORMATION_MESSAGE);
             }
 		}
-		
-		else{
-			System.out.println("Not Implemented");
-		}
 
 	}
 

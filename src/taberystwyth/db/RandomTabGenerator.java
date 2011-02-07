@@ -23,14 +23,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class RandomTabGenerator.
  */
 public class RandomTabGenerator {
     
+    private final static Logger log = 
+        Logger.getLogger(RandomTabGenerator.class);
+    
     /** The instance of SQLConnection */
-    SQLConnection sql = SQLConnection.getInstance();
+    private SQLConnection sql = SQLConnection.getInstance();
     
     /** The instance. */
     private static RandomTabGenerator instance = new RandomTabGenerator();
@@ -67,7 +72,8 @@ public class RandomTabGenerator {
             sql.setChangeTracking(false);
             int i = 0;
             while (i < N_TEAMS) {
-                System.out.println(genTeam() + " generated");
+                String team = genTeam();
+                log.info("Team generated: " + team);
                 ++i;
             }
             genLocations();
@@ -84,11 +90,13 @@ public class RandomTabGenerator {
                     conn.setAutoCommit(false);
                     String s = "insert into locations (name, rating) values (?, ?);";
                     for (int i = 0; i < N_LOCATIONS; ++i) {
+                        String location = locations[gen.nextInt(locations.length)];
                         PreparedStatement p = conn.prepareStatement(s);
-                        p.setString(1, locations[gen.nextInt(locations.length)]);
+                        p.setString(1, location);
                         p.setInt(2, 50);
                         p.execute();
                         p.close();
+                        log.info("Location generated: " + location);
                     }   
                     conn.commit();
                     sql.cycleConn();

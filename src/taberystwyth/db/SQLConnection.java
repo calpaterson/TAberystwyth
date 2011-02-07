@@ -74,6 +74,8 @@ public class SQLConnection extends Observable implements Runnable {
     
     public synchronized void setChangeTracking(boolean changeTracking) {
         this.changeTracking = changeTracking;
+        setChanged();
+        notifyObservers();
     }
     
     /**

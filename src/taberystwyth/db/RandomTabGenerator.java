@@ -38,7 +38,7 @@ public class RandomTabGenerator {
     
     /**
      * Gets the single instance of RandomTabGenerator.
-     *
+     * 
      * @return single instance of RandomTabGenerator
      */
     public static RandomTabGenerator getInstance() {
@@ -49,7 +49,9 @@ public class RandomTabGenerator {
     private Random gen = new Random();
     
     /** The Constant N_TEAMS. */
-    private static final int N_TEAMS = 100;
+    private static final int N_TEAMS = 12;
+    
+    private static final int N_LOCATIONS = 4; 
     
     /**
      * Instantiates a new random tab generator.
@@ -66,16 +68,47 @@ public class RandomTabGenerator {
             sql.setChangeTracking(false);
             int i = 0;
             while (i < N_TEAMS) {
-                System.out.println(genTeam() + " generated...");
+                System.out.println(genTeam() + " generated");
                 ++i;
             }
+            genLocations();
             sql.setChangeTracking(true);
+        }
+    }
+    
+    private void genLocations() {
+        while (true) {
+            Connection conn = sql.getConn();
+            try {
+                synchronized (sql) {
+                    conn.setAutoCommit(false);
+                    String s = "insert into locations (name, rating) values (?, ?);";
+                    for (int i = 0; i < N_LOCATIONS; ++i) {
+                        PreparedStatement p = conn.prepareStatement(s);
+                        p.setString(1, locations[i]);
+                        p.setInt(2, 50);
+                        p.execute();
+                        p.close();
+                        System.out.println(locations[i] + " generated");
+                    }   
+                    conn.commit();
+                    sql.cycleConn();
+                    return;
+                }
+            } catch (SQLException e) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
         }
     }
     
     /**
      * Generate a random team
-     *
+     * 
      * @return the name of the team
      */
     private String genTeam() {
@@ -84,7 +117,7 @@ public class RandomTabGenerator {
                 String speaker1;
                 String speaker2;
                 String name;
-                synchronized(sql){
+                synchronized (sql) {
                     /*
                      * Get the connection, stop auto commit
                      */
@@ -124,9 +157,10 @@ public class RandomTabGenerator {
     
     /**
      * Generate a speaker.
-     *
+     * 
      * @return the name of the speaker
-     * @throws SQLException the SQL exception
+     * @throws SQLException
+     *             the SQL exception
      */
     private String genSpeaker() throws SQLException {
         String name = genName();
@@ -147,7 +181,7 @@ public class RandomTabGenerator {
     
     /**
      * Generate a random name
-     *
+     * 
      * @return the string
      */
     private String genName() {
@@ -285,7 +319,7 @@ public class RandomTabGenerator {
             "Sophie", "Thomas", "William" };
     
     /** The locations. */
-    String[] locations = {
+    private String[] locations = {
             "Bath",
             "Blaenavon Industrial Landscape",
             "Blenheim Palace",

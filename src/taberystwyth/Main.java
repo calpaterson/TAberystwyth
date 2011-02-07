@@ -84,7 +84,7 @@ public final class Main {
                 
                 final JMenu debugMenu = new JMenu("Debug");
                 final JMenuItem generateMorningTab = new JMenuItem(
-                        "Generate Morning Tab");
+                        "Generate Tab");
                 generateMorningTab.addActionListener(new DebugMenuListener());
                 debugMenu.add(generateMorningTab);
                 

@@ -18,74 +18,144 @@
 
 package taberystwyth.db;
 
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class RandomTabGenerator.
+ */
 public class RandomTabGenerator {
+    
+    /** The instance of SQLConnection */
     SQLConnection sql = SQLConnection.getInstance();
     
+    /** The instance. */
     private static RandomTabGenerator instance = new RandomTabGenerator();
     
+    /**
+     * Gets the single instance of RandomTabGenerator.
+     *
+     * @return single instance of RandomTabGenerator
+     */
     public static RandomTabGenerator getInstance() {
         return instance;
     }
     
+    /** The random generator that will be used throughout. */
     private Random gen = new Random();
     
+    /** The Constant N_TEAMS. */
     private static final int N_TEAMS = 100;
     
+    /**
+     * Instantiates a new random tab generator.
+     */
     private RandomTabGenerator() {
         /* VOID */
     }
     
+    /**
+     * Generate a random tab.
+     */
     public void generate() {
         synchronized (sql) {
             sql.setChangeTracking(false);
             int i = 0;
             while (i < N_TEAMS) {
-                genTeam();
+                System.out.println(genTeam() + " generated...");
                 ++i;
             }
             sql.setChangeTracking(true);
         }
     }
     
+    /**
+     * Generate a random team
+     *
+     * @return the name of the team
+     */
     private String genTeam() {
-        String speaker1;
-        String speaker2;
         while (true) {
             try {
-                speaker1 = genSpeaker();
-                speaker2 = genSpeaker();
-                String name = speaker1 + " and " + speaker2;
-                sql.execute("insert into teams (name, speaker1, speaker2) values("
-                        + "'"
-                        + name
-                        + "', '"
-                        + speaker1
-                        + "', '"
-                        + speaker2
-                        + "');");
+                String speaker1;
+                String speaker2;
+                String name;
+                synchronized(sql){
+                    /*
+                     * Get the connection, stop auto commit
+                     */
+                    Connection conn = sql.getConn();
+                    conn.setAutoCommit(false);
+                    
+                    /*
+                     *  
+                     */
+                    speaker1 = genSpeaker();
+                    speaker2 = genSpeaker();
+                    
+                    String s = "insert into teams (name, speaker1, speaker2) values(?, ?, ?);";
+                    PreparedStatement p = conn.prepareStatement(s);
+                    name = speaker1 + " and " + speaker2;
+                    
+                    p.setString(1, name);
+                    p.setString(2, speaker1);
+                    p.setString(3, speaker2);
+                    
+                    p.execute();
+                    p.close();
+                    conn.commit();
+                    
+                    /*
+                     * Boilerplate end code
+                     */
+                    sql.cycleConn();
+                }
                 return name;
             } catch (SQLException e) {
                 // FIXME: remove failed inserts
+                e.printStackTrace();
             }
         }
     }
     
+    /**
+     * Generate a speaker.
+     *
+     * @return the name of the speaker
+     * @throws SQLException the SQL exception
+     */
     private String genSpeaker() throws SQLException {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
-        sql.execute("insert into speakers (name, institution) values(" + "'"
-                + name + "','" + institution + "');");
+        synchronized (sql) {
+            Connection conn = sql.getConn();
+            String s = "insert into speakers (name, institution) values(?,?);";
+            PreparedStatement p = conn.prepareStatement(s);
+            
+            p.setString(1, name);
+            p.setString(2, institution);
+            
+            p.execute();
+            p.close();
+        }
         return name;
     }
     
+    /**
+     * Generate a random name
+     *
+     * @return the string
+     */
     private String genName() {
         return firstNames[gen.nextInt(firstNames.length)] + " "
                 + gen.nextInt(25);
     }
     
+    /** The institutions. */
     private String[] institutions = {
             "University of Aberdeen",
             "University of Abertay Dundee",
@@ -170,7 +240,7 @@ public class RandomTabGenerator {
             "Peninsula College of Medicine and Dentistry",
             "University of Plymouth",
             "University of Portsmouth",
-            // "Queen's University Belfast", // FIXME: Apostrophes!
+            "Queen's University Belfast",
             "Queen Margaret University, Edinburgh",
             "University of Reading",
             "The Robert Gordon University, Aberdeen",
@@ -205,6 +275,7 @@ public class RandomTabGenerator {
             "University of Worcester", "University of York",
             "York St John University" };
     
+    /** The first names. */
     private String[] firstNames = { "Abigail", "Alexander", "Amelia", "Amy",
             "Benjamin", "Callum", "Charlie", "Charlotte", "Chloe", "Daniel",
             "Ella", "Ellie", "Emily", "Emma", "Ethan", "George", "Grace",
@@ -213,6 +284,7 @@ public class RandomTabGenerator {
             "Mia", "Mohammed", "Molly", "Oliver", "Olivia", "Samuel",
             "Sophie", "Thomas", "William" };
     
+    /** The locations. */
     String[] locations = {
             "Bath",
             "Blaenavon Industrial Landscape",

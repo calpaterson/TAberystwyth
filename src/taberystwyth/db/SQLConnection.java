@@ -296,6 +296,7 @@ public class SQLConnection extends Observable implements Runnable {
                     + file.getAbsolutePath());
             Statement statement = conn.createStatement();
             statement.execute("PRAGMA foreign_keys = ON;");
+            statement.close();
         }
         setChanged();
     }

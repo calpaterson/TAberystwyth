@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -283,9 +284,10 @@ public final class Allocator {
         HashMap<String, Integer> points = getTeamPoints();
         
         /*
-         * For each team, add it to map of pools
+         * For each team, add it to the map of pools
          */
-        for (String team : points.keySet()) {
+        for (Entry<String,Integer> entry : points.entrySet()) {
+            String team = entry.getKey();
             int innerPoints = points.get(team);
             /*
              * If the pool does not exist, create it

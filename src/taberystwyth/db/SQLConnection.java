@@ -148,8 +148,12 @@ public class SQLConnection extends Observable implements Runnable {
      */
     private synchronized void evaluateSQLFile(InputStream file) {
         char[] cbuf = new char[4000];
+        InputStreamReader isr = null;
+        BufferedReader br = null;
         try {
-            new BufferedReader(new InputStreamReader(file)).read(cbuf);
+            isr = new InputStreamReader(file);
+            br = new BufferedReader(new InputStreamReader(file));
+            br.read(cbuf);
             
             /*
              * FIXME: This block is some disgusting magic that loads all of the
@@ -164,6 +168,14 @@ public class SQLConnection extends Observable implements Runnable {
             }
         } catch (Exception e) {
             panic(e, "Unable to evaluate SQL file");
+        } finally {
+            try {
+                br.close();
+                isr.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         System.out.println("SQLConnection.evaluateSQLFile()");
         setChanged();

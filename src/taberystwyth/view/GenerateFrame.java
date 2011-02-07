@@ -125,6 +125,7 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
             setProgress(0);
             generateButton.setEnabled(true);
             setCursor(null);
+            OverviewFrame.getInstance().setEnabled(true);
             GenerateFrame.getInstance().setVisible(false);
         }
         
@@ -133,6 +134,7 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
     @Override
     public void actionPerformed(ActionEvent e) {
         generateButton.setEnabled(false);
+        OverviewFrame.getInstance().setEnabled(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         Generation generation = new Generation();
         generation.addPropertyChangeListener(this);

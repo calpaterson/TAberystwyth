@@ -30,8 +30,7 @@ import taberystwyth.view.OverviewFrame;
 public class DebugMenuListener implements ActionListener {
     
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("Generate Morning Tab")) {
-            //Generator.getInstance().generate();
+        if (e.getActionCommand().equals("Generate Tab")) {
             GenerateFrame.getInstance().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(OverviewFrame.getInstance(),

@@ -25,16 +25,16 @@ import java.util.Random;
 
 import org.apache.log4j.Logger;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class RandomTabGenerator.
  */
 public class RandomTabGenerator {
     
+    /** The Constant log. */
     private final static Logger log = 
         Logger.getLogger(RandomTabGenerator.class);
     
-    /** The instance of SQLConnection */
+    /** The instance of SQLConnection. */
     private SQLConnection sql = SQLConnection.getInstance();
     
     /** The instance. */
@@ -55,8 +55,10 @@ public class RandomTabGenerator {
     /** The Constant N_TEAMS. */
     private static final int N_TEAMS = 12;
     
+    /** The Constant N_LOCATIONS. */
     private static final int N_LOCATIONS = 4; 
     
+    /** The Constant N_JUDGES. */
     private static final int N_JUDGES = 30;
     
     /**
@@ -91,6 +93,12 @@ public class RandomTabGenerator {
         }
     }
     
+    /**
+     * Gen judge.
+     *
+     * @return the string
+     */
+    @SuppressWarnings("null") // This is for the variable conn only
     private String genJudge() {
         while(true){
             Connection conn = null;
@@ -119,13 +127,16 @@ public class RandomTabGenerator {
                     conn.rollback();
                 } catch (Exception e1) {
                     log.error("Exception while rolling back!", e1);
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
         }
     }
     
+    /**
+     * Gen locations.
+     */
+    @SuppressWarnings("null") // This is for the variable conn only
     private void genLocations() {
         while (true) {
             Connection conn = null;
@@ -149,9 +160,10 @@ public class RandomTabGenerator {
                 }
             } catch (SQLException e) {
                 try {
+                    log.error("SQL Exception", e);
                     conn.rollback();
-                } catch (SQLException e1) {
-                    // TODO Auto-generated catch block
+                } catch (Exception e1) {
+                    log.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
                 }
             }
@@ -159,17 +171,18 @@ public class RandomTabGenerator {
     }
     
     /**
-     * Generate a random team
-     * 
+     * Generate a random team.
+     *
      * @return the name of the team
      */
+    @SuppressWarnings("null") // This is for the variable conn only
     private String genTeam() {
         while (true) {
+            Connection conn = null;
             try {
                 String speaker1;
                 String speaker2;
                 String name;
-                Connection conn;
                 synchronized (sql) {
                     /*
                      * Get the connection, stop auto commit
@@ -202,8 +215,13 @@ public class RandomTabGenerator {
                 }
                 return name;
             } catch (SQLException e) {
-                // FIXME: remove failed inserts
-                e.printStackTrace();
+                try {
+                    log.error("SQL Exception", e);
+                    conn.rollback();
+                } catch (Exception e1) {
+                    log.error("Exception while trying to roll back", e1);
+                    e1.printStackTrace();
+                }
             }
         }
     }
@@ -233,8 +251,8 @@ public class RandomTabGenerator {
     }
     
     /**
-     * Generate a random name
-     * 
+     * Generate a random name.
+     *
      * @return the string
      */
     private String genName() {

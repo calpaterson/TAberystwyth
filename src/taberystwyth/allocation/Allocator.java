@@ -197,8 +197,7 @@ public final class Allocator {
          * Allocate locations
          */
         if (locationAlgo == LocationAllocation.RANDOM) {
-            rs = sql
-                    .executeQuery("select name from locations order by random();");
+            rs = sql.executeQuery("select name from locations order by random();");
             int i = 0;
             while (rs.next() && i < matches.size()) {
                 matches.get(i).setLocation(rs.getString(1));
@@ -210,7 +209,7 @@ public final class Allocator {
         }
         
         for (Match m : matches) {
-            synchronized(sql){
+            synchronized (sql) {
                 Connection conn = sql.getConn();
                 conn.setAutoCommit(false);
                 
@@ -228,34 +227,51 @@ public final class Allocator {
                 conn.commit();
                 sql.cycleConn();
             }
+            
+            /*
+             * String roomInsert =
+             * "insert into rooms (first_prop, second_prop, " +
+             * "first_op, second_op, location, round) values(" + "'" +
+             * m.getFirstProp() + "'" + ", " + "'" + m.getSecondProp() + "', "
+             * + "'" + m.getFirstOp() + "', " + "'" + m.getSecondOp() + "', " +
+             * "'" + m.getLocation() + "', " + round + ");";
+             * sql.execute(roomInsert);
+             */
 
-/*            String roomInsert = "insert into rooms (first_prop, second_prop, "
-                    + "first_op, second_op, location, round) values(" + "'"
-                    + m.getFirstProp() + "'" + ", " + "'" + m.getSecondProp()
-                    + "', " + "'" + m.getFirstOp() + "', " + "'"
-                    + m.getSecondOp() + "', " + "'" + m.getLocation() + "', "
-                    + round + ");";
-            sql.execute(roomInsert);*/
-            String chairInsert = "insert into judging_panels (name, round, "
-                    + "room, isChair) values(" + "'" + m.getChair() + "'"
-                    + ", " + round + ", '" + m.getLocation() + "'" + ", "
-                    + "1);";
-            sql.execute(chairInsert);
+            synchronized (sql) {
+                Connection conn = sql.getConn();
+                conn.setAutoCommit(false);
+                
+                String s = "insert into judging_panels (name, round, room, isChair) values (?,?,?,?);";
+                PreparedStatement p = conn.prepareStatement(s);
+                p.setString(1, m.getChair());
+                p.setInt(2, round);
+                p.setString(3, m.getLocation());
+                p.setBoolean(4, true);
+                p.execute();
+                p.close();
+                
+                conn.commit();
+                sql.cycleConn();
+            }
+            
             for (String w : m.getWings()) {
-                String wingInsert = "insert into judging_panels (name, round, "
-                        + "room, isChair) values("
-                        + "'"
-                        + w
-                        + "'"
-                        + ", "
-                        + round
-                        + ", "
-                        + "'"
-                        + m.getLocation()
-                        + "'"
-                        + ", "
-                        + "0);";
-                sql.execute(wingInsert);
+                synchronized (sql) {
+                    Connection conn = sql.getConn();
+                    conn.setAutoCommit(false);
+                    
+                    String s = "insert into judging_panels (name, round, room, isChair) values (?,?,?,?);";
+                    PreparedStatement p = conn.prepareStatement(s);
+                    p.setString(1, w);
+                    p.setInt(2, round);
+                    p.setString(3, m.getLocation());
+                    p.setBoolean(4, false);
+                    p.execute();
+                    p.close();
+                    
+                    conn.commit();
+                    sql.cycleConn();
+                }
             }
             
         }

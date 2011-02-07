@@ -197,38 +197,6 @@ final public class SQLConnection extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
-    
-    /**
-     * Execute an SQL statement against the database
-     * 
-     * @param statement
-     *            statement
-     * @return success or failure
-     * @throws SQLException 
-     */
-    @Deprecated
-    public synchronized boolean execute(String statement){
-        boolean returnValue = false;
-        /*
-         * Order seems to be important here because the semantics of sqlite are
-         * quite odd. Closing the connection is required in order to flush
-         * updates to the database file
-         */
-        try{
-        Statement stmt = conn.createStatement();
-        returnValue = stmt.execute(statement);
-        stmt.close();
-        conn.close();
-        conn = DriverManager.getConnection("jdbc:sqlite:"
-                + file.getAbsolutePath());
-        } catch (SQLException e2){
-            
-        }
-        LOG.info("Executed: " + statement);
-        setChanged();
-        notifyObservers();
-        return returnValue;
-    }
 
     /**
      * Execute an SQL query against the database

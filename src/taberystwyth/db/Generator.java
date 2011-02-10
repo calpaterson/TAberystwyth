@@ -56,10 +56,10 @@ final public class Generator {
     private Random gen = new Random();
     
     /** The Constant N_TEAMS. */
-    public static final int N_TEAMS = 12;
+    public static final int N_TEAMS = 32;
     
     /** The Constant N_LOCATIONS. */
-    public static final int N_LOCATIONS = 4;
+    public static final int N_LOCATIONS = 8;
     
     /** The Constant N_JUDGES. */
     public static final int N_JUDGES = 30;
@@ -80,15 +80,11 @@ final public class Generator {
     // This is for the variable conn only
     public String genJudge() {
         while (true) {
-            Connection conn = null;
             try {
                 synchronized (sql) {
-                    conn = sql.getConn();
-                    conn.setAutoCommit(false);
-                    
                     String name = genName();
                     
-                    PreparedStatement p = conn
+                    PreparedStatement p = sql
                             .prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
                     p.setString(1, name);
                     p.setString(2,
@@ -97,8 +93,7 @@ final public class Generator {
                     p.execute();
                     p.close();
                     
-                    conn.commit();
-                    sql.cycleConn();
+                    sql.commit();
                     LOG.debug("Judge generated: " + name);
                     return name;
                 }
@@ -106,7 +101,7 @@ final public class Generator {
                 LOG.error("SQL Exception", e);
                 e.printStackTrace();
                 try {
-                    conn.rollback();
+                    sql.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while rolling back!", e1);
                     e1.printStackTrace();
@@ -122,27 +117,23 @@ final public class Generator {
     // This is for the variable conn only
     public void genLocation() {
         while (true) {
-            Connection conn = null;
             try {
                 synchronized (sql) {
-                    conn = sql.getConn();
-                    conn.setAutoCommit(false);
                     String s = "insert into locations (name, rating) values (?, ?);";
                     String location = locations[gen.nextInt(locations.length)];
-                    PreparedStatement p = conn.prepareStatement(s);
+                    PreparedStatement p = sql.prepareStatement(s);
                     p.setString(1, location);
                     p.setInt(2, 50);
                     p.execute();
                     p.close();
                     LOG.info("Location generated: " + location);
-                    conn.commit();
-                    sql.cycleConn();
+                    sql.commit();
                     return;
                 }
             } catch (SQLException e) {
                 try {
                     LOG.error("SQL Exception", e);
-                    conn.rollback();
+                    sql.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
@@ -160,26 +151,16 @@ final public class Generator {
     // This is for the variable conn only
     public String genTeam() {
         while (true) {
-            Connection conn = null;
             try {
                 String speaker1;
                 String speaker2;
                 String name;
                 synchronized (sql) {
-                    /*
-                     * Get the connection, stop auto commit
-                     */
-                    conn = sql.getConn();
-                    conn.setAutoCommit(false);
-                    
-                    /*
-                     *  
-                     */
                     speaker1 = genSpeaker();
                     speaker2 = genSpeaker();
                     
                     String s = "insert into teams (name, speaker1, speaker2) values(?, ?, ?);";
-                    PreparedStatement p = conn.prepareStatement(s);
+                    PreparedStatement p = sql.prepareStatement(s);
                     name = speaker1 + " and " + speaker2;
                     
                     p.setString(1, name);
@@ -188,19 +169,15 @@ final public class Generator {
                     
                     p.execute();
                     p.close();
-                    conn.commit();
                     
-                    /*
-                     * Boilerplate end code
-                     */
-                    sql.cycleConn();
+                    sql.commit();
                     LOG.debug("Team generated: " + name);
                 }
                 return name;
             } catch (SQLException e) {
                 try {
                     LOG.error("SQL Exception", e);
-                    conn.rollback();
+                    sql.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
@@ -220,15 +197,15 @@ final public class Generator {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
         synchronized (sql) {
-            Connection conn = sql.getConn();
             String s = "insert into speakers (name, institution) values(?,?);";
-            PreparedStatement p = conn.prepareStatement(s);
+            PreparedStatement p = sql.prepareStatement(s);
             
             p.setString(1, name);
             p.setString(2, institution);
             
             p.execute();
             p.close();
+            sql.commit();
         }
         return name;
     }

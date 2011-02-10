@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,13 +47,13 @@ final public class SQLConnection extends Observable implements Runnable {
     /**
      * The instance of this (singleton) object
      */
-    private static SQLConnection instance = new SQLConnection();
+    private static final SQLConnection INSTANCE = new SQLConnection();
     
     private static final Logger LOG = Logger.getLogger(SQLConnection.class);
     
     /**
      * The frequency (in milliseconds) with which this singleton notifies
-     * observers 
+     * observers
      */
     private static final int NOTIFY_FREQUENCY = 100;
     
@@ -62,7 +63,7 @@ final public class SQLConnection extends Observable implements Runnable {
      * @return
      */
     public static SQLConnection getInstance() {
-        return instance;
+        return INSTANCE;
     }
     
     /**
@@ -104,59 +105,48 @@ final public class SQLConnection extends Observable implements Runnable {
     
     /**
      * Evaluates a given SQL file against the current connection.
-     * 
-     * @param conn
-     *            connection to SQL database
-     * @param filePath
-     *            path of SQL file
-     * @throws IOException
-     *             if the file is not found
-     * @throws SQLException
-     *             if there is some problem with the SQL server
      */
-    private synchronized void evaluateSQLFile(InputStream file) {
-        char[] cbuf = new char[4000];
-        InputStreamReader isr = null;
-        BufferedReader br = null;
-        try {
-            isr = new InputStreamReader(file);
-            br = new BufferedReader(new InputStreamReader(file));
-            boolean endOfStreamReached = br.read(cbuf) == -1;
-            if (!endOfStreamReached){
-                String message = "Internal array cbuf not long enough to read sql";
-                LOG.error(message);
-                throw new IOException(message);
-            }
-            
-            /*
-             * FIXME: This block is some disgusting magic that loads all of the
-             * SQL statements in the given file
-             */
-            String fileContents = new String(cbuf);
-            String[] statements = fileContents.split(";");
-            for (int i = 0; i < (statements.length - 1); ++i) {
-                statements[i] = statements[i].concat(";");
-                // System.out.println(statements[i]);
-                conn.createStatement().execute(statements[i]);
-            }
-            LOG.info("Evaluated SQL file");
-            /*
-             * FIXME: Change this method's argument type to File, so that the 
-             * log can hold the absolute file path
-             */
-        } catch (Exception e) {
-            panic(e, "Unable to evaluate SQL file");
-        } finally {
+    private void evaluateSQLFile(InputStream file) {
+        synchronized (getInstance()) {
+            char[] cbuf = new char[10000];
+            InputStreamReader isr = null;
+            BufferedReader br = null;
             try {
-                br.close();
-                isr.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                isr = new InputStreamReader(file);
+                br = new BufferedReader(new InputStreamReader(file));
+                br.read(cbuf);
+                
+                /*
+                 * FIXME: This block is some disgusting magic that loads all of
+                 * the SQL statements in the given file
+                 */
+                String fileContents = new String(cbuf);
+                String[] statements = fileContents.split(";");
+                for (int i = 0; i < (statements.length - 1); ++i) {
+                    statements[i] = statements[i].concat(";");
+                    // System.out.println(statements[i]);
+                    conn.createStatement().execute(statements[i]);
+                }
+                LOG.debug("Evaluated SQL file");
+                /*
+                 * FIXME: Change this method's argument type to File, so that
+                 * the log can hold the absolute file path
+                 */
+            } catch (Exception e) {
+                LOG.fatal("Unable to evaluate SQL file", e);
+                
+            } finally {
+                try {
+                    br.close();
+                    isr.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
+            setChanged();
+            notifyObservers();
         }
-        setChanged();
-        notifyObservers();
     }
     
     /**
@@ -175,13 +165,13 @@ final public class SQLConnection extends Observable implements Runnable {
     }
     
     @Override
-    public void addObserver(Observer observer){
+    public void addObserver(Observer observer) {
         super.addObserver(observer);
         LOG.info("Observer added: " + observer);
         /*
-         * setChanged() is not designed for this kind of use, but the 
-         * intention here is that this ensures that in the next loop 
-         * the observers are told to repull
+         * setChanged() is not designed for this kind of use, but the intention
+         * here is that this ensures that in the next loop the observers are
+         * told to repull
          */
         setChanged();
     }
@@ -196,18 +186,23 @@ final public class SQLConnection extends Observable implements Runnable {
      */
     public synchronized void create(File file) throws IOException,
             SQLException {
+        this.file = file;
+        
+        /*
+         * Check if the file already exists
+         */
         if (file.exists()) {
             throw new IOException("tab already exists");
         }
         
-        this.file = file;
-
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
+        conn.setAutoCommit(false);
+        
         InputStream schema = this.getClass()
                 .getResourceAsStream("/schema.sql");
         evaluateSQLFile(schema);
-        
+        schema.close();
     }
     
     /**
@@ -215,21 +210,24 @@ final public class SQLConnection extends Observable implements Runnable {
      * 
      * This is complete hack but is absolutely required because if this isn't
      * done then sqlite won't notice any updates that are done to the code.
+     * 
      * @throws SQLException
      */
-    public void cycleConn() throws SQLException{
-        synchronized(this){
-            conn.close();
-            conn = DriverManager.getConnection("jdbc:sqlite:"
-                    + file.getAbsolutePath());
-            Statement statement = conn.createStatement();
-            statement.execute("PRAGMA foreign_keys = ON;");
-            statement.close();
-            LOG.info("Cycled connection");
-        }
+    public void commit() throws SQLException {
+        LOG.debug("committing...");
+        conn.commit();
+        conn.close();
+        conn = DriverManager.getConnection("jdbc:sqlite:"
+                + file.getAbsolutePath());
+        /*
+         * Statement statement = conn.createStatement();
+         * statement.execute("PRAGMA foreign_keys = ON;"); statement.close();
+         */
+        conn.setAutoCommit(false);
+        LOG.debug("   ...done");
         setChanged();
     }
-
+    
     /**
      * Execute an SQL query against the database
      * 
@@ -238,21 +236,20 @@ final public class SQLConnection extends Observable implements Runnable {
      * @return resultset
      */
     @Deprecated
-    public synchronized ResultSet executeQuery(String query) {
-        ResultSet returnValue = null;
-        try {
-            Statement stmt = conn.createStatement();
-            returnValue = stmt.executeQuery(query);
-            LOG.info("Executed query: " + query);
-        } catch (SQLException e) {
-            panic(e, "Unable to execute this query against the database:\n"
-                    + query);
+    public ResultSet executeQuery(String query) {
+        synchronized (getInstance()) {
+            ResultSet returnValue = null;
+            try {
+                Statement stmt = conn.createStatement();
+                returnValue = stmt.executeQuery(query);
+                // LOG.info("Executed query: " + query);
+            } catch (SQLException e) {
+                panic(e,
+                        "Unable to execute this query against the database:\n"
+                                + query);
+            }
+            return returnValue;
         }
-        return returnValue;
-    }
-
-    public Connection getConn() {
-        return conn;
     }
     
     public synchronized boolean isChangeTracking() {
@@ -279,9 +276,9 @@ final public class SQLConnection extends Observable implements Runnable {
     
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
-                Thread.sleep(NOTIFY_FREQUENCY); //FIXME: finalise
+                Thread.sleep(NOTIFY_FREQUENCY); // FIXME: finalise
                 notifyObservers();
             } catch (InterruptedException e) {
                 /*
@@ -291,7 +288,7 @@ final public class SQLConnection extends Observable implements Runnable {
             }
         }
     }
-
+    
     /**
      * Set the database file, and loads the schema into it if required.
      * 
@@ -306,31 +303,32 @@ final public class SQLConnection extends Observable implements Runnable {
         this.file = file;
         conn = DriverManager.getConnection("jdbc:sqlite:"
                 + file.getAbsolutePath());
-        
-        /*
-         * This line is required in order to unfuck sqlites' default behaviour,
-         * which is to ignore fk constraints
-         */
-        Statement st = conn.createStatement();
-        st.execute("PRAGMA foreign_keys = ON;");
-        st.close();
-        cycleConn();
+        conn.setAutoCommit(false);
         
         LOG.info("Database set to " + file.getAbsolutePath());
         
         setChanged();
         notifyObservers();
     }
-
-    public synchronized void setChangeTracking(boolean changeTracking) {
+    
+    public void setChangeTracking(boolean changeTracking) {
         this.changeTracking = changeTracking;
         setChanged();
     }
     
     public void start() {
-       Thread thread = new Thread(instance);
-       thread.setName("SQL");
-       thread.start();
+        Thread thread = new Thread(INSTANCE);
+        thread.setName("SQL");
+        thread.start();
+    }
+    
+    public PreparedStatement prepareStatement(String string)
+            throws SQLException {
+        return conn.prepareStatement(string);
+    }
+    
+    public void rollback() throws SQLException {
+        conn.rollback();
     }
     
 }

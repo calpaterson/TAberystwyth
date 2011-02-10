@@ -9,6 +9,7 @@ The entire SQL approach needs to be redone
  transactions (and work out the sqlite weirdness to boot)
  - Must provide prep'd statements to callers 
  - Must provide closing
+Compile a version of the JDBC jar from github that includes source code
 
 For v0.1
 ========

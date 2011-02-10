@@ -39,27 +39,20 @@ public class JudgeInsertionFrameListener implements ActionListener {
     
     private JudgeInsertionFrame frame;
     
-    private SQLConnection conn = SQLConnection.getInstance();
-    
     public void actionPerformed(ActionEvent e) {
         frame = JudgeInsertionFrame.getInstance();
         if (e.getActionCommand().equals("Save")) {
             try {
                 SQLConnection sql = SQLConnection.getInstance();
                 synchronized (sql) {
-                    Connection conn = sql.getConn();
-                    conn.setAutoCommit(false);
-                    
                     String s = "insert into judges (name, institution, rating) values (?,?,?);";
-                    PreparedStatement p = conn.prepareStatement(s);
+                    PreparedStatement p = sql.prepareStatement(s);
                     p.setString(1, frame.getJudgeName().getText());
                     p.setString(2, frame.getInstitution().getText());
                     p.setString(3, frame.getRating().getText());
                     p.execute();
                     p.close();
-                    
-                    conn.commit();
-                    sql.cycleConn();
+                    sql.commit();
                 }
             } catch (SQLException e1) {
                 LOG.error("Unable to insert a judge", e1);

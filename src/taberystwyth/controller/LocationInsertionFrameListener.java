@@ -26,11 +26,15 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 import taberystwyth.db.SQLConnection;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
 
 public final class LocationInsertionFrameListener implements ActionListener {
+    
+    private static Logger LOG = Logger.getLogger(LocationInsertionFrameListener.class);
     
     private static LocationInsertionFrameListener instance = 
         new LocationInsertionFrameListener();
@@ -49,17 +53,17 @@ public final class LocationInsertionFrameListener implements ActionListener {
             LocationInsertionFrame.getInstance();
         if (e.getActionCommand().equals("Save")) {
             synchronized (SQLConnection.getInstance()) {
-                Connection conn = sql.getConn();
                 try {
-                    PreparedStatement p = conn
+                    PreparedStatement p = sql
                             .prepareStatement("insert into locations (name, rating) values (?, ?);");
                     p.setString(1, frame.getLocationName().getText());
                     p.setInt(2,
                             Integer.parseInt((frame.getRating().getText())));
                     p.execute();
                     p.close();
-                    sql.cycleConn();
+                    sql.commit();
                 } catch (SQLException e1) {
+                    LOG.error("Unable to insert judge", e1);
                     JOptionPane
                             .showMessageDialog(
                                     OverviewFrame.getInstance(),

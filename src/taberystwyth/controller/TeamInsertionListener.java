@@ -39,7 +39,6 @@ public class TeamInsertionListener implements ActionListener {
     .getLogger(TeamInsertionListener.class);
     
     TeamInsertionFrame frame;
-    SQLConnection conn = SQLConnection.getInstance();
     
     public TeamInsertionListener(TeamInsertionFrame frame) {
         this.frame = frame;
@@ -65,40 +64,38 @@ public class TeamInsertionListener implements ActionListener {
             SQLConnection sql = SQLConnection.getInstance();
             try {
                 synchronized (sql) {
-                    Connection conn = sql.getConn();
-                    conn.setAutoCommit(false);
-                    
                     String speaker1 = "insert into speakers (name, institution, esl, novice) values (?,?,?,?);";
-                    PreparedStatement p1 = conn.prepareStatement(speaker1);
+                    PreparedStatement p1 = sql.prepareStatement(speaker1);
                     p1.setString(1, frame.getSpeaker1Name().getText());
                     p1.setString(2, frame.getSpeaker1Institution().getText());
                     p1.setBoolean(3, frame.getSpeaker1ESL().isSelected());
                     p1.setBoolean(4, frame.getSpeaker1Novice().isSelected());
-                    
+                    LOG.debug("s1name = " + frame.getSpeaker1Name().getText());
+                    p1.execute();
+                    p1.close();
+
                     String speaker2 = "insert into speakers (name, institution, esl, novice) values (?,?,?,?);";
-                    PreparedStatement p2 = conn.prepareStatement(speaker2);
+                    PreparedStatement p2 = sql.prepareStatement(speaker2);
                     p2.setString(1, frame.getSpeaker2Name().getText());
                     p2.setString(2, frame.getSpeaker2Institution().getText());
                     p2.setBoolean(3, frame.getSpeaker2ESL().isSelected());
                     p2.setBoolean(4, frame.getSpeaker2Novice().isSelected());
+                    LOG.debug("s1name = " + frame.getSpeaker2Name().getText());
+                    p2.execute();
+                    p2.close();
                     
                     String team = "insert into teams (speaker1, speaker2, name) values(?,?,?)";
-                    PreparedStatement t = conn.prepareStatement(team);
+                    PreparedStatement t = sql.prepareStatement(team);
                     t.setString(1, frame.getSpeaker1Name().getText());
                     t.setString(2, frame.getSpeaker2Name().getText());
                     t.setString(3, frame.getTeamName().getText());
-                    
-                    p1.execute();
-                    p1.close();
-                    p2.execute();
-                    p2.close();
                     t.execute();
                     t.close();
-                    conn.commit();
-                    sql.cycleConn();
+                    
+                    sql.commit();
                 }
             } catch (SQLException e1) {
-                LOG.error("Unable to insert a judge", e1);
+                LOG.error("Unable to insert a team", e1);
                 JOptionPane.showMessageDialog(frame,
                         "Unable to insert that team into the database",
                         "Database Error", JOptionPane.ERROR_MESSAGE);

@@ -77,7 +77,7 @@ final public class OverviewFrame extends JFrame implements Observer {
 
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
-                jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
                         "tab"));
                 jfc.showDialog(this, "Create");
                 File selection = jfc.getSelectedFile();
@@ -96,27 +96,29 @@ final public class OverviewFrame extends JFrame implements Observer {
                  */
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
-                jfc.setFileFilter(new FileNameExtensionFilter("Tab files", 
-                "tab"));
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
+                        "tab"));
                 jfc.showDialog(this, "Open");
                 File selection = jfc.getSelectedFile();
                 try {
                     SQLConnection.getInstance().set(selection);
                 } catch (Exception e) {
-                    if (e.getMessage().equals("tab version not as expected")){
-                        JOptionPane.showMessageDialog(this,
-                                "The selected tab file is of a different " +
-                                		"version to this program - it will " + 
-                                		"not be possible to open it",
-                                "Tab Version Error",
-                                JOptionPane.ERROR_MESSAGE);
+                    if (e.getMessage().equals("tab version not as expected")) {
+                        JOptionPane
+                                .showMessageDialog(
+                                        this,
+                                        "The selected tab file is of a different "
+                                                + "version to this program - it will "
+                                                + "not be possible to open it",
+                                        "Tab Version Error",
+                                        JOptionPane.ERROR_MESSAGE);
                         problem = true;
                     } else {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(this,
-                            "Problem reading selected file", "File Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    problem = true;
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this,
+                                "Problem reading selected file", "File Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        problem = true;
                     }
                 }
             } else if (n == 2) {
@@ -151,8 +153,7 @@ final public class OverviewFrame extends JFrame implements Observer {
          * Add menu bar
          */
         menu = new OverviewFrameMenu(new OverviewFrameMenuListener(this));
-        add(menu,
-                BorderLayout.NORTH);
+        add(menu, BorderLayout.NORTH);
         
         /*
          * Holding panel
@@ -203,78 +204,84 @@ final public class OverviewFrame extends JFrame implements Observer {
     
     private void refreshList(String table, DefaultListModel model) {
         model.removeAllElements();
-        ResultSet rs = SQLConnection.getInstance().executeQuery(
-                "select (name) from " + table + ";");
-        int index = 0;
-        try {
-            while (rs.next()) {
-                String entry = rs.getString("NAME");
-                /*
-                 * If it's a team, append the institution of the team
-                 */
-                if (table.equals("teams")) {
-                    entry += " (" + getInstitution(entry) + ")";
+        SQLConnection sql = SQLConnection.getInstance();
+        synchronized (sql) {
+            ResultSet rs = sql.executeQuery("select (name) from " + table
+                    + ";");
+            int index = 0;
+            try {
+                while (rs.next()) {
+                    String entry = rs.getString("NAME");
+                    /*
+                     * If it's a team, append the institution of the team
+                     */
+                    if (table.equals("teams")) {
+                        entry += " (" + getInstitution(entry) + ")";
+                    }
+                    model.add(index, entry);
+                    ++index;
                 }
-                model.add(index, entry);
-                ++index;
+            } catch (SQLException e) {
+                SQLConnection.getInstance().panic(e,
+                        "Unable to refresh overview frame");
             }
-        } catch (SQLException e) {
-            SQLConnection.getInstance().panic(e,
-                    "Unable to refresh overview frame");
         }
     }
     
     private String getInstitution(final String teamName) {
         String query = null;
         String returnValue = null;
-        SQLConnection conn = SQLConnection.getInstance();
-        try {
-            /*
-             * Get the speakers on the team
-             */
-            // FIXME: small hack here to ensure that the teamname (which might
-            // contain a ' is properly escaped:
-            String teamName_ = teamName.replaceAll("'", "''");
-            query = "select speaker1, speaker2 from teams where teams.name = '"
-                    + teamName + "';";
-            ResultSet rs = conn.executeQuery(query);
-            rs.next();
-            String speaker1 = rs.getString("SPEAKER1");
-            String speaker2 = rs.getString("SPEAKER2");
-            
-            /*
-             * Get the institution of speaker1
-             */
-            query = "select (institution) from speakers where speakers.name = '"
-                    + speaker1 + "'";
-            rs = conn.executeQuery(query);
-            rs.next();
-            String inst1 = rs.getString("INSTITUTION");
-            rs.close();
-            
-            /*
-             * Get the institution of speaker2
-             */
-            query = "select (institution) from speakers where speakers.name = '"
-                    + speaker2 + "'";
-            rs = conn.executeQuery(query);
-            rs.next();
-            String inst2 = rs.getString("INSTITUTION");
-            rs.close();
-            
-            /*
-             * Compare them
-             */
-            if (!inst1.equals(inst2)) {
-                returnValue = "Mixed";
-            } else {
-                returnValue = inst1;
+        SQLConnection sql = SQLConnection.getInstance();
+        synchronized (sql) {
+            try {
+                /*
+                 * Get the speakers on the team
+                 */
+                // FIXME: small hack here to ensure that the teamname (which
+                // might
+                // contain a ' is properly escaped:
+                String teamName_ = teamName.replaceAll("'", "''");
+                query = "select speaker1, speaker2 from teams where teams.name = '"
+                        + teamName + "';";
+                ResultSet rs = sql.executeQuery(query);
+                rs.next();
+                String speaker1 = rs.getString("SPEAKER1");
+                String speaker2 = rs.getString("SPEAKER2");
+                
+                /*
+                 * Get the institution of speaker1
+                 */
+                query = "select (institution) from speakers where speakers.name = '"
+                        + speaker1 + "'";
+                rs = sql.executeQuery(query);
+                rs.next();
+                String inst1 = rs.getString("INSTITUTION");
+                rs.close();
+                
+                /*
+                 * Get the institution of speaker2
+                 */
+                query = "select (institution) from speakers where speakers.name = '"
+                        + speaker2 + "'";
+                rs = sql.executeQuery(query);
+                rs.next();
+                String inst2 = rs.getString("INSTITUTION");
+                rs.close();
+                
+                /*
+                 * Compare them
+                 */
+                if (!inst1.equals(inst2)) {
+                    returnValue = "Mixed";
+                } else {
+                    returnValue = inst1;
+                }
+                
+            } catch (SQLException e) {
+                sql.panic(e,
+                        "Unable to find what institution two speakers are from.  Query was:\n"
+                                + query);
             }
-            
-        } catch (SQLException e) {
-            conn.panic(e,
-                    "Unable to find what institution two speakers are from.  Query was:\n"
-                            + query);
         }
         return returnValue;
     }

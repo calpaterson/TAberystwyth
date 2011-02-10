@@ -202,6 +202,7 @@ final public class SQLConnection extends Observable implements Runnable {
         InputStream schema = this.getClass()
                 .getResourceAsStream("/schema.sql");
         evaluateSQLFile(schema);
+        commit();
         schema.close();
     }
     

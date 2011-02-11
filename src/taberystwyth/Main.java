@@ -18,10 +18,13 @@
 
 package taberystwyth;
 
+import java.sql.Connection;
+
 import javax.swing.*;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.h2.jdbcx.JdbcConnectionPool;
 
 import taberystwyth.controller.DebugMenuListener;
 import taberystwyth.view.OverviewFrame;
@@ -64,11 +67,16 @@ public final class Main {
                     e1);
         }
         
+        /*
+         * Load the connection pool
+         */
+        JdbcConnectionPool cp = JdbcConnectionPool.create(
+                "jdbc:h2:~/test", "sa", "sa");
+        
         try {
-            
-            Class.forName("taberystwyth.db.SQLConnection");
+            /*Class.forName("taberystwyth.db.SQLConnection");
             Class.forName("taberystwyth.allocation.Allocator");
-            Class.forName("taberystwyth.view.OverviewFrame");
+            Class.forName("taberystwyth.view.OverviewFrame");*/
         } catch (Exception e) {
             LOG.fatal("Unable to load the singleton classes.", e);
             return;
@@ -78,7 +86,7 @@ public final class Main {
          * If the debug argument is passed, add the debug menu FIXME: Clean
          * this up so that the overviewframe menu has an option to display the
          * debug menu or not - this stuff shouldn't be here.
-         */
+         *
         if (args.length > 0 && args[0].equals("--debug")) {
                 LOG.info("Entering debug mode.");
                 
@@ -89,7 +97,7 @@ public final class Main {
                 debugMenu.add(generateMorningTab);
                 
                 OverviewFrame.getInstance().getMenu().add(debugMenu);
-        }
+        }*/
     }
     
 }

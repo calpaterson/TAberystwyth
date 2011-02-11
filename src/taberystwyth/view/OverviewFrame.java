@@ -59,73 +59,7 @@ final public class OverviewFrame extends JFrame implements Observer {
     private JMenuBar menu;
     
     private OverviewFrame() {
-        /*
-         * Run a "simple" dialog locating the current tab or creating a new one
-         */
-        boolean problem = true;
-        while (problem == true) {
-            Object[] options = { "Create a new tab", "Open an existing tab",
-                    "Close this program" };
-            int n = JOptionPane.showOptionDialog(this,
-                    "Create a new tab or open an existing one?",
-                    "TAberystwyth", JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            if (n == 0) {
-                /*
-                 * Create a new tab
-                 */
-
-                problem = false;
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
-                        "tab"));
-                jfc.showDialog(this, "Create");
-                File selection = jfc.getSelectedFile();
-                try {
-                    SQLConnection.getInstance().create(selection);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(this,
-                            "Problem reading selected file", "File Error",
-                            JOptionPane.ERROR_MESSAGE);
-                    problem = true;
-                }
-            } else if (n == 1) {
-                /*
-                 * Open an existing tab
-                 */
-                problem = false;
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
-                        "tab"));
-                jfc.showDialog(this, "Open");
-                File selection = jfc.getSelectedFile();
-                try {
-                    SQLConnection.getInstance().set(selection);
-                } catch (Exception e) {
-                    if (e.getMessage().equals("tab version not as expected")) {
-                        JOptionPane
-                                .showMessageDialog(
-                                        this,
-                                        "The selected tab file is of a different "
-                                                + "version to this program - it will "
-                                                + "not be possible to open it",
-                                        "Tab Version Error",
-                                        JOptionPane.ERROR_MESSAGE);
-                        problem = true;
-                    } else {
-                        e.printStackTrace();
-                        JOptionPane.showMessageDialog(this,
-                                "Problem reading selected file", "File Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        problem = true;
-                    }
-                }
-            } else if (n == 2) {
-                System.exit(0);
-            }
-        }
-        
+       
         setLayout(new BorderLayout());
         setTitle("TAberystwyth");
         /*

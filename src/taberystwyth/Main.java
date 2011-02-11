@@ -18,15 +18,20 @@
 
 package taberystwyth;
 
+import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.h2.jdbcx.JdbcConnectionPool;
 
 import taberystwyth.controller.DebugMenuListener;
+import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 import taberystwyth.view.OverviewFrame;
 
 /**
@@ -38,7 +43,9 @@ public final class Main {
     
     private static final Logger LOG = Logger.getLogger(Main.class);
     
-    private Main(){
+    private static  final TabServer TABSERVER = TabServer.getInstance();
+    
+    private Main() {
         /* VOID */
     }
     
@@ -68,15 +75,76 @@ public final class Main {
         }
         
         /*
-         * Load the connection pool
+         * Run a "simple" dialog locating the current tab or creating a new one
          */
-        JdbcConnectionPool cp = JdbcConnectionPool.create(
-                "jdbc:h2:~/test", "sa", "sa");
+        boolean problem = true;
+        while (problem == true) {
+            Object[] options = { "Create a new tab", "Open an existing tab",
+                    "Close this program" };
+            int n = JOptionPane.showOptionDialog(null,
+                    "Create a new tab or open an existing one?",
+                    "TAberystwyth", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n == 0) {
+                /*
+                 * Create a new tab
+                 */
+                problem = false;
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
+                        "tab"));
+                jfc.showDialog(null, "Create");
+                File selection = jfc.getSelectedFile();
+                try {
+                    TABSERVER.createDatabase(selection);
+                } catch (Exception e) {
+                    String error = "Unable to create selected tab";
+                    LOG.error(error, e);
+                    JOptionPane.showMessageDialog(null,
+                            error, "File Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    problem = true;
+                }
+            } else if (n == 1) {
+                /*
+                 * Open an existing tab
+                 */
+                problem = false;
+                JFileChooser jfc = new JFileChooser();
+                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
+                        "tab"));
+                jfc.showDialog(null, "Open");
+                File selection = jfc.getSelectedFile();
+                try {
+                    TABSERVER.openDatabase(selection);
+                } catch (Exception e) {
+                    String error = "Unable to open chosen tab";
+                    LOG.error(error, e);
+                    JOptionPane.showMessageDialog(null,
+                            error, "File Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    problem = true;
+                }
+            } else if (n == 2) {
+                LOG.fatal("User closed program");
+                System.exit(0);
+            }
+        }
         
         try {
-            /*Class.forName("taberystwyth.db.SQLConnection");
-            Class.forName("taberystwyth.allocation.Allocator");
-            Class.forName("taberystwyth.view.OverviewFrame");*/
+            TABSERVER.getConnectionPool().getConnection();
+        } catch (SQLException e1) {
+            LOG.error("something", e1);
+        }
+        
+        System.exit(1);
+        
+        try {
+            /*
+             * Class.forName("taberystwyth.db.SQLConnection");
+             * Class.forName("taberystwyth.allocation.Allocator");
+             * Class.forName("taberystwyth.view.OverviewFrame");
+             */
         } catch (Exception e) {
             LOG.fatal("Unable to load the singleton classes.", e);
             return;
@@ -86,18 +154,18 @@ public final class Main {
          * If the debug argument is passed, add the debug menu FIXME: Clean
          * this up so that the overviewframe menu has an option to display the
          * debug menu or not - this stuff shouldn't be here.
-         *
+         */
         if (args.length > 0 && args[0].equals("--debug")) {
-                LOG.info("Entering debug mode.");
-                
-                final JMenu debugMenu = new JMenu("Debug");
-                final JMenuItem generateMorningTab = new JMenuItem(
-                        "Generate Tab");
-                generateMorningTab.addActionListener(new DebugMenuListener());
-                debugMenu.add(generateMorningTab);
-                
-                OverviewFrame.getInstance().getMenu().add(debugMenu);
-        }*/
+            LOG.info("Entering debug mode.");
+            
+            final JMenu debugMenu = new JMenu("Debug");
+            final JMenuItem generateMorningTab = new JMenuItem("Generate Tab");
+            generateMorningTab.addActionListener(new DebugMenuListener());
+            debugMenu.add(generateMorningTab);
+            
+            OverviewFrame.getInstance().getMenu().add(debugMenu);
+        }
+        
     }
     
 }

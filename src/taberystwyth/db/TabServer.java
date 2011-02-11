@@ -1,7 +1,14 @@
 package taberystwyth.db;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -45,5 +52,44 @@ public class TabServer {
         connectionPool = JdbcConnectionPool.create(
                 "jdbc:h2:" + location.getAbsolutePath() + ";IFEXISTS=TRUE", "sa", "sa");
         LOG.info("Opened database: " + location.getAbsolutePath());
+    }
+    
+    /**
+     * Evaluates a given SQL file against the current connection.
+     */
+    private void evaluateSQLFile(File file) {
+            char[] cbuf = new char[10000];
+            FileReader fr = null;
+            BufferedReader br = null;
+            try {
+                fr = new FileReader(file);
+                br = new BufferedReader(fr);
+                br.read(cbuf);
+                
+                /*
+                 * This block is some disgusting magic that loads all of
+                 * the SQL statements in the given file
+                 */
+                String fileContents = new String(cbuf);
+                String[] statements = fileContents.split(";");
+                Connection conn = getConnectionPool().getConnection();
+                for (int i = 0; i < (statements.length - 1); ++i) {
+                    statements[i] = statements[i].concat(";");
+                    Statement state = conn.createStatement();
+                    state.execute(statements[i]);
+                }
+                conn.close();
+                LOG.debug("Evaluated SQL file: " + file.getAbsolutePath());
+            } catch (Exception e) {
+                LOG.fatal("Unable to evaluate: " + file.getAbsolutePath(), e);
+                
+            } finally {
+                try {
+                    br.close();
+                    fr.close();
+                } catch (IOException e) {
+                    LOG.error("Unable to read file: " + file.getAbsolutePath(), e);
+                }
+            }
     }
 }

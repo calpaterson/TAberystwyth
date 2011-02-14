@@ -44,8 +44,7 @@ public final class Allocator {
     
     private static final long INITIAL_SEED = 0L;
     private transient final Random randomGenerator = new Random(INITIAL_SEED);
-    private Connection sql;
-    private PreparedStatement stmt;
+    private Connection conn;
     Logger LOG = Logger.getLogger(Allocator.class);
     
     private static Allocator instance = new Allocator();
@@ -64,7 +63,7 @@ public final class Allocator {
      */
     private Allocator() {
         try {
-            sql = TabServer.getConnectionPool().getConnection();
+            conn = TabServer.getConnectionPool().getConnection();
         } catch (SQLException e) {
             LOG.error("Can't connect to database", e);
         }
@@ -92,94 +91,99 @@ public final class Allocator {
      */
     public void allocate(final TabAlgorithm teamAlgo,
                     final TabAlgorithm judgeAlgo,
-                    final TabAlgorithm locationAlgo)
-                    throws SQLException, SwingTeamsRequiredException,
-                    LocationsRequiredException, JudgesRequiredException {
-        
-        /*
-         * Two names that will be used repeatedly
-         */
-        ResultSet rs;
-        
-        /*
-         * Figure out the current round
-         */
-        int round;
-        stmt = sql.prepareStatement("select max(\"round\") from rooms;");
-        rs = stmt.executeQuery();
-        
-        if (rs.next()) {
-            round = rs.getInt(1) + 1;
-        } else {
-            round = 0;
-        }
-        rs.close();
-        
-        /*
-         * Generate matches
-         */
-        stmt = sql.prepareStatement("select count(*) / 4 from teams;");
-        rs = stmt.executeQuery();
-        rs.next();
-        final int nMatches = rs.getInt(1);
-        final ArrayList<Match> matches = new ArrayList<Match>();
-        int rank = 0;
-        while (matches.size() < nMatches) {
-            matches.add(new Match(rank));
-            ++rank;
-        }
-        rs.close();
-        
-        /*
-         * Allocate teams
-         */
-        if (teamAlgo.getName().equals("WUDC")) {
-            final TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
-            
-            final int highestTeamScore = pools.lastKey();
-            
-            // FIXME: What if highest team score is zero? (Initial round)
+                    final TabAlgorithm locationAlgo) throws SQLException,
+                    SwingTeamsRequiredException, LocationsRequiredException,
+                    JudgesRequiredException {
+        try {
             /*
-             * For every possible (leveled) pool...
+             * Two names that will be used repeatedly
              */
-            rank = 0;
-            for (int treeIndex = highestTeamScore; treeIndex >= 0; --treeIndex) {
+            ResultSet rs;
+            PreparedStatement stmt;
+            
+            /*
+             * Figure out the current round
+             */
+            int round;
+            stmt = conn.prepareStatement("select max(\"round\") from rooms;");
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                round = rs.getInt(1) + 1;
+            } else {
+                round = 0;
+            }
+            rs.close();
+            LOG.debug("Current round is: " + round);
+            
+            /*
+             * Generate matches
+             */
+            stmt = conn.prepareStatement("select count(*) / 4 from teams;");
+            rs = stmt.executeQuery();
+            rs.next();
+            final int nMatches = rs.getInt(1);
+            LOG.debug("Will generate " + nMatches + " rooms");
+            final ArrayList<Match> matches = new ArrayList<Match>();
+            int rank = 0;
+            while (matches.size() < nMatches) {
+                matches.add(new Match(rank));
+                ++rank;
+            }
+            rs.close();
+            
+            /*
+             * Allocate teams
+             */
+            if (teamAlgo.getName().equals("WUDC")) {
+                final TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
+                
+                final int highestTeamScore = pools.lastKey();
+                
+                // FIXME: What if highest team score is zero? (Initial round)
                 /*
-                 * ...if the pool exists
+                 * For every possible (leveled) pool...
                  */
-                if (pools.containsKey(treeIndex)) {
+                rank = 0;
+                for (int treeIndex = highestTeamScore; treeIndex >= 0; --treeIndex) {
                     /*
-                     * ...then build random rooms
+                     * ...if the pool exists
                      */
-                    ArrayList<String> pool = pools.get(treeIndex);
-                    int poolSizeDiv4 = pool.size() / 4;
-                    for (int i = 0; i < poolSizeDiv4; ++i) {
-                        
-                        Match match = matches.get(rank);
-                        
+                    if (pools.containsKey(treeIndex)) {
                         /*
-                         * Give all of the teams a random position
+                         * ...then build random rooms
                          */
-                        match.setFirstProp(pool.remove(randomGenerator
-                                        .nextInt(pool.size())));
-                        match.setFirstOp(pool.remove(randomGenerator
-                                        .nextInt(pool.size())));
-                        match.setSecondProp(pool.remove(randomGenerator
-                                        .nextInt(pool.size())));
-                        match.setSecondOp(pool.remove(randomGenerator
-                                        .nextInt(pool.size())));
-                        
-                        rank++;
+                        ArrayList<String> pool = pools.get(treeIndex);
+                        int poolSizeDiv4 = pool.size() / 4;
+                        for (int i = 0; i < poolSizeDiv4; ++i) {
+                            
+                            Match match = matches.get(rank);
+                            
+                            /*
+                             * Give all of the teams a random position
+                             */
+                            match.setFirstProp(pool.remove(randomGenerator
+                                            .nextInt(pool.size())));
+                            match.setFirstOp(pool.remove(randomGenerator
+                                            .nextInt(pool.size())));
+                            match.setSecondProp(pool.remove(randomGenerator
+                                            .nextInt(pool.size())));
+                            match.setSecondOp(pool.remove(randomGenerator
+                                            .nextInt(pool.size())));
+                            
+                            rank++;
+                        }
                     }
                 }
-                
             }
+            LOG.debug("Allocated teams");
             
             /*
              * Allocate Judges
              */
             if (judgeAlgo.getName().equals("Balanced")) {
-                stmt = sql.prepareStatement("select \"name\" from judges order by \"rating\" desc");
+                stmt = conn.prepareStatement(
+                      "select \"name\" from judges order by \"rating\" desc");
                 rs = stmt.executeQuery();
                 /*
                  * Allocate wings in a round-robin way
@@ -201,46 +205,47 @@ public final class Allocator {
                     }
                 }
             }
+            LOG.debug("Allocated judges");
             
             /*
              * Allocate locations
              */
             if (locationAlgo.getName().equals("Random")) {
-                stmt = sql.prepareStatement("select \"name\" from locations order by random();");
+                stmt = conn.prepareStatement(
+                        "select \"name\" from locations order by rand();");
                 rs = stmt.executeQuery();
                 int i = 0;
                 while (rs.next() && i < matches.size()) {
                     matches.get(i).setLocation(rs.getString(1));
                     ++i;
                 }
-                
             } else if (locationAlgo.getName().equals("Best to Best")) {
                 /* VOID */
             }
+            LOG.debug("Allocated locations");
             
+            /*
+             * Now put all the matches into the database
+             */
             for (Match m : matches) {
-                synchronized (sql) {
-                    String s = "insert into rooms "
-                                    + "(\"first_prop\", \"second_prop\","
-                                    + " \"first_op\", \"second_op\", "
-                                    + "\"location\", \"round\") values (?,?,?,?,?,?);";
-                    PreparedStatement p = sql.prepareStatement(s);
-                    p.setString(1, m.getFirstProp());
-                    p.setString(2, m.getSecondProp());
-                    p.setString(3, m.getFirstOp());
-                    p.setString(4, m.getSecondOp());
-                    p.setString(5, m.getLocation());
-                    p.setInt(6, round);
-                    p.execute();
-                    p.close();
-                    
-                    sql.commit();
-                }
+                String s = "insert into rooms "
+                                + "(\"first_prop\", \"second_prop\","
+                                + " \"first_op\", \"second_op\", "
+                                + "\"location\", \"round\") values (?,?,?,?,?,?);";
+                PreparedStatement p = conn.prepareStatement(s);
+                p.setString(1, m.getFirstProp());
+                p.setString(2, m.getSecondProp());
+                p.setString(3, m.getFirstOp());
+                p.setString(4, m.getSecondOp());
+                p.setString(5, m.getLocation());
+                p.setInt(6, round);
+                p.execute();
+                p.close();
                 
-                String s = "insert into \"judging_panels\" " + "(\"name\", "
+                s = "insert into judging_panels " + "(\"name\", "
                                 + "\"round\", " + "\"room\", "
                                 + "\"isChair\") " + "values (?,?,?,?);";
-                PreparedStatement p = sql.prepareStatement(s);
+                p = conn.prepareStatement(s);
                 p.setString(1, m.getChair());
                 p.setInt(2, round);
                 p.setString(3, m.getLocation());
@@ -248,23 +253,25 @@ public final class Allocator {
                 p.execute();
                 p.close();
                 
-                sql.commit();
-                
                 for (String w : m.getWings()) {
                     s = "insert into judging_panels " + "(\"name\", "
                                     + "\"round\", " + "\"room\", "
                                     + "\"isChair\") " + "values (?,?,?,?);";
-                    p = sql.prepareStatement(s);
+                    p = conn.prepareStatement(s);
                     p.setString(1, w);
                     p.setInt(2, round);
                     p.setString(3, m.getLocation());
                     p.setBoolean(4, false);
                     p.execute();
                     p.close();
-                    
-                    sql.commit();
                 }
             }
+            conn.commit();
+            LOG.debug("Everything went fine and is committed");
+        } catch (SQLException e) {
+            conn.rollback();
+            LOG.debug("It didn't go well, rolled back");
+            throw e;
         }
     }
     
@@ -353,12 +360,13 @@ public final class Allocator {
     protected HashMap<String, Integer> getTeamPoints() throws SQLException {
         HashMap<String, Integer> teamScores = new HashMap<String, Integer>();
         ResultSet rs;
-        synchronized (sql) {
+        synchronized (conn) {
             /*
              * Check if any rounds have happened yet, if not set all scores to
              * 0
              */
-            stmt = sql.prepareStatement("select count (*) from team_results;");
+            PreparedStatement stmt = conn
+                            .prepareStatement("select count (*) from team_results;");
             rs = stmt.executeQuery();
             rs.next();
             if (rs.getInt(1) == 0) {
@@ -374,7 +382,7 @@ public final class Allocator {
              */
             for (String name : getTeamNames()) {
                 int teamPoints = 0;
-                stmt = sql.prepareStatement("select \"position\" from team_results where \"team\" = ?;");
+                stmt = conn.prepareStatement("select \"position\" from team_results where \"team\" = ?;");
                 stmt.setString(1, name);
                 rs = stmt.executeQuery();
                 
@@ -406,7 +414,8 @@ public final class Allocator {
      */
     protected ArrayList<String> getTeamNames() throws SQLException {
         ArrayList<String> teamNames = new ArrayList<String>();
-        stmt = sql.prepareStatement("select \"name\" from teams;");
+        PreparedStatement stmt = conn
+                        .prepareStatement("select \"name\" from teams;");
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             teamNames.add(rs.getString("name"));

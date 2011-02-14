@@ -19,25 +19,38 @@ package taberystwyth.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.apache.log4j.Logger;
+
 import net.miginfocom.swing.MigLayout;
 
 import taberystwyth.controller.TeamFocusListener;
 import taberystwyth.controller.TeamInsertionListener;
-import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 
+/**
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
+ * @author Cal Paterson
+ * 
+ * The frame used to insert teams
+ */
 final public class TeamInsertionFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private Logger LOG = Logger.getLogger(TeamInsertionFrame.class);
+	
 	private JButton clear = new JButton("Clear");
 
-	private transient SQLConnection conn = SQLConnection.getInstance();
+	private transient Connection conn;
 
-	private TeamInsertionListener listener = new TeamInsertionListener(this);
+	private TeamInsertionListener listener = new TeamInsertionListener();
 
 	private JButton save = new JButton("Save");
 
@@ -88,6 +101,9 @@ final public class TeamInsertionFrame extends JFrame {
 	
 	
 	
+	/**
+	 * @return An instance of the frame
+	 */
 	public static TeamInsertionFrame getInstance(){
 		return instance;
 	}
@@ -136,6 +152,12 @@ final public class TeamInsertionFrame extends JFrame {
 		setLocationRelativeTo(OverviewFrame.getInstance());
 		clear.addActionListener(listener);
 		save.addActionListener(listener);
+		
+		try {
+			conn = TabServer.getConnectionPool().getConnection();
+		} catch (SQLException e) {
+			LOG.error("Can't connect to database", e);
+		}
 	}
 
 	public static synchronized long getSerialversionuid() {

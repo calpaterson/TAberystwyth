@@ -26,8 +26,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -143,27 +146,54 @@ final public class OverviewFrame extends JFrame implements Observer {
     }
     
     private void refreshList(String table, DefaultListModel model) {
-        model.removeAllElements();
         try {
-            Connection sql = TabServer.getConnectionPool().getConnection();
-            Statement statement = sql.createStatement();
-            ResultSet rs = statement.executeQuery("select \"name\" from "
-                            + table + ";");
-            int index = 0;
-            while (rs.next()) {
-                String entry = rs.getString(1);
-                /*
-                 * If it's a team, append the institution of the team
-                 */
-                if (table.equals("teams")) {
-                    entry += " (\"" + getInstitution(entry) + "\")";
+            synchronized (model) {
+                long start = System.currentTimeMillis();
+                
+                // What the view has
+                Set<String> view = new HashSet<String>(2000);
+                for (int i = 0; i < model.getSize(); ++i) {
+                    view.add((String) model.get(i));
                 }
-                model.add(index, entry);
-                ++index;
+                
+                // What the db has
+                Set<String> db = new HashSet<String>(2000);
+                Connection sql = TabServer.getConnectionPool()
+                                .getConnection();
+                Statement statement = sql.createStatement();
+                ResultSet rs = statement
+                                .executeQuery("select \"name\" from "
+                                                + table + ";");
+                while (rs.next()) {
+                    String entry = rs.getString(1);
+                    db.add(entry);
+                }
+                rs.close();
+                statement.close();
+                sql.close();
+                
+                // Find out what is in the db but not in the view
+                Set<String> db_t = new HashSet<String>(2000);
+                db_t.addAll(db);
+                db_t.removeAll(view);
+                for (String s:db_t){
+                    model.addElement(s);
+                    LOG.info("Adding: " + s);
+                }
+                
+                // FIXME: Things may have been deleted from the db, but not
+                // registered in the view, so take account of that.
+                view.removeAll(db);
+                for (String s:view){
+                    model.removeElement(s);
+                    LOG.info("Removing: " + s);
+                }
+                
+                long end = System.currentTimeMillis();
+                LOG.info("RefreshList() had the lock for " + table + 
+                   " for " + ((end - start)) + " millis");
             }
-            rs.close();
-            statement.close();
-            sql.close();
+            
         } catch (SQLException e) {
             LOG.error("Unable to update overview frame", e);
         }

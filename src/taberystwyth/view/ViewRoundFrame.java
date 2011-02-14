@@ -41,58 +41,58 @@ import taberystwyth.db.TabServer;
  * 
  */
 public class ViewRoundFrame extends JFrame {
-
-	JLabel roundLabel = new JLabel("Round:");
-	JLabel motionLabel = new JLabel("Motion:");
-
-	JComboBox rounds = new JComboBox();
-
-	JTextField motion = new JTextField();
-
-	JButton clear = new JButton("Clear");
-	JButton view = new JButton("View");
-
-	Vector<JLabel> roundOptions = new Vector<JLabel>();
-
-	Logger LOG = Logger.getLogger(ViewRoundFrame.class);
-
-	public ViewRoundFrame() {
-		setVisible(true);
-		setTitle("View Rounds");
-
-		setLayout(new GridLayout(3, 2));
-
-		add(roundLabel);
-		add(rounds);
-
-		addRounds();
-
-		add(motionLabel);
-		add(motion);
-
-		add(clear);
-		add(view);
-
-		pack();
-	}
-
-	private void addRounds() {
-
-		try {
-			Connection conn = TabServer.getConnectionPool().getConnection();
-			PreparedStatement stmt = conn
-					.prepareStatement("select distinct \"round\" from room;");
-			ResultSet rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				rounds.addItem(rs.getString("round"));
-			}
-
-			stmt.close();
-			conn.close();
-		} catch (SQLException e) {
-			LOG.error("Unable to select roundnumbers", e);
-		}
-
-	}
+    
+    JLabel roundLabel = new JLabel("Round:");
+    JLabel motionLabel = new JLabel("Motion:");
+    
+    JComboBox rounds = new JComboBox();
+    
+    JTextField motion = new JTextField();
+    
+    JButton clear = new JButton("Clear");
+    JButton view = new JButton("View");
+    
+    Vector<JLabel> roundOptions = new Vector<JLabel>();
+    
+    Logger LOG = Logger.getLogger(ViewRoundFrame.class);
+    
+    public ViewRoundFrame() {
+        setVisible(true);
+        setTitle("View Rounds");
+        
+        setLayout(new GridLayout(3, 2));
+        
+        add(roundLabel);
+        add(rounds);
+        
+        addRounds();
+        
+        add(motionLabel);
+        add(motion);
+        
+        add(clear);
+        add(view);
+        
+        pack();
+    }
+    
+    private void addRounds() {
+        
+        try {
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt = conn
+                            .prepareStatement("select distinct \"round\" from room;");
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                rounds.addItem(rs.getString("round"));
+            }
+            
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            LOG.error("Unable to select roundnumbers", e);
+        }
+        
+    }
 }

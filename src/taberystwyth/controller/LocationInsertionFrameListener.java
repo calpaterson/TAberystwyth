@@ -40,57 +40,59 @@ import taberystwyth.view.OverviewFrame;
  * 
  */
 public final class LocationInsertionFrameListener implements ActionListener {
-
-	private static Logger LOG = Logger
-			.getLogger(LocationInsertionFrameListener.class);
-
-	private static LocationInsertionFrameListener instance = new LocationInsertionFrameListener();
-
-	/**
-	 * @return an instance of the listener
-	 */
-	public static LocationInsertionFrameListener getInstance() {
-		return instance;
-	}
-
-	private LocationInsertionFrameListener() {
-		// VOID
-	}
-
-	private Connection sql;
-	{
-		try {
-			sql = TabServer.getConnectionPool().getConnection();
-		} catch (SQLException e) {
-			LOG.error("Can't get connection to database", e);
-		}
-
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		LocationInsertionFrame frame = LocationInsertionFrame.getInstance();
-		if (e.getActionCommand().equals("Save")) {
-			try {
-				PreparedStatement p = sql
-						.prepareStatement("insert into locations (\"name\", \"rating\") values (?, ?);");
-				p.setString(1, frame.getLocationName().getText());
-				p.setInt(2, Integer.parseInt((frame.getRating().getText())));
-				p.execute();
-				p.close();
-				sql.commit();
-			} catch (SQLException e1) {
-				LOG.error("Unable to insert judge", e1);
-				JOptionPane.showMessageDialog(OverviewFrame.getInstance(),
-						"Was unable to insert that location into the database",
-						"Unable to insert", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-
-		if (e.getActionCommand().equals("Clear")) {
-			frame.getLocationName().setText("");
-			frame.getRating().setText("");
-		}
-	}
-
+    
+    private static Logger LOG = Logger
+                    .getLogger(LocationInsertionFrameListener.class);
+    
+    private static LocationInsertionFrameListener instance = new LocationInsertionFrameListener();
+    
+    /**
+     * @return an instance of the listener
+     */
+    public static LocationInsertionFrameListener getInstance() {
+        return instance;
+    }
+    
+    private LocationInsertionFrameListener() {
+        // VOID
+    }
+    
+    private Connection sql;
+    {
+        try {
+            sql = TabServer.getConnectionPool().getConnection();
+        } catch (SQLException e) {
+            LOG.error("Can't get connection to database", e);
+        }
+        
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        LocationInsertionFrame frame = LocationInsertionFrame.getInstance();
+        if (e.getActionCommand().equals("Save")) {
+            try {
+                PreparedStatement p = sql
+                                .prepareStatement("insert into locations (\"name\", \"rating\") values (?, ?);");
+                p.setString(1, frame.getLocationName().getText());
+                p.setInt(2, Integer.parseInt((frame.getRating().getText())));
+                p.execute();
+                p.close();
+                sql.commit();
+            } catch (SQLException e1) {
+                LOG.error("Unable to insert judge", e1);
+                JOptionPane.showMessageDialog(
+                                OverviewFrame.getInstance(),
+                                "Was unable to insert that location into the database",
+                                "Unable to insert",
+                                JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        if (e.getActionCommand().equals("Clear")) {
+            frame.getLocationName().setText("");
+            frame.getRating().setText("");
+        }
+    }
+    
 }

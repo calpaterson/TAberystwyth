@@ -8,7 +8,7 @@ package taberystwyth.allocation.exceptions;
  * An exception to represent when not enough teams are in the database
  */
 public class SwingTeamsRequiredException extends Exception {
-
+    
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
     
@@ -17,16 +17,17 @@ public class SwingTeamsRequiredException extends Exception {
     
     /**
      * Instantiates a new SwingTeamsRequiredException.
-     *
-     * @param required the required
+     * 
+     * @param required
+     *            the required
      */
-    public SwingTeamsRequiredException(int required){
+    public SwingTeamsRequiredException(int required) {
         this.required = required;
     }
-
+    
     /**
      * Gets the number of swing teams that will be needed.
-     *
+     * 
      * @return the required
      */
     public synchronized int getRequired() {

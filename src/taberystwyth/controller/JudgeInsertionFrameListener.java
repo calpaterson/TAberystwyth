@@ -51,8 +51,7 @@ public class JudgeInsertionFrameListener implements ActionListener {
         if (e.getActionCommand().equals("Save")) {
             Connection sql = null;
             try {
-                sql = TabServer.getConnectionPool()
-                .getConnection();
+                sql = TabServer.getConnectionPool().getConnection();
                 String s = "insert into judges " + "(\"name\", "
                                 + "\"institution\", " + "\"rating\") "
                                 + "values (?,?,?);";

@@ -13,17 +13,18 @@ public class JudgesRequiredException extends Exception {
     
     /**
      * Instantiates a new JudgesRequiredException.
-     *
-     * @param required the required
+     * 
+     * @param required
+     *            the required
      */
-    public JudgesRequiredException(final int required){
+    public JudgesRequiredException(final int required) {
         super();
         this.required = required;
     }
-
+    
     /**
      * Gets the number of judges that need to be added.
-     *
+     * 
      * @return the required
      */
     public int getRequired() {

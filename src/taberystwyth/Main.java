@@ -19,12 +19,14 @@
 package taberystwyth;
 
 import java.io.File;
-import java.sql.SQLException;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import taberystwyth.controller.DebugMenuListener;
@@ -52,18 +54,17 @@ public final class Main {
      * @param args
      *            arguments passed to the program
      */
-    public static void main(final String[] args) {      
+    public static void main(final String[] args) {
         /*
          * Try setting the look and feel. If it doesn't work, we just fail and
          * continue.
          */
         try {
-            UIManager
-                    .setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager
+                            .getSystemLookAndFeelClassName());
         } catch (Exception e1) {
-            LOG.error(
-                    "Unable to set the system look and feel, will carry on with the default.",
-                    e1);
+            LOG.error("Unable to set the system look and feel, will carry on with the default.",
+                            e1);
         }
         
         /*
@@ -74,9 +75,11 @@ public final class Main {
             Object[] options = { "Create a new tab", "Open an existing tab",
                     "Close this program" };
             int n = JOptionPane.showOptionDialog(null,
-                    "Create a new tab or open an existing one?",
-                    "TAberystwyth", JOptionPane.YES_NO_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                            "Create a new tab or open an existing one?",
+                            "TAberystwyth",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, options,
+                            options[0]);
             if (n == 0) {
                 /*
                  * Create a new tab
@@ -84,7 +87,7 @@ public final class Main {
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
-                        "tab"));
+                                "tab"));
                 jfc.showDialog(null, "Create");
                 File selection = jfc.getSelectedFile();
                 try {
@@ -93,7 +96,7 @@ public final class Main {
                     String error = "Unable to create selected tab";
                     LOG.error(error, e);
                     JOptionPane.showMessageDialog(null, error, "File Error",
-                            JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
             } else if (n == 1) {
@@ -103,7 +106,7 @@ public final class Main {
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
-                        "tab"));
+                                "tab"));
                 jfc.showDialog(null, "Open");
                 File selection = jfc.getSelectedFile();
                 try {
@@ -112,7 +115,7 @@ public final class Main {
                     String error = "Unable to open chosen tab";
                     LOG.error(error, e);
                     JOptionPane.showMessageDialog(null, error, "File Error",
-                            JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
             } else if (n == 2) {
@@ -138,7 +141,8 @@ public final class Main {
             LOG.info("Entering debug mode.");
             
             final JMenu debugMenu = new JMenu("Debug");
-            final JMenuItem generateMorningTab = new JMenuItem("Generate Tab");
+            final JMenuItem generateMorningTab = new JMenuItem(
+                            "Generate Tab");
             generateMorningTab.addActionListener(new DebugMenuListener());
             debugMenu.add(generateMorningTab);
             

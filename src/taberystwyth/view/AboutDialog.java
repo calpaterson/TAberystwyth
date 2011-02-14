@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+
 import net.miginfocom.swing.MigLayout;
 
 final public class AboutDialog extends JDialog {
@@ -18,14 +19,14 @@ final public class AboutDialog extends JDialog {
     private static final long serialVersionUID = 1L;
     
     private static AboutDialog instance = new AboutDialog();
-
+    
     public static AboutDialog getInstance() {
         return instance;
     }
-
+    
     protected BufferedImage aduLogo;
     
-    private AboutDialog(){
+    private AboutDialog() {
         super(OverviewFrame.getInstance(), "About", true);
         setLayout(new MigLayout("wrap 1", "[center]"));
         
@@ -33,11 +34,13 @@ final public class AboutDialog extends JDialog {
          * Prepare the imageLabel
          */
         try {
-            aduLogo = ImageIO.read(this.getClass().getResourceAsStream("/adu.jpeg"));
+            aduLogo = ImageIO.read(this.getClass().getResourceAsStream(
+                            "/adu.jpeg"));
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(OverviewFrame.getInstance(), 
-                    "The file \"adu.jpeg\" was not loaded correctly.", 
-                    "Error", ERROR);
+            JOptionPane.showMessageDialog(
+                            OverviewFrame.getInstance(),
+                            "The file \"adu.jpeg\" was not loaded correctly.",
+                            "Error", ERROR);
             e.printStackTrace();
         }
         JLabel imageLabel = new JLabel(new ImageIcon(aduLogo));
@@ -46,20 +49,21 @@ final public class AboutDialog extends JDialog {
         /*
          * The captions
          */
-        JLabel name = new 
-            JLabel("TAberystwyth v0.0, Bitch.");
+        JLabel name = new JLabel("TAberystwyth v0.0, Bitch.");
         JLabel desc = new JLabel("A Debating Competition Organiser");
-
+        
         /*
          * The close button
          */
-        JButton close = new JButton("Close");;
+        JButton close = new JButton("Close");
+        ;
         close.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            setVisible(false);
-          }
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                setVisible(false);
+            }
         });
-
+        
         /*
          * Add everything
          */

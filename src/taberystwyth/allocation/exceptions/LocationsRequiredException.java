@@ -13,17 +13,18 @@ public class LocationsRequiredException extends Exception {
     
     /**
      * Instantiates a new LocationsRequiredException.
-     *
-     * @param required the required
+     * 
+     * @param required
+     *            the required
      */
-    public LocationsRequiredException(final int required){
+    public LocationsRequiredException(final int required) {
         super();
         this.required = required;
     }
-
+    
     /**
      * Gets the number of locations that need to be added.
-     *
+     * 
      * @return the required
      */
     public int getRequired() {

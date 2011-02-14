@@ -23,19 +23,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import taberystwyth.db.Generator;
 import taberystwyth.view.GenerateFrame;
 import taberystwyth.view.OverviewFrame;
 
 public class DebugMenuListener implements ActionListener {
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Generate Tab")) {
             GenerateFrame.getInstance().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(OverviewFrame.getInstance(),
-                    "Not implemented!", "Not implemented",
-                    JOptionPane.ERROR_MESSAGE);
+                            "Not implemented!", "Not implemented",
+                            JOptionPane.ERROR_MESSAGE);
             
         }
     }

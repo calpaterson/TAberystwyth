@@ -22,7 +22,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
-import org.h2.jdbcx.JdbcConnectionPool;
 
 import org.apache.log4j.Logger;
 
@@ -88,13 +87,14 @@ final public class Generator {
                 String name = genName();
                 
                 PreparedStatement p = conn
-                        .prepareStatement("insert into judges " +
-                        		"(\"name\", " +
-                        		"\"institution\", " +
-                        		"\"rating\") " +
-                        		"values (?,?,?);");
+                                .prepareStatement("insert into judges "
+                                                + "(\"name\", "
+                                                + "\"institution\", "
+                                                + "\"rating\") "
+                                                + "values (?,?,?);");
                 p.setString(1, name);
-                p.setString(2, institutions[gen.nextInt(institutions.length)]);
+                p.setString(2,
+                                institutions[gen.nextInt(institutions.length)]);
                 p.setInt(3, 50);
                 p.execute();
                 p.close();
@@ -121,12 +121,10 @@ final public class Generator {
     public void genLocation() {
         while (true) {
             try {
-                String s = "insert into locations " +
-                		"(\"name\", " +
-                		"\"rating\") " +
-                		"values (?, ?);";
-                String location = locations[gen.nextInt(locations.length)] +
-                 gen.nextInt(100);
+                String s = "insert into locations " + "(\"name\", "
+                                + "\"rating\") " + "values (?, ?);";
+                String location = locations[gen.nextInt(locations.length)]
+                                + gen.nextInt(100);
                 PreparedStatement p = conn.prepareStatement(s);
                 p.setString(1, location);
                 p.setInt(2, 50);
@@ -140,8 +138,8 @@ final public class Generator {
                     LOG.error("Unable to generate a location", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    LOG.error(
-                       "Exception while trying to roll back a location!", e1);
+                    LOG.error("Exception while trying to roll back a location!",
+                                    e1);
                 }
             }
         }
@@ -163,11 +161,9 @@ final public class Generator {
                 speaker1 = genSpeaker();
                 speaker2 = genSpeaker();
                 
-                String s = "insert into teams " +
-                		"(\"name\", " +
-                		"\"speaker1\", " +
-                		"\"speaker2\") " +
-                		"values(?, ?, ?);";
+                String s = "insert into teams " + "(\"name\", "
+                                + "\"speaker1\", " + "\"speaker2\") "
+                                + "values(?, ?, ?);";
                 PreparedStatement p = conn.prepareStatement(s);
                 name = speaker1 + " and " + speaker2;
                 
@@ -186,8 +182,8 @@ final public class Generator {
                     LOG.error("Unable to generate a team: " + name, e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    LOG.error(
-                     "Exception while trying to roll back a team: " + name, e1);
+                    LOG.error("Exception while trying to roll back a team: "
+                                    + name, e1);
                 }
             }
         }
@@ -203,10 +199,8 @@ final public class Generator {
     private String genSpeaker() throws SQLException {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
-        String s = "insert into speakers " +
-        		"(\"name\", " +
-        		"\"institution\") " +
-        		"values(?,?);";
+        String s = "insert into speakers " + "(\"name\", "
+                        + "\"institution\") " + "values(?,?);";
         PreparedStatement p = conn.prepareStatement(s);
         
         p.setString(1, name);
@@ -225,7 +219,7 @@ final public class Generator {
      */
     private String genName() {
         return firstNames[gen.nextInt(firstNames.length)] + " "
-                + surnames[gen.nextInt(surnames.length)];
+                        + surnames[gen.nextInt(surnames.length)];
     }
     
     /** The institutions. */
@@ -352,10 +346,10 @@ final public class Generator {
     private String[] firstNames = { "Abigail", "Alexander", "Amelia", "Amy",
             "Benjamin", "Callum", "Charlie", "Charlotte", "Chloe", "Daniel",
             "Ella", "Ellie", "Emily", "Emma", "Ethan", "George", "Grace",
-            "Hannah", "Harry", "Jack", "James", "Jessica", "Joseph", "Joshua",
-            "Katie", "Lewis", "Lily", "Lucy", "Luke", "Matthew", "Megan",
-            "Mia", "Mohammed", "Molly", "Oliver", "Olivia", "Samuel",
-            "Sophie", "Thomas", "William" };
+            "Hannah", "Harry", "Jack", "James", "Jessica", "Joseph",
+            "Joshua", "Katie", "Lewis", "Lily", "Lucy", "Luke", "Matthew",
+            "Megan", "Mia", "Mohammed", "Molly", "Oliver", "Olivia",
+            "Samuel", "Sophie", "Thomas", "William" };
     
     /** The locations. */
     private String[] locations = {
@@ -380,7 +374,7 @@ final public class Generator {
     
     String[] surnames = { "Jones", "Williams", "Davies", "Evans", "Thomas",
             "Roberts", "Lewis", "Hughes", "Morgan", "Griffiths", "Edwards",
-            "Smith", "James", "Rees", "Jenkins", "Owen", "Price", "Phillips",
-            "Morris", "Richards" };
+            "Smith", "James", "Rees", "Jenkins", "Owen", "Price",
+            "Phillips", "Morris", "Richards" };
     
 }

@@ -21,7 +21,6 @@ package taberystwyth.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,8 +28,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
+
+import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuBar;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
 
@@ -142,7 +147,8 @@ final public class OverviewFrame extends JFrame implements Observer {
         try {
             Connection sql = TabServer.getConnectionPool().getConnection();
             Statement statement = sql.createStatement();
-            ResultSet rs = statement.executeQuery("select \"name\" from " + table + ";");
+            ResultSet rs = statement.executeQuery("select \"name\" from "
+                            + table + ";");
             int index = 0;
             while (rs.next()) {
                 String entry = rs.getString(1);
@@ -171,9 +177,9 @@ final public class OverviewFrame extends JFrame implements Observer {
             /*
              * Get the speakers on the team
              */
-            PreparedStatement teamStatement = conn.prepareStatement(
-                "select \"speaker1\", \"speaker2\" from teams " + 
-                " where teams.\"name\" = ?;");
+            PreparedStatement teamStatement = conn
+                            .prepareStatement("select \"speaker1\", \"speaker2\" from teams "
+                                            + " where teams.\"name\" = ?;");
             teamStatement.setString(1, teamName);
             ResultSet rs = teamStatement.executeQuery();
             rs.next();
@@ -184,8 +190,8 @@ final public class OverviewFrame extends JFrame implements Observer {
             /*
              * Get the institution of speaker1
              */
-            query = "select \"institution\" from speakers where " + 
-                "speakers.\"name\" = '" + speaker1 + "'";
+            query = "select \"institution\" from speakers where "
+                            + "speakers.\"name\" = '" + speaker1 + "'";
             Statement instStatement = conn.createStatement();
             rs = instStatement.executeQuery(query);
             rs.next();
@@ -196,8 +202,8 @@ final public class OverviewFrame extends JFrame implements Observer {
             /*
              * Get the institution of speaker2
              */
-            query = "select \"institution\" from speakers where " + 
-                "speakers.\"name\" = '" + speaker2 + "'";
+            query = "select \"institution\" from speakers where "
+                            + "speakers.\"name\" = '" + speaker2 + "'";
             Statement statement = conn.createStatement();
             rs = statement.executeQuery(query);
             rs.next();
@@ -223,6 +229,7 @@ final public class OverviewFrame extends JFrame implements Observer {
         return returnValue;
     }
     
+    @Override
     public void update(Observable o, Object arg) {
         LOG.info("Updating view");
         refreshTeams();

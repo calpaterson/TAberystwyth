@@ -2,7 +2,6 @@ package taberystwyth.db;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -119,10 +118,10 @@ public class TabServer extends Observable implements Runnable {
         notifyObservers();
         
     }
-
+    
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
                 Thread.sleep(UPDATE_FREQUENCY);
                 setChanged();

@@ -18,7 +18,11 @@
 
 package taberystwyth.slides;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -71,7 +75,8 @@ public final class XHTMLFactory {
         
         subs.put("<!--ROUND-->", Integer.toString(round));
         
-        query = "select \"text\" from motion where \"round\" = " + round + ";";
+        query = "select \"text\" from motion where \"round\" = " + round
+                        + ";";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         rs.next();
@@ -92,9 +97,9 @@ public final class XHTMLFactory {
          * global substitutions
          */
         writeWithSubstitutions(root, "draw-title-slide.xhtml",
-                "draw-title-slide.xhtml");
+                        "draw-title-slide.xhtml");
         writeWithSubstitutions(root, "motion-slide.xhtml",
-                "motion-slide.xhtml");
+                        "motion-slide.xhtml");
         
         /*
          * Build the full tab
@@ -104,13 +109,9 @@ public final class XHTMLFactory {
         /*
          * Build the match slides
          */
-        query = "select \"round\", " +
-        		"\"location\", " +
-        		"\"first_prop\", " +
-        		"\"first_op\", " +
-        		"\"second_prop\", " +
-                "\"second_op\" " +
-                "from rooms";
+        query = "select \"round\", " + "\"location\", " + "\"first_prop\", "
+                        + "\"first_op\", " + "\"second_prop\", "
+                        + "\"second_op\" " + "from rooms";
         final int FIRST_PROP = 3;
         final int FIRST_OP = 4;
         final int SECOND_PROP = 5;
@@ -122,7 +123,7 @@ public final class XHTMLFactory {
              * Get the chair for this room
              */
             String chairQuery = "select (\"name\") from judging_panels where "
-                    + "\"isChair\" = 1";
+                            + "\"isChair\" = 1";
             Statement chairStatement = conn.createStatement();
             ResultSet chairRS = chairStatement.executeQuery(chairQuery);
             chairRS.next();
@@ -135,7 +136,7 @@ public final class XHTMLFactory {
              * Get the wings
              */
             String wingsQuery = "select (\"name\") from judging_panels where "
-                    + "\"isChair\" = 0 order by random()";
+                            + "\"isChair\" = 0 order by random()";
             Statement wingsStatement = conn.createStatement();
             ResultSet wingsRS = wingsStatement.executeQuery(wingsQuery);
             wingsRS.next();
@@ -157,7 +158,7 @@ public final class XHTMLFactory {
             
             // FIXME: There should be some deterministic ordering of slides
             writeWithSubstitutions(root, "motion-slide.xhtml", round + "-"
-                    + chair + ".xhtml");
+                            + chair + ".xhtml");
         }
         
         /*
@@ -177,7 +178,7 @@ public final class XHTMLFactory {
     }
     
     private void writeWithSubstitutions(File root, String templateName,
-            String outputName) throws IOException {
+                    String outputName) throws IOException {
         File titlePage = new File(root, outputName);
         if (!titlePage.createNewFile()) {
             throw new IOException("Was not able to create " + templateName);
@@ -185,7 +186,7 @@ public final class XHTMLFactory {
         FileWriter fr = new FileWriter(titlePage);
         BufferedWriter br = new BufferedWriter(fr);
         InputStream template = this.getClass().getResourceAsStream(
-                templateName);
+                        templateName);
         br.write(applySubstitutionMap(template));
         br.close();
         fr.close();
@@ -217,10 +218,11 @@ public final class XHTMLFactory {
         File temporaryDirectory = new File(basePath, directoryName);
         if (!temporaryDirectory.mkdir()) {
             throw new IOException("Was not able to create the temporary"
-                    + "directory " + temporaryDirectory.getAbsolutePath());
+                            + "directory "
+                            + temporaryDirectory.getAbsolutePath());
         }
         
         return temporaryDirectory;
     }
-
+    
 }

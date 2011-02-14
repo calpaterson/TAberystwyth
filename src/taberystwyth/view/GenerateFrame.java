@@ -25,31 +25,29 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Connection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
-import taberystwyth.db.Generator;
-import taberystwyth.db.TabServer;
-
 import net.miginfocom.swing.MigLayout;
+import taberystwyth.db.Generator;
 
 /**
  * Simple frame that does the generation of random tabs
  */
-public class GenerateFrame extends JFrame implements ActionListener, PropertyChangeListener {
+public class GenerateFrame extends JFrame implements ActionListener,
+                PropertyChangeListener {
     
     private static final long serialVersionUID = 1L;
-
+    
     private static final GenerateFrame INSTANCE = new GenerateFrame();
     
     /**
      * @return the instance
      */
-    public static GenerateFrame getInstance(){
+    public static GenerateFrame getInstance() {
         return INSTANCE;
     }
     
@@ -76,7 +74,8 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         
         generateButton = new JButton("Generate");
         
-        int length = Generator.N_TEAMS + Generator.N_JUDGES + Generator.N_LOCATIONS;
+        int length = Generator.N_TEAMS + Generator.N_JUDGES
+                        + Generator.N_LOCATIONS;
         progressBar = new JProgressBar(0, length);
         
         generateButton.addActionListener(this);
@@ -89,27 +88,27 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         setLocationRelativeTo(OverviewFrame.getInstance());
     }
     
-    private class Generation extends SwingWorker<Void,Void>{
-
+    private class Generation extends SwingWorker<Void, Void> {
+        
         @Override
         protected Void doInBackground() throws Exception {
             Generator generator = Generator.getInstance();
             
             int progress = 0;
             
-            for (int i = 0; i <= Generator.N_TEAMS; ++i){
+            for (int i = 0; i <= Generator.N_TEAMS; ++i) {
                 generator.genTeam();
                 ++progress;
                 setProgress(progress);
             }
             
-            for (int i = 0; i <= Generator.N_JUDGES; ++i){
+            for (int i = 0; i <= Generator.N_JUDGES; ++i) {
                 generator.genJudge();
                 ++progress;
                 setProgress(progress);
             }
             
-            for (int i = 0; i <= Generator.N_LOCATIONS; ++i){
+            for (int i = 0; i <= Generator.N_LOCATIONS; ++i) {
                 generator.genLocation();
                 ++progress;
                 setProgress(progress);
@@ -119,7 +118,7 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         }
         
         @Override
-        protected void done(){
+        protected void done() {
             setProgress(0);
             generateButton.setEnabled(true);
             setCursor(null);
@@ -128,7 +127,7 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         }
         
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         generateButton.setEnabled(false);
@@ -138,7 +137,7 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         generation.addPropertyChangeListener(this);
         generation.execute();
     }
-
+    
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress" == evt.getPropertyName()) {

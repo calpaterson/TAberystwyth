@@ -52,8 +52,9 @@ public class Match {
     
     /**
      * Instantiates a new match.
-     *
-     * @param rank the rank
+     * 
+     * @param rank
+     *            the rank
      */
     public Match(int rank) {
         this.rank = rank;
@@ -61,7 +62,7 @@ public class Match {
     
     /**
      * Gets the first prop.
-     *
+     * 
      * @return the first prop
      */
     public synchronized String getFirstProp() {
@@ -70,8 +71,9 @@ public class Match {
     
     /**
      * Sets the first prop.
-     *
-     * @param firstProp the new first prop
+     * 
+     * @param firstProp
+     *            the new first prop
      */
     public synchronized void setFirstProp(String firstProp) {
         this.firstProp = firstProp;
@@ -79,7 +81,7 @@ public class Match {
     
     /**
      * Gets the second prop.
-     *
+     * 
      * @return the second prop
      */
     public synchronized String getSecondProp() {
@@ -88,8 +90,9 @@ public class Match {
     
     /**
      * Sets the second prop.
-     *
-     * @param secondProp the new second prop
+     * 
+     * @param secondProp
+     *            the new second prop
      */
     public synchronized void setSecondProp(String secondProp) {
         this.secondProp = secondProp;
@@ -97,7 +100,7 @@ public class Match {
     
     /**
      * Gets the first op.
-     *
+     * 
      * @return the first op
      */
     public synchronized String getFirstOp() {
@@ -106,8 +109,9 @@ public class Match {
     
     /**
      * Sets the first op.
-     *
-     * @param firstOp the new first op
+     * 
+     * @param firstOp
+     *            the new first op
      */
     public synchronized void setFirstOp(String firstOp) {
         this.firstOp = firstOp;
@@ -115,7 +119,7 @@ public class Match {
     
     /**
      * Gets the second op.
-     *
+     * 
      * @return the second op
      */
     public synchronized String getSecondOp() {
@@ -124,8 +128,9 @@ public class Match {
     
     /**
      * Sets the second op.
-     *
-     * @param secondOp the new second op
+     * 
+     * @param secondOp
+     *            the new second op
      */
     public synchronized void setSecondOp(String secondOp) {
         this.secondOp = secondOp;
@@ -133,7 +138,7 @@ public class Match {
     
     /**
      * Gets the chair.
-     *
+     * 
      * @return the chair
      */
     public synchronized String getChair() {
@@ -142,8 +147,9 @@ public class Match {
     
     /**
      * Sets the chair.
-     *
-     * @param chair the new chair
+     * 
+     * @param chair
+     *            the new chair
      */
     public synchronized void setChair(String chair) {
         this.chair = chair;
@@ -151,7 +157,7 @@ public class Match {
     
     /**
      * Gets the wings.
-     *
+     * 
      * @return the wings
      */
     public synchronized List<String> getWings() {
@@ -160,7 +166,7 @@ public class Match {
     
     /**
      * Gets the location.
-     *
+     * 
      * @return the location
      */
     public synchronized String getLocation() {
@@ -169,8 +175,9 @@ public class Match {
     
     /**
      * Sets the location.
-     *
-     * @param location the new location
+     * 
+     * @param location
+     *            the new location
      */
     public synchronized void setLocation(String location) {
         this.location = location;
@@ -178,7 +185,7 @@ public class Match {
     
     /**
      * Gets the rank.
-     *
+     * 
      * @return the rank
      */
     public synchronized int getRank() {
@@ -187,8 +194,9 @@ public class Match {
     
     /**
      * Sets the rank.
-     *
-     * @param rank the new rank
+     * 
+     * @param rank
+     *            the new rank
      */
     public synchronized void setRank(int rank) {
         this.rank = rank;
@@ -196,19 +204,20 @@ public class Match {
     
     /**
      * Checks whether a chair has been set.
-     *
+     * 
      * @return true, if successful
      */
-    public synchronized boolean hasChair(){
+    public synchronized boolean hasChair() {
         return chair != null;
     }
     
     /**
      * Adds a wing.
-     *
-     * @param name the name
+     * 
+     * @param name
+     *            the name
      */
     public void addWing(String name) {
-        wings.add(name);        
+        wings.add(name);
     }
 }

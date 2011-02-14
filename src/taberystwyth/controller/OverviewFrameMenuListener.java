@@ -20,29 +20,37 @@ package taberystwyth.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import taberystwyth.db.SQLConnection;
-import taberystwyth.allocation.Allocator;
 import taberystwyth.view.AboutDialog;
 import taberystwyth.view.AllocationFrame;
 import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
 import taberystwyth.view.TeamInsertionFrame;
-import taberystwyth.view.ViewRoundFrame;
 
+/**
+ * 
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
+ * @author Cal Paterson
+ * 
+ * The listener for the OverviewFrame
+ *
+ */
 public class OverviewFrameMenuListener implements ActionListener {
 	OverviewFrame overviewFrame;
 
-	public OverviewFrameMenuListener(OverviewFrame overviewFrame) {
-		this.overviewFrame = overviewFrame;
+	/**
+	 * Constructor
+	 */
+	public OverviewFrameMenuListener() {
+		this.overviewFrame = OverviewFrame.getInstance();
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 	    if (e.getActionCommand().equals("Quit")) {
 			System.exit(0);

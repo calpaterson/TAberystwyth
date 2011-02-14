@@ -28,8 +28,8 @@ create table judges (
        "name" text not null,
        "institution" text not null,
        "rating" smallint not null default 10,
-       primary key (name, institution),
-       constraint check_rating check (rating between 0 and 100)
+       primary key ("name", "institution"),
+       constraint check_rating check ("rating" between 0 and 100)
 );
 
 -- Speakers
@@ -40,14 +40,14 @@ create table speakers (
        "institution" text not null,
        "esl" boolean not null default 'f',
        "novice" boolean not null default 'f',
-       primary key (name, institution)
+       primary key ("name", "institution")
 );
 
 -- Locations
 create table locations (
        "name" text primary key,
        "rating" smallint not null default 10
-       constraint check_rating check (rating between 0 and 100)
+       constraint check_rating check ("rating" between 0 and 100)
 );
 
 -- Teams
@@ -55,9 +55,9 @@ create table teams (
        "name" text not null,
        "speaker1" text not null,
        "speaker2" text not null,
-       primary key (name, speaker1, speaker2),
-       foreign key (speaker1) references speaker(name) on delete cascade,
-       foreign key (speaker2) references speaker(name) on delete cascade
+       primary key ("name", "speaker1", "speaker2"),
+       foreign key ("speaker1") references speakers("name") on delete cascade,
+       foreign key ("speaker2") references speakers("name") on delete cascade
 );
 
 -- Team Results ("team points")
@@ -65,9 +65,9 @@ create table team_results (
        "round" smallint not null,
        "team" text not null,
        "position" smallint not null,
-       primary key (round, team),
-       foreign key (team) references team(name),
-       constraint check_position check (position between 1 and 4)
+       primary key ("round", "team"),
+       foreign key ("team") references teams("name"),
+       constraint check_position check ("position" between 1 and 4)
 );
 
 -- Speaker Results ("speaker points")
@@ -75,9 +75,9 @@ create table speaker_results (
        "round" smallint not null,
        "speaker" text not null,
        "points" smallint not null,
-       primary key (round, speaker),
-       foreign key (speaker) references speaker(name),
-       constraint check_points check (points between 0 and 100)
+       primary key ("round", "speaker"),
+       foreign key ("speaker") references speakers("name"),
+       constraint check_points check ("points" between 0 and 100)
 );
       
 -- Rooms (individual debates)
@@ -88,12 +88,12 @@ create table rooms (
        "first_op" text not null,
        "second_prop" text not null,
        "second_op" text not null,
-       primary key (round, location),
-       foreign key (location) references location(name),
-       foreign key (first_prop) references team(name),
-       foreign key (first_op) references team(name),
-       foreign key (second_prop) references team(name),
-       foreign key (second_op) references team(name)
+       primary key ("round", "location"),
+       foreign key ("location") references locations("name"),
+       foreign key ("first_prop") references teams("name"),
+       foreign key ("first_op") references teams("name"),
+       foreign key ("second_prop") references teams("name"),
+       foreign key ("second_op") references teams("name")
 );
 
 -- Judging panels
@@ -102,9 +102,9 @@ create table judging_panels (
        "round" smallint not null,
        "room" text not null,
        "isChair" boolean not null default 0, -- 0 is false
-       primary key (name, round, room),
-       foreign key (name) references judge(name),
-       foreign key (room) references locations(name)
+       primary key ("name", "round", "room"),
+       foreign key ("name") references judges("name"),
+       foreign key ("room") references locations("name")
 );
 
 create table motions (

@@ -171,8 +171,9 @@ final public class OverviewFrame extends JFrame implements Observer {
             /*
              * Get the speakers on the team
              */
-            PreparedStatement teamStatement = sql
-                            .prepareStatement("select speaker1, speaker2 from teams where teams.name = ?;");
+            PreparedStatement teamStatement = sql.prepareStatement(
+                "select \"speaker1\", \"speaker2\" from teams " + 
+                " where teams.name = ?;");
             teamStatement.setString(1, teamName);
             ResultSet rs = teamStatement.executeQuery();
             rs.next();

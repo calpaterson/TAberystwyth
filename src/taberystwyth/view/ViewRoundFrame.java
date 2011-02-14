@@ -81,7 +81,7 @@ public class ViewRoundFrame extends JFrame {
 		try {
 			Connection sql = TabServer.getConnectionPool().getConnection();
 			PreparedStatement stmt = sql
-					.prepareStatement("select distinct round from room;");
+					.prepareStatement("select distinct \"round\" from room;");
 			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {

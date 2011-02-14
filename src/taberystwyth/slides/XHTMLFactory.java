@@ -57,7 +57,7 @@ public final class XHTMLFactory {
         /*
          * Get the current round
          */
-        query = "select max(round) from rooms;";
+        query = "select max(\"round\") from rooms;";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         int round = rs.getInt(1);
@@ -71,7 +71,7 @@ public final class XHTMLFactory {
         
         subs.put("<!--ROUND-->", Integer.toString(round));
         
-        query = "select text from motion where round = " + round + ";";
+        query = "select \"text\" from motion where \"round\" = " + round + ";";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         rs.next();
@@ -79,7 +79,7 @@ public final class XHTMLFactory {
         rs.close();
         statement.close();
         
-        query = "select name from tournament_name";
+        query = "select \"name\" from tournament_name";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         rs.next();
@@ -104,8 +104,13 @@ public final class XHTMLFactory {
         /*
          * Build the match slides
          */
-        query = "select round, location, first_prop, first_op, second_prop"
-                + "second_op from rooms";
+        query = "select \"round\", " +
+        		"\"location\", " +
+        		"\"first_prop\", " +
+        		"\"first_op\", " +
+        		"\"second_prop\", " +
+                "\"second_op\" " +
+                "from rooms";
         final int FIRST_PROP = 3;
         final int FIRST_OP = 4;
         final int SECOND_PROP = 5;
@@ -116,8 +121,8 @@ public final class XHTMLFactory {
             /*
              * Get the chair for this room
              */
-            String chairQuery = "select (name) from judging_panels where "
-                    + "isChair = 1";
+            String chairQuery = "select (\"name\") from judging_panels where "
+                    + "\"isChair\" = 1";
             Statement chairStatement = conn.createStatement();
             ResultSet chairRS = chairStatement.executeQuery(chairQuery);
             chairRS.next();
@@ -127,8 +132,8 @@ public final class XHTMLFactory {
             /*
              * Get the wings
              */
-            String wingsQuery = "select (name) from judging_panels where "
-                    + "isChair = 0 order by random()";
+            String wingsQuery = "select (\"name\") from judging_panels where "
+                    + "\"isChair\" = 0 order by random()";
             Statement wingsStatement = conn.createStatement();
             ResultSet wingsRS = wingsStatement.executeQuery(wingsQuery);
             wingsRS.next();
@@ -211,43 +216,5 @@ public final class XHTMLFactory {
         
         return temporaryDirectory;
     }
-    
-    /*
-     * public static File generateSlides(int round) throws Exception {
-     * 
-     * File output = null;
-     * 
-     * FileInputStream fStream = new FileInputStream("html/slide.html");
-     * DataInputStream dStream = new DataInputStream(fStream); BufferedReader
-     * reader = new BufferedReader(new InputStreamReader( dStream));
-     * 
-     * BufferedWriter writer = new BufferedWriter(new FileWriter("1.html"));
-     * 
-     * String chair = null, judges = null, location = null, fprop = null, fop =
-     * null, sop = null, sprop = null;
-     * 
-     * chair = "Mike Keary"; judges = "Tom Coyle, Maya"; location = "A14";
-     * fprop = "ABER A"; fop = "ABER HAMZA"; sprop = "ABER D"; sop = "SOAS A";
-     * 
-     * String line = reader.readLine(); while (line != null) {
-     * 
-     * 
-     * Replace tags with actual information
-     * 
-     * line = line.replace("<!--CHAIR-->", chair); line =
-     * line.replace("<!--JUDGES-->", judges); line =
-     * line.replace("<!--ROOM-->", location); line =
-     * line.replace("<!--1PROP-->", fprop); line = line.replace("<!--1OP-->",
-     * fop); line = line.replace("<!--2PROP-->", sprop); line =
-     * line.replace("<!--2OP-->", sop);
-     * 
-     * writer.write(line);
-     * 
-     * line = reader.readLine(); }
-     * 
-     * dStream.close(); writer.flush(); writer.close();
-     * 
-     * return output; }
-     */
 
 }

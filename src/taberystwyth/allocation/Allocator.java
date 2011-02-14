@@ -43,8 +43,6 @@ public final class Allocator {
     private static final long INITIAL_SEED = 0L;
     private transient final Random randomGenerator = new Random(INITIAL_SEED);
     
-    private transient final SQLConnection sql = SQLConnection.getInstance();
-    
     private static Allocator instance = new Allocator();
     
     /**

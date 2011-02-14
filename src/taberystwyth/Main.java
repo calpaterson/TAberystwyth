@@ -19,7 +19,6 @@
 package taberystwyth;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.swing.*;
@@ -27,10 +26,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import org.h2.jdbcx.JdbcConnectionPool;
 
 import taberystwyth.controller.DebugMenuListener;
-import taberystwyth.db.SQLConnection;
 import taberystwyth.db.TabServer;
 import taberystwyth.view.OverviewFrame;
 

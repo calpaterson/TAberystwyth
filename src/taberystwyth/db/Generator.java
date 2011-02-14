@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Random;
+import org.h2.jdbcx.JdbcConnectionPool;
 
 import org.apache.log4j.Logger;
 
@@ -38,7 +39,7 @@ final public class Generator {
     }
     
     /** The instance of SQLConnection. */
-    private SQLConnection sql = SQLConnection.getInstance();
+    private Connection conn = TabServer.getConnectionPool();
     
     /** The instance. */
     private static Generator instance = new Generator();

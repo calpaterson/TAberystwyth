@@ -47,6 +47,13 @@ public class TabServer implements Observer {
     public void createDatabase(File location){
         connectionPool = JdbcConnectionPool.create(
                 "jdbc:h2:" + location.getAbsolutePath(), "sa", "sa");
+        InputStream sqlStream = TabServer.class.getResourceAsStream("/schema.sql");
+        evaluateSQLFile(sqlStream);
+        try {
+            sqlStream.close();
+        } catch (IOException e) {
+            LOG.error("Unable to close SQL stream", e);
+        }
         LOG.info("Created database: " + location.getAbsolutePath());
     }
     
@@ -59,12 +66,12 @@ public class TabServer implements Observer {
     /**
      * Evaluates a given SQL file against the current connection.
      */
-    private void evaluateSQLFile(File file) {
+    private void evaluateSQLFile(InputStream file) {
             char[] cbuf = new char[10000];
-            FileReader fr = null;
+            InputStreamReader fr = null;
             BufferedReader br = null;
             try {
-                fr = new FileReader(file);
+                fr = new InputStreamReader(file);
                 br = new BufferedReader(fr);
                 br.read(cbuf);
                 
@@ -81,16 +88,16 @@ public class TabServer implements Observer {
                     state.execute(statements[i]);
                 }
                 conn.close();
-                LOG.debug("Evaluated SQL file: " + file.getAbsolutePath());
+                LOG.debug("Evaluated SQL file");
             } catch (Exception e) {
-                LOG.fatal("Unable to evaluate: " + file.getAbsolutePath(), e);
+                LOG.error("Unable to evaluate SQL file", e);
                 
             } finally {
                 try {
                     br.close();
                     fr.close();
                 } catch (IOException e) {
-                    LOG.error("Unable to read file: " + file.getAbsolutePath(), e);
+                    LOG.error("Unable to evaluate SQL file", e);
                 }
             }
     }

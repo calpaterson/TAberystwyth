@@ -40,7 +40,7 @@ public final class Main {
     
     private static final Logger LOG = Logger.getLogger(Main.class);
     
-    private static  final TabServer TABSERVER = TabServer.getInstance();
+    private static final TabServer TABSERVER = TabServer.getInstance();
     
     private Main() {
         /* VOID */
@@ -97,8 +97,7 @@ public final class Main {
                 } catch (Exception e) {
                     String error = "Unable to create selected tab";
                     LOG.error(error, e);
-                    JOptionPane.showMessageDialog(null,
-                            error, "File Error",
+                    JOptionPane.showMessageDialog(null, error, "File Error",
                             JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
@@ -117,8 +116,7 @@ public final class Main {
                 } catch (Exception e) {
                     String error = "Unable to open chosen tab";
                     LOG.error(error, e);
-                    JOptionPane.showMessageDialog(null,
-                            error, "File Error",
+                    JOptionPane.showMessageDialog(null, error, "File Error",
                             JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
@@ -134,14 +132,9 @@ public final class Main {
             LOG.error("something", e1);
         }
         
-        System.exit(1);
-        
         try {
-            /*
-             * Class.forName("taberystwyth.db.SQLConnection");
-             * Class.forName("taberystwyth.allocation.Allocator");
-             * Class.forName("taberystwyth.view.OverviewFrame");
-             */
+            Class.forName("taberystwyth.allocation.Allocator");
+            Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {
             LOG.fatal("Unable to load the singleton classes.", e);
             return;

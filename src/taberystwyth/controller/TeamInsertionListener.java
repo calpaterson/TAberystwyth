@@ -72,7 +72,12 @@ public class TeamInsertionListener implements ActionListener {
 			try {
 				sql = TabServer.getConnectionPool().getConnection();
 			
-				String speaker1 = "insert into speakers (name, institution, esl, novice) values (?,?,?,?);";
+				String speaker1 = "insert into speakers " +
+						"(\"name\", " +
+						"\"institution\", " +
+						"\"esl\", " +
+						"\"novice\") " +
+						"values (?,?,?,?);";
 				PreparedStatement p1 = sql.prepareStatement(speaker1);
 				p1.setString(1, frame.getSpeaker1Name().getText());
 				p1.setString(2, frame.getSpeaker1Institution().getText());
@@ -82,7 +87,12 @@ public class TeamInsertionListener implements ActionListener {
 				p1.execute();
 				p1.close();
 
-				String speaker2 = "insert into speakers (name, institution, esl, novice) values (?,?,?,?);";
+				String speaker2 = "insert into speakers " +
+						"(\"name\", " +
+						"\"institution\", " +
+						"\"esl\", " +
+						"\"novice\") " +
+						"values (?,?,?,?);";
 				PreparedStatement p2 = sql.prepareStatement(speaker2);
 				p2.setString(1, frame.getSpeaker2Name().getText());
 				p2.setString(2, frame.getSpeaker2Institution().getText());
@@ -92,7 +102,11 @@ public class TeamInsertionListener implements ActionListener {
 				p2.execute();
 				p2.close();
 
-				String team = "insert into teams (speaker1, speaker2, name) values(?,?,?)";
+				String team = "insert into teams " +
+						"(\"speaker1\", " +
+						"\"speaker2\", " +
+						"\"name\") " +
+						"values(?,?,?)";
 				PreparedStatement t = sql.prepareStatement(team);
 				t.setString(1, frame.getSpeaker1Name().getText());
 				t.setString(2, frame.getSpeaker2Name().getText());

@@ -33,6 +33,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
+import taberystwyth.allocation.options.AlgorithmListBuilder;
+import taberystwyth.allocation.options.TabAlgorithm;
 import taberystwyth.controller.AllocationFrameListener;
 
 /**
@@ -119,18 +121,18 @@ final public class AllocationFrame extends JFrame {
         /*
          * Set up comboboxes
          */
-        // FIXME
-        /*
-         * for (String name : repos.getTeamDrawTypeMap().keySet()) {
-         * teamDrawTypes.addElement(name); }
-         * 
-         * for (String name : repos.getJudgeDrawTypeMap().keySet()) {
-         * judgeDrawTypes.addElement(name); }
-         * 
-         * for (String name : repos.getLocationDrawTypeMap().keySet()) {
-         * locationDrawTypes.addElement(name); }
-         */
-
+        for (TabAlgorithm ta : AlgorithmListBuilder.getTeamAlgorithms()) {
+            teamDrawTypes.addElement(ta.getName());
+        }
+        
+        for (TabAlgorithm ja : AlgorithmListBuilder.getJudgeAlgorithms()) {
+            judgeDrawTypes.addElement(ja.getName());
+        }
+        
+        for (TabAlgorithm la : AlgorithmListBuilder.getLocationAlgorithms()) {
+            locationDrawTypes.addElement(la.getName());
+        }
+        
         teamDrawTypeBox.setModel(teamDrawTypes);
         judgeDrawTypeBox.setModel(judgeDrawTypes);
         locationDrawTypeBox.setModel(locationDrawTypes);

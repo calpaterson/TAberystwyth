@@ -66,7 +66,7 @@ public final class Allocator {
 		try {
 			sql = TabServer.getConnectionPool().getConnection();
 		} catch (SQLException e) {
-			LOG.error("Can't connect to database: " + e.getMessage());
+			LOG.error("Can't connect to database", e);
 		}
 
 	};
@@ -105,7 +105,7 @@ public final class Allocator {
 		 * Figure out the current round
 		 */
 		int round;
-		stmt = sql.prepareStatement("select max(round) from rooms;");
+		stmt = sql.prepareStatement("select max(\"round\") from rooms;");
 		rs = stmt.executeQuery();
 
 		if (rs.next()) {
@@ -179,7 +179,7 @@ public final class Allocator {
 			 * Allocate Judges
 			 */
 			if (judgeAlgo == JudgeAllocation.BALANCED) {
-				stmt = sql.prepareStatement("select name from judges order by rating desc");
+				stmt = sql.prepareStatement("select \"name\" from judges order by \"rating\" desc");
 				rs = stmt.executeQuery();
 				/*
 				 * Allocate wings in a round-robin way
@@ -206,7 +206,7 @@ public final class Allocator {
 			 * Allocate locations
 			 */
 			if (locationAlgo == LocationAllocation.RANDOM) {
-				stmt = sql.prepareStatement("select name from locations order by random();");
+				stmt = sql.prepareStatement("select \"name\" from locations order by random();");
 				rs = stmt.executeQuery();
 				int i = 0;
 				while (rs.next() && i < matches.size()) {
@@ -220,7 +220,10 @@ public final class Allocator {
 
 			for (Match m : matches) {
 				synchronized (sql) {
-					String s = "insert into rooms (first_prop, second_prop, first_op, second_op, location, round) values (?,?,?,?,?,?);";
+					String s = "insert into rooms " +
+							"(\"first_prop\", \"second_prop\"," +
+							" \"first_op\", \"second_op\", " +
+							"\"location\", \"round\") values (?,?,?,?,?,?);";
 					PreparedStatement p = sql.prepareStatement(s);
 					p.setString(1, m.getFirstProp());
 					p.setString(2, m.getSecondProp());
@@ -234,17 +237,12 @@ public final class Allocator {
 					sql.commit();
 				}
 
-				/*
-				 * String roomInsert =
-				 * "insert into rooms (first_prop, second_prop, " +
-				 * "first_op, second_op, location, round) values(" + "'" +
-				 * m.getFirstProp() + "'" + ", " + "'" + m.getSecondProp() +
-				 * "', " + "'" + m.getFirstOp() + "', " + "'" + m.getSecondOp()
-				 * + "', " + "'" + m.getLocation() + "', " + round + ");";
-				 * sql.execute(roomInsert);
-				 */
-
-				String s = "insert into judging_panels (name, round, room, isChair) values (?,?,?,?);";
+				String s = "insert into \"judging_panels\" " +
+						"(\"name\", " +
+						"\"round\", " +
+						"\"room\", " +
+						"\"isChair\") " +
+						"values (?,?,?,?);";
 				PreparedStatement p = sql.prepareStatement(s);
 				p.setString(1, m.getChair());
 				p.setInt(2, round);
@@ -256,7 +254,12 @@ public final class Allocator {
 				sql.commit();
 
 				for (String w : m.getWings()) {
-					s = "insert into judging_panels (name, round, room, isChair) values (?,?,?,?);";
+					s = "insert into judging_panels " +
+							"(\"name\", " +
+							"\"round\", " +
+							"\"room\", " +
+							"\"isChair\") " +
+							"values (?,?,?,?);";
 					p = sql.prepareStatement(s);
 					p.setString(1, w);
 					p.setInt(2, round);
@@ -374,7 +377,7 @@ public final class Allocator {
 			 */
 			for (String name : getTeamNames()) {
 				int teamPoints = 0;
-				stmt = sql.prepareStatement("select position from team_results where team = ?;");
+				stmt = sql.prepareStatement("select \"position\" from team_results where \"team\" = ?;");
 				stmt.setString(1, name);
 				rs = stmt.executeQuery();
 
@@ -406,7 +409,7 @@ public final class Allocator {
 	 */
 	protected ArrayList<String> getTeamNames() throws SQLException {
 		ArrayList<String> teamNames = new ArrayList<String>();
-		stmt = sql.prepareStatement("select name from teams;");
+		stmt = sql.prepareStatement("select \"name\" from teams;");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				teamNames.add(rs.getString("name"));

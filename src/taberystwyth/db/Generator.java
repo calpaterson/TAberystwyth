@@ -34,12 +34,8 @@ final public class Generator {
     /** The Constant log. */
     private final static Logger LOG = Logger.getLogger(Generator.class);
     
-    public static synchronized Logger getLog() {
-        return LOG;
-    }
-    
     /** The instance of SQLConnection. */
-    private Connection conn = TabServer.getConnectionPool();
+    private Connection conn;
     
     /** The instance. */
     private static Generator instance = new Generator();
@@ -67,9 +63,15 @@ final public class Generator {
     
     /**
      * Instantiates a new random tab generator.
+     * 
+     * @throws SQLException
      */
     private Generator() {
-        /* VOID */
+        try {
+            conn = TabServer.getConnectionPool().getConnection();
+        } catch (SQLException e) {
+            LOG.error("Unable to get connection", e);
+        }
     }
     
     /**
@@ -82,30 +84,25 @@ final public class Generator {
     public String genJudge() {
         while (true) {
             try {
-                synchronized (sql) {
-                    String name = genName();
-                    
-                    PreparedStatement p = sql
-                            .prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
-                    p.setString(1, name);
-                    p.setString(2,
-                            institutions[gen.nextInt(institutions.length)]);
-                    p.setInt(3, 50);
-                    p.execute();
-                    p.close();
-                    
-                    sql.commit();
-                    LOG.debug("Judge generated: " + name);
-                    return name;
-                }
+                String name = genName();
+                
+                PreparedStatement p = conn
+                        .prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
+                p.setString(1, name);
+                p.setString(2, institutions[gen.nextInt(institutions.length)]);
+                p.setInt(3, 50);
+                p.execute();
+                p.close();
+                
+                conn.commit();
+                LOG.debug("Judge generated: " + name);
+                return name;
             } catch (SQLException e) {
-                LOG.error("SQL Exception", e);
-                e.printStackTrace();
                 try {
-                    sql.rollback();
+                    LOG.error("SQL Exception", e);
+                    conn.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while rolling back!", e1);
-                    e1.printStackTrace();
                 }
             }
         }
@@ -119,22 +116,20 @@ final public class Generator {
     public void genLocation() {
         while (true) {
             try {
-                synchronized (sql) {
-                    String s = "insert into locations (name, rating) values (?, ?);";
-                    String location = locations[gen.nextInt(locations.length)];
-                    PreparedStatement p = sql.prepareStatement(s);
-                    p.setString(1, location);
-                    p.setInt(2, 50);
-                    p.execute();
-                    p.close();
-                    LOG.info("Location generated: " + location);
-                    sql.commit();
-                    return;
-                }
+                String s = "insert into locations (name, rating) values (?, ?);";
+                String location = locations[gen.nextInt(locations.length)];
+                PreparedStatement p = conn.prepareStatement(s);
+                p.setString(1, location);
+                p.setInt(2, 50);
+                p.execute();
+                p.close();
+                LOG.info("Location generated: " + location);
+                conn.commit();
+                return;
             } catch (SQLException e) {
                 try {
                     LOG.error("SQL Exception", e);
-                    sql.rollback();
+                    conn.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while trying to roll back", e1);
                     e1.printStackTrace();
@@ -156,32 +151,29 @@ final public class Generator {
                 String speaker1;
                 String speaker2;
                 String name;
-                synchronized (sql) {
-                    speaker1 = genSpeaker();
-                    speaker2 = genSpeaker();
-                    
-                    String s = "insert into teams (name, speaker1, speaker2) values(?, ?, ?);";
-                    PreparedStatement p = sql.prepareStatement(s);
-                    name = speaker1 + " and " + speaker2;
-                    
-                    p.setString(1, name);
-                    p.setString(2, speaker1);
-                    p.setString(3, speaker2);
-                    
-                    p.execute();
-                    p.close();
-                    
-                    sql.commit();
-                    LOG.debug("Team generated: " + name);
-                }
+                speaker1 = genSpeaker();
+                speaker2 = genSpeaker();
+                
+                String s = "insert into teams (name, speaker1, speaker2) values(?, ?, ?);";
+                PreparedStatement p = conn.prepareStatement(s);
+                name = speaker1 + " and " + speaker2;
+                
+                p.setString(1, name);
+                p.setString(2, speaker1);
+                p.setString(3, speaker2);
+                
+                p.execute();
+                p.close();
+                
+                conn.commit();
+                LOG.debug("Team generated: " + name);
                 return name;
             } catch (SQLException e) {
                 try {
                     LOG.error("SQL Exception", e);
-                    sql.rollback();
+                    conn.rollback();
                 } catch (Exception e1) {
                     LOG.error("Exception while trying to roll back", e1);
-                    e1.printStackTrace();
                 }
             }
         }
@@ -197,17 +189,15 @@ final public class Generator {
     private String genSpeaker() throws SQLException {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
-        synchronized (sql) {
-            String s = "insert into speakers (name, institution) values(?,?);";
-            PreparedStatement p = sql.prepareStatement(s);
-            
-            p.setString(1, name);
-            p.setString(2, institution);
-            
-            p.execute();
-            p.close();
-            sql.commit();
-        }
+        String s = "insert into speakers (name, institution) values(?,?);";
+        PreparedStatement p = conn.prepareStatement(s);
+        
+        p.setString(1, name);
+        p.setString(2, institution);
+        
+        p.execute();
+        p.close();
+        conn.commit();
         return name;
     }
     

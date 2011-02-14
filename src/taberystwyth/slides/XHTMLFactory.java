@@ -19,12 +19,14 @@
 package taberystwyth.slides;
 
 import java.io.*;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 
 public final class XHTMLFactory {
     
@@ -49,102 +51,112 @@ public final class XHTMLFactory {
          * Common
          */
         String query;
+        Statement statement;
         ResultSet rs;
-        SQLConnection sql = SQLConnection.getInstance();
+        Connection conn = TabServer.getConnectionPool().getConnection();
+        /*
+         * Get the current round
+         */
+        query = "select max(round) from rooms;";
+        statement = conn.createStatement();
+        rs = statement.executeQuery(query);
+        int round = rs.getInt(1);
+        rs.close();
+        statement.close();
         
-        synchronized (sql) {
+        /*
+         * Update the substitution map
+         */
+        subs.clear();
+        
+        subs.put("<!--ROUND-->", Integer.toString(round));
+        
+        query = "select text from motion where round = " + round + ";";
+        statement = conn.createStatement();
+        rs = statement.executeQuery(query);
+        rs.next();
+        subs.put("<!--MOTION-->", rs.getString(1));
+        rs.close();
+        statement.close();
+        
+        query = "select name from tournament_name";
+        statement = conn.createStatement();
+        rs = statement.executeQuery(query);
+        rs.next();
+        subs.put("<!--TOURNAMENT_NAME-->", rs.getString(1));
+        rs.close();
+        statement.close();
+        
+        /*
+         * Build the title and motion slides, these can be done with only the
+         * global substitutions
+         */
+        writeWithSubstitutions(root, "draw-title-slide.xhtml",
+                "draw-title-slide.xhtml");
+        writeWithSubstitutions(root, "motion-slide.xhtml",
+                "motion-slide.xhtml");
+        
+        /*
+         * Build the full tab
+         */
+        subs.put("<!--FULL_TAB-->", getFullTabTable());
+        
+        /*
+         * Build the match slides
+         */
+        query = "select round, location, first_prop, first_op, second_prop"
+                + "second_op from rooms";
+        final int FIRST_PROP = 3;
+        final int FIRST_OP = 4;
+        final int SECOND_PROP = 5;
+        final int SECOND_OP = 6;
+        statement = conn.createStatement();
+        rs = statement.executeQuery(query);
+        while (rs.next()) {
             /*
-             * Get the current round
+             * Get the chair for this room
              */
-            query = "select max(round) from rooms;";
-            rs = SQLConnection.getInstance().executeQuery(query);
-            int round = rs.getInt(1);
+            String chairQuery = "select (name) from judging_panels where "
+                    + "isChair = 1";
+            Statement chairStatement = conn.createStatement();
+            ResultSet chairRS = chairStatement.executeQuery(chairQuery);
+            chairRS.next();
+            String chair = chairRS.getString(1);
+            subs.put("<!--CHAIR-->", chair);
             
             /*
-             * Update the substitution map
+             * Get the wings
              */
-            subs.clear();
-            
-            subs.put("<!--ROUND-->", Integer.toString(round));
-            
-            query = "select text from motion where round = " + round + ";";
-            rs = sql.executeQuery(query);
-            rs.next();
-            subs.put("<!--MOTION-->", rs.getString(1));
-            
-            query = "select name from tournament_name";
-            rs = sql.executeQuery(query);
-            rs.next();
-            subs.put("<!--TOURNAMENT_NAME-->", rs.getString(1));
-            
-            /*
-             * Build the title and motion slides, these can be done with only
-             * the global substitutions
-             */
-            writeWithSubstitutions(root, "draw-title-slide.xhtml",
-                    "draw-title-slide.xhtml");
-            writeWithSubstitutions(root, "motion-slide.xhtml",
-                    "motion-slide.xhtml");
-            
-            /*
-             * Build the full tab
-             */
-            subs.put("<!--FULL_TAB-->", getFullTabTable());
-            
-            /*
-             * Build the match slides
-             */
-            query = "select round, location, first_prop, first_op, second_prop"
-                    + "second_op from rooms";
-            final int FIRST_PROP = 3;
-            final int FIRST_OP = 4;
-            final int SECOND_PROP = 5;
-            final int SECOND_OP = 6;
-            rs = sql.executeQuery(query);
-            while (rs.next()) {
-                /*
-                 * Get the chair for this room
-                 */
-                String chairQuery = "select (name) from judging_panels where "
-                        + "isChair = 1";
-                ResultSet chairRS = sql.executeQuery(chairQuery);
-                chairRS.next();
-                String chair = chairRS.getString(1);
-                subs.put("<!--CHAIR-->", chair);
-                
-                /*
-                 * Get the wings
-                 */
-                String wingsQuery = "select (name) from judging_panels where "
-                        + "isChair = 0 order by random()";
-                ResultSet wingsRS = sql.executeQuery(wingsQuery);
-                wingsRS.next();
-                String wings = wingsRS.getString(1);
-                while (wingsRS.next()) {
-                    wings += ", ";
-                    wings += wingsRS.getString(1);
-                }
-                subs.put("<!--WINGS-->", wings);
-                
-                /*
-                 * Get the teams
-                 */
-                subs.put("<!--FIRST_PROP-->", rs.getString(FIRST_PROP));
-                subs.put("<!--FIRST_OP-->", rs.getString(FIRST_OP));
-                subs.put("<!--SECOND_PROP-->", rs.getString(SECOND_PROP));
-                subs.put("<!--SECOND_OP-->", rs.getString(SECOND_OP));
-                
-                // FIXME: There should be some deterministic ordering of slides
-                writeWithSubstitutions(root, "motion-slide.xhtml", round + "-"
-                        + chair + ".xhtml");
-                
+            String wingsQuery = "select (name) from judging_panels where "
+                    + "isChair = 0 order by random()";
+            Statement wingsStatement = conn.createStatement();
+            ResultSet wingsRS = wingsStatement.executeQuery(wingsQuery);
+            wingsRS.next();
+            String wings = wingsRS.getString(1);
+            while (wingsRS.next()) {
+                wings += ", ";
+                wings += wingsRS.getString(1);
             }
+            subs.put("<!--WINGS-->", wings);
             
             /*
-             * Build the scroller
+             * Get the teams
              */
-            // FIXME: no idea
+            subs.put("<!--FIRST_PROP-->", rs.getString(FIRST_PROP));
+            subs.put("<!--FIRST_OP-->", rs.getString(FIRST_OP));
+            subs.put("<!--SECOND_PROP-->", rs.getString(SECOND_PROP));
+            subs.put("<!--SECOND_OP-->", rs.getString(SECOND_OP));
+            
+            // FIXME: There should be some deterministic ordering of slides
+            writeWithSubstitutions(root, "motion-slide.xhtml", round + "-"
+                    + chair + ".xhtml");
+            
         }
+        
+        /*
+         * Build the scroller
+         */
+        // FIXME: no idea
         return null;
     }
     

@@ -52,7 +52,11 @@ public class JudgeInsertionFrameListener implements ActionListener {
             try {
                 Connection sql = TabServer.getConnectionPool().getConnection();
                 synchronized (sql) {
-                    String s = "insert into judges (name, institution, rating) values (?,?,?);";
+                    String s = "insert into judges " +
+                    		"(\"name\", " +
+                    		"\"institution\", " +
+                    		"\"rating\") " +
+                    		"values (?,?,?);";
                     PreparedStatement p = sql.prepareStatement(s);
                     p.setString(1, frame.getJudgeName().getText());
                     p.setString(2, frame.getInstitution().getText());

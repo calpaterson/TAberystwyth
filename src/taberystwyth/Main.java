@@ -52,12 +52,7 @@ public final class Main {
      * @param args
      *            arguments passed to the program
      */
-    public static void main(final String[] args) {
-        /*
-         * Set up logging
-         */
-        BasicConfigurator.configure();
-        
+    public static void main(final String[] args) {      
         /*
          * Try setting the look and feel. If it doesn't work, we just fail and
          * continue.

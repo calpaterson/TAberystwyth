@@ -87,7 +87,11 @@ final public class Generator {
                 String name = genName();
                 
                 PreparedStatement p = conn
-                        .prepareStatement("insert into judges (name, institution, rating) values (?,?,?);");
+                        .prepareStatement("insert into judges " +
+                        		"(\"name\", " +
+                        		"\"institution\", " +
+                        		"\"rating\") " +
+                        		"values (?,?,?);");
                 p.setString(1, name);
                 p.setString(2, institutions[gen.nextInt(institutions.length)]);
                 p.setInt(3, 50);
@@ -116,7 +120,10 @@ final public class Generator {
     public void genLocation() {
         while (true) {
             try {
-                String s = "insert into locations (name, rating) values (?, ?);";
+                String s = "insert into locations " +
+                		"(\"name\", " +
+                		"\"rating\") " +
+                		"values (?, ?);";
                 String location = locations[gen.nextInt(locations.length)];
                 PreparedStatement p = conn.prepareStatement(s);
                 p.setString(1, location);
@@ -154,7 +161,11 @@ final public class Generator {
                 speaker1 = genSpeaker();
                 speaker2 = genSpeaker();
                 
-                String s = "insert into teams (name, speaker1, speaker2) values(?, ?, ?);";
+                String s = "insert into teams " +
+                		"(\"name\", " +
+                		"\"speaker1\", " +
+                		"\"speaker2\") " +
+                		"values(?, ?, ?);";
                 PreparedStatement p = conn.prepareStatement(s);
                 name = speaker1 + " and " + speaker2;
                 
@@ -189,7 +200,10 @@ final public class Generator {
     private String genSpeaker() throws SQLException {
         String name = genName();
         String institution = institutions[gen.nextInt(institutions.length)];
-        String s = "insert into speakers (name, institution) values(?,?);";
+        String s = "insert into speakers " +
+        		"(\"name\", " +
+        		"\"institution\") " +
+        		"values(?,?);";
         PreparedStatement p = conn.prepareStatement(s);
         
         p.setString(1, name);

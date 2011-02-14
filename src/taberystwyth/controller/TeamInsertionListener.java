@@ -117,7 +117,7 @@ public class TeamInsertionListener implements ActionListener {
 			frame.getSpeaker2Novice().setSelected(false);
 			frame.getTeamName().setText("");
 		}
-		;
+		
 	}
 
 }

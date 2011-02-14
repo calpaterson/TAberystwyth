@@ -103,10 +103,10 @@ final public class Generator {
                 return name;
             } catch (SQLException e) {
                 try {
-                    LOG.error("SQL Exception", e);
+                    LOG.error("Unable to generate a judge", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    LOG.error("Exception while rolling back!", e1);
+                    LOG.error("Exception while rolling back a judge!", e1);
                 }
             }
         }
@@ -135,11 +135,11 @@ final public class Generator {
                 return;
             } catch (SQLException e) {
                 try {
-                    LOG.error("SQL Exception", e);
+                    LOG.error("Unable to generate a location", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    LOG.error("Exception while trying to roll back", e1);
-                    e1.printStackTrace();
+                    LOG.error(
+                       "Exception while trying to roll back a location!", e1);
                 }
             }
         }
@@ -181,10 +181,11 @@ final public class Generator {
                 return name;
             } catch (SQLException e) {
                 try {
-                    LOG.error("SQL Exception", e);
+                    LOG.error("Unable to generate a team", e);
                     conn.rollback();
                 } catch (Exception e1) {
-                    LOG.error("Exception while trying to roll back", e1);
+                    LOG.error(
+                     "Exception while trying to roll back a team", e1);
                 }
             }
         }

@@ -150,7 +150,7 @@ final public class OverviewFrame extends JFrame implements Observer {
                  * If it's a team, append the institution of the team
                  */
                 if (table.equals("teams")) {
-                    entry += " (" + getInstitution(entry) + ")";
+                    entry += " (\"" + getInstitution(entry) + "\")";
                 }
                 model.add(index, entry);
                 ++index;
@@ -173,39 +173,40 @@ final public class OverviewFrame extends JFrame implements Observer {
              */
             PreparedStatement teamStatement = sql.prepareStatement(
                 "select \"speaker1\", \"speaker2\" from teams " + 
-                " where teams.name = ?;");
+                " where teams.\"name\" = ?;");
             teamStatement.setString(1, teamName);
             ResultSet rs = teamStatement.executeQuery();
             rs.next();
-            String speaker1 = rs.getString("SPEAKER1");
-            String speaker2 = rs.getString("SPEAKER2");
+            String speaker1 = rs.getString(1);
+            String speaker2 = rs.getString(2);
+            
             /*
              * Get the institution of speaker1
              */
-            query = "select (institution) from speakers where speakers.name = '"
-                            + speaker1 + "'";
+            query = "select \"institution\" from speakers where " + 
+                "speakers.\"name\" = '" + speaker1 + "'";
             Statement instStatement = sql.createStatement();
             rs = instStatement.executeQuery(query);
             rs.next();
-            String inst1 = rs.getString("INSTITUTION");
+            String inst1 = rs.getString(1);
             rs.close();
             
             /*
              * Get the institution of speaker2
              */
-            query = "select (institution) from speakers where speakers.name = '"
-                            + speaker2 + "'";
+            query = "select \"institution\" from speakers where " + 
+                "speakers.\"name\" = '" + speaker2 + "'";
             Statement statement = sql.createStatement();
             rs = statement.executeQuery(query);
             rs.next();
-            String inst2 = rs.getString("INSTITUTION");
+            String inst2 = rs.getString(1);
             rs.close();
             
             /*
              * Compare them
              */
             if (!inst1.equals(inst2)) {
-                returnValue = "Mixed";
+                returnValue = "Composite";
             } else {
                 returnValue = inst1;
             }

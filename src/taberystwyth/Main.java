@@ -122,12 +122,6 @@ public final class Main {
         }
         
         try {
-            TABSERVER.getConnectionPool().getConnection();
-        } catch (SQLException e1) {
-            LOG.error("something", e1);
-        }
-        
-        try {
             Class.forName("taberystwyth.allocation.Allocator");
             Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {

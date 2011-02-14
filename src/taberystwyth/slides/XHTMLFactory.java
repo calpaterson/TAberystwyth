@@ -127,6 +127,8 @@ public final class XHTMLFactory {
             ResultSet chairRS = chairStatement.executeQuery(chairQuery);
             chairRS.next();
             String chair = chairRS.getString(1);
+            chairRS.close();
+            chairStatement.close();
             subs.put("<!--CHAIR-->", chair);
             
             /*
@@ -142,6 +144,7 @@ public final class XHTMLFactory {
                 wings += ", ";
                 wings += wingsRS.getString(1);
             }
+            wingsStatement.close();
             subs.put("<!--WINGS-->", wings);
             
             /*
@@ -155,13 +158,16 @@ public final class XHTMLFactory {
             // FIXME: There should be some deterministic ordering of slides
             writeWithSubstitutions(root, "motion-slide.xhtml", round + "-"
                     + chair + ".xhtml");
-            
         }
         
         /*
          * Build the scroller
          */
         // FIXME: no idea
+        
+        rs.close();
+        statement.close();
+        conn.close();
         return null;
     }
     

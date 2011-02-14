@@ -91,6 +91,7 @@ public class TabServer extends Observable implements Runnable {
                 statements[i] = statements[i].concat(";");
                 Statement state = conn.createStatement();
                 state.execute(statements[i]);
+                state.close();
             }
             conn.close();
             LOG.debug("Evaluated SQL file");

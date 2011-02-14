@@ -94,7 +94,6 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         @Override
         protected Void doInBackground() throws Exception {
             Generator generator = Generator.getInstance();
-            Connection sql = TabServer.getConnectionPool().getConnection();
             
             int progress = 0;
             

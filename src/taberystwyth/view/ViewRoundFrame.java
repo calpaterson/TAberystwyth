@@ -79,8 +79,8 @@ public class ViewRoundFrame extends JFrame {
 	private void addRounds() {
 
 		try {
-			Connection sql = TabServer.getConnectionPool().getConnection();
-			PreparedStatement stmt = sql
+			Connection conn = TabServer.getConnectionPool().getConnection();
+			PreparedStatement stmt = conn
 					.prepareStatement("select distinct \"round\" from room;");
 			ResultSet rs = stmt.executeQuery();
 
@@ -88,6 +88,8 @@ public class ViewRoundFrame extends JFrame {
 				rounds.addItem(rs.getString("round"));
 			}
 
+			stmt.close();
+			conn.close();
 		} catch (SQLException e) {
 			LOG.error("Unable to select roundnumbers", e);
 		}

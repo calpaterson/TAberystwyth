@@ -167,11 +167,11 @@ final public class OverviewFrame extends JFrame implements Observer {
         String query = null;
         String returnValue = null;
         try {
-            Connection sql = TabServer.getConnectionPool().getConnection();
+            Connection conn = TabServer.getConnectionPool().getConnection();
             /*
              * Get the speakers on the team
              */
-            PreparedStatement teamStatement = sql.prepareStatement(
+            PreparedStatement teamStatement = conn.prepareStatement(
                 "select \"speaker1\", \"speaker2\" from teams " + 
                 " where teams.\"name\" = ?;");
             teamStatement.setString(1, teamName);
@@ -179,28 +179,32 @@ final public class OverviewFrame extends JFrame implements Observer {
             rs.next();
             String speaker1 = rs.getString(1);
             String speaker2 = rs.getString(2);
+            teamStatement.close();
             
             /*
              * Get the institution of speaker1
              */
             query = "select \"institution\" from speakers where " + 
                 "speakers.\"name\" = '" + speaker1 + "'";
-            Statement instStatement = sql.createStatement();
+            Statement instStatement = conn.createStatement();
             rs = instStatement.executeQuery(query);
             rs.next();
             String inst1 = rs.getString(1);
             rs.close();
+            instStatement.close();
             
             /*
              * Get the institution of speaker2
              */
             query = "select \"institution\" from speakers where " + 
                 "speakers.\"name\" = '" + speaker2 + "'";
-            Statement statement = sql.createStatement();
+            Statement statement = conn.createStatement();
             rs = statement.executeQuery(query);
             rs.next();
             String inst2 = rs.getString(1);
             rs.close();
+            statement.close();
+            conn.close();
             
             /*
              * Compare them

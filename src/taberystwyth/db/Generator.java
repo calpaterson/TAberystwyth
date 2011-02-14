@@ -69,6 +69,7 @@ final public class Generator {
     private Generator() {
         try {
             conn = TabServer.getConnectionPool().getConnection();
+            conn.setAutoCommit(false);
         } catch (SQLException e) {
             LOG.error("Unable to get connection", e);
         }
@@ -124,7 +125,8 @@ final public class Generator {
                 		"(\"name\", " +
                 		"\"rating\") " +
                 		"values (?, ?);";
-                String location = locations[gen.nextInt(locations.length)];
+                String location = locations[gen.nextInt(locations.length)] +
+                 gen.nextInt(100);
                 PreparedStatement p = conn.prepareStatement(s);
                 p.setString(1, location);
                 p.setInt(2, 50);
@@ -154,10 +156,10 @@ final public class Generator {
     // This is for the variable conn only
     public String genTeam() {
         while (true) {
+            String name = null;
             try {
                 String speaker1;
                 String speaker2;
-                String name;
                 speaker1 = genSpeaker();
                 speaker2 = genSpeaker();
                 
@@ -181,11 +183,11 @@ final public class Generator {
                 return name;
             } catch (SQLException e) {
                 try {
-                    LOG.error("Unable to generate a team", e);
+                    LOG.error("Unable to generate a team: " + name, e);
                     conn.rollback();
                 } catch (Exception e1) {
                     LOG.error(
-                     "Exception while trying to roll back a team", e1);
+                     "Exception while trying to roll back a team: " + name, e1);
                 }
             }
         }
@@ -212,7 +214,7 @@ final public class Generator {
         
         p.execute();
         p.close();
-        conn.commit();
+        LOG.debug("Speaker generated: " + name);
         return name;
     }
     

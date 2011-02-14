@@ -36,40 +36,46 @@ import taberystwyth.view.JudgeInsertionFrame;
  * 
  * @author Roberto Sarrionandia
  * @author Cal Paterson
- *
+ * 
  */
 public class JudgeInsertionFrameListener implements ActionListener {
     
     private static final Logger LOG = Logger
-            .getLogger(JudgeInsertionFrameListener.class);
+                    .getLogger(JudgeInsertionFrameListener.class);
     
     private JudgeInsertionFrame frame;
     
     @Override
-	public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         frame = JudgeInsertionFrame.getInstance();
         if (e.getActionCommand().equals("Save")) {
+            Connection sql = null;
             try {
-                Connection sql = TabServer.getConnectionPool().getConnection();
-                synchronized (sql) {
-                    String s = "insert into judges " +
-                    		"(\"name\", " +
-                    		"\"institution\", " +
-                    		"\"rating\") " +
-                    		"values (?,?,?);";
-                    PreparedStatement p = sql.prepareStatement(s);
-                    p.setString(1, frame.getJudgeName().getText());
-                    p.setString(2, frame.getInstitution().getText());
-                    p.setString(3, frame.getRating().getText());
-                    p.execute();
-                    p.close();
-                    sql.commit();
-                }
+                sql = TabServer.getConnectionPool()
+                .getConnection();
+                String s = "insert into judges " + "(\"name\", "
+                                + "\"institution\", " + "\"rating\") "
+                                + "values (?,?,?);";
+                PreparedStatement p = sql.prepareStatement(s);
+                p.setString(1, frame.getJudgeName().getText());
+                p.setString(2, frame.getInstitution().getText());
+                p.setString(3, frame.getRating().getText());
+                p.execute();
+                p.close();
+                sql.commit();
+                sql.close();
             } catch (SQLException e1) {
                 LOG.error("Unable to insert a judge", e1);
-                JOptionPane.showMessageDialog(frame,
-                        "Unable to insert that judge into the database",
-                        "Database Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                                frame,
+                                "Unable to insert that judge into the database",
+                                "Database Error", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                try {
+                    sql.close();
+                } catch (SQLException e1) {
+                    LOG.error("Unable to close a connection", e1);
+                }
             }
             frame.getJudgeName().setText("");
             frame.getInstitution().setText("");

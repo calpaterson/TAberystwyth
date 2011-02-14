@@ -33,9 +33,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
-import taberystwyth.allocation.options.JudgeAllocation;
-import taberystwyth.allocation.options.LocationAllocation;
-import taberystwyth.allocation.options.TeamAllocation;
+import taberystwyth.allocation.options.AlgorithmListBuilder;
+import taberystwyth.allocation.options.TabAlgorithm;
 import taberystwyth.controller.AllocationFrameListener;
 
 /**
@@ -122,17 +121,16 @@ final public class AllocationFrame extends JFrame {
         /*
          * Set up comboboxes
          */
-        //FIXME Maybe mapping of nicer names and descriptions?
-        for (TeamAllocation ta : TeamAllocation.values()) {
-            teamDrawTypes.addElement(ta);
+        for (TabAlgorithm ta : AlgorithmListBuilder.getTeamAlgorithms()) {
+            teamDrawTypes.addElement(ta.getName());
         }
         
-        for (JudgeAllocation ja : JudgeAllocation.values()) {
-            judgeDrawTypes.addElement(ja);
+        for (TabAlgorithm ja : AlgorithmListBuilder.getJudgeAlgorithms()) {
+            judgeDrawTypes.addElement(ja.getName());
         }
         
-        for (LocationAllocation la : LocationAllocation.values()) {           
-            locationDrawTypes.addElement(la);
+        for (TabAlgorithm la : AlgorithmListBuilder.getLocationAlgorithms()) {
+            locationDrawTypes.addElement(la.getName());
         }
         
         teamDrawTypeBox.setModel(teamDrawTypes);

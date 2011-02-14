@@ -122,15 +122,15 @@ final public class AllocationFrame extends JFrame {
          * Set up comboboxes
          */
         for (TabAlgorithm ta : AlgorithmListBuilder.getTeamAlgorithms()) {
-            teamDrawTypes.addElement(ta.getName());
+            teamDrawTypes.addElement(ta);
         }
         
         for (TabAlgorithm ja : AlgorithmListBuilder.getJudgeAlgorithms()) {
-            judgeDrawTypes.addElement(ja.getName());
+            judgeDrawTypes.addElement(ja);
         }
         
         for (TabAlgorithm la : AlgorithmListBuilder.getLocationAlgorithms()) {
-            locationDrawTypes.addElement(la.getName());
+            locationDrawTypes.addElement(la);
         }
         
         teamDrawTypeBox.setModel(teamDrawTypes);
@@ -203,15 +203,15 @@ final public class AllocationFrame extends JFrame {
      * of the algorithms selected
      */
     public void updateDescriptions() {
-        // FIXME
-        /*
-         * teamDrawTypeDescription.setText(repos.getTeamDrawTypeMap().get(
-         * teamDrawTypeBox.getSelectedItem()));
-         * judgeDrawTypeDescription.setText(repos.getJudgeDrawTypeMap().get(
-         * judgeDrawTypeBox.getSelectedItem()));
-         * locationDrawTypeDescription.setText
-         * (repos.getLocationDrawTypeMap().get(
-         * locationDrawTypeBox.getSelectedItem()));
-         */
+        //FIXME
+        
+//          teamDrawTypeDescription.setText(
+//          
+//          judgeDrawTypeDescription.setText(repos.getJudgeDrawTypeMap().get(
+//          judgeDrawTypeBox.getSelectedItem()));
+//          locationDrawTypeDescription.setText
+//          (repos.getLocationDrawTypeMap().get(
+//          locationDrawTypeBox.getSelectedItem()));
+         
     }
 }

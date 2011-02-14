@@ -1,6 +1,6 @@
 package taberystwyth.allocation.options;
 
-final class WUDC implements TabAlgorithm{
+public class WUDC implements TabAlgorithm{
 
     @Override
     public String getName() {
@@ -12,6 +12,11 @@ final class WUDC implements TabAlgorithm{
         		" Pools are created of equally strong teams, " +
         		"then teams are promoted until the pool is " +
         		"divisible by four";
+    }
+    
+    @Override
+    public String toString(){
+        return getName();
     }
     
 }

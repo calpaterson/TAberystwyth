@@ -12,9 +12,10 @@ import taberystwyth.allocation.Allocator;
 import taberystwyth.allocation.exceptions.JudgesRequiredException;
 import taberystwyth.allocation.exceptions.LocationsRequiredException;
 import taberystwyth.allocation.exceptions.SwingTeamsRequiredException;
-import taberystwyth.allocation.options.JudgeAllocation;
-import taberystwyth.allocation.options.LocationAllocation;
-import taberystwyth.allocation.options.TeamAllocation;
+import taberystwyth.allocation.options.Balanced;
+import taberystwyth.allocation.options.Random;
+import taberystwyth.allocation.options.TabAlgorithm;
+import taberystwyth.allocation.options.WUDC;
 import taberystwyth.view.AllocationFrame;
 
 public class AllocationFrameListener implements ActionListener, ItemListener {
@@ -28,10 +29,10 @@ public class AllocationFrameListener implements ActionListener, ItemListener {
 
         else if (event.getActionCommand().equals("Allocate")) {
             try {
-                // FIXME
-                Allocator.getInstance().allocate(TeamAllocation.WUDC,
-                                JudgeAllocation.BALANCED,
-                                LocationAllocation.RANDOM);
+                AllocationFrame frame = AllocationFrame.getInstance();
+                
+                Allocator.getInstance().allocate(new WUDC(), new Balanced(), new Random());
+                
             } catch (SQLException e) {
                 /*
                  * This is a "proper" error...not much can be done

@@ -33,6 +33,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
+import taberystwyth.allocation.options.JudgeAllocation;
+import taberystwyth.allocation.options.LocationAllocation;
+import taberystwyth.allocation.options.TeamAllocation;
 import taberystwyth.controller.AllocationFrameListener;
 
 /**
@@ -119,18 +122,19 @@ final public class AllocationFrame extends JFrame {
         /*
          * Set up comboboxes
          */
-        // FIXME
-        /*
-         * for (String name : repos.getTeamDrawTypeMap().keySet()) {
-         * teamDrawTypes.addElement(name); }
-         * 
-         * for (String name : repos.getJudgeDrawTypeMap().keySet()) {
-         * judgeDrawTypes.addElement(name); }
-         * 
-         * for (String name : repos.getLocationDrawTypeMap().keySet()) {
-         * locationDrawTypes.addElement(name); }
-         */
-
+        //FIXME Maybe mapping of nicer names and descriptions?
+        for (TeamAllocation ta : TeamAllocation.values()) {
+            teamDrawTypes.addElement(ta);
+        }
+        
+        for (JudgeAllocation ja : JudgeAllocation.values()) {
+            judgeDrawTypes.addElement(ja);
+        }
+        
+        for (LocationAllocation la : LocationAllocation.values()) {           
+            locationDrawTypes.addElement(la);
+        }
+        
         teamDrawTypeBox.setModel(teamDrawTypes);
         judgeDrawTypeBox.setModel(judgeDrawTypes);
         locationDrawTypeBox.setModel(locationDrawTypes);

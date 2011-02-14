@@ -141,10 +141,10 @@ public final class Main {
             LOG.info("Entering debug mode.");
             
             final JMenu debugMenu = new JMenu("Debug");
-            final JMenuItem generateMorningTab = new JMenuItem(
+            final JMenuItem generateTab = new JMenuItem(
                             "Generate Tab");
-            generateMorningTab.addActionListener(new DebugMenuListener());
-            debugMenu.add(generateMorningTab);
+            generateTab.addActionListener(new DebugMenuListener());
+            debugMenu.add(generateTab);
             
             OverviewFrame.getInstance().getMenu().add(debugMenu);
         }

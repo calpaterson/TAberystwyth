@@ -30,8 +30,14 @@ import org.apache.log4j.Logger;
 
 import taberystwyth.db.TabServer;
 import taberystwyth.view.JudgeInsertionFrame;
-import taberystwyth.view.OverviewFrame;
 
+/**
+ * This class is the listener for the judge insertion frame
+ * 
+ * @author Roberto Sarrionandia
+ * @author Cal Paterson
+ *
+ */
 public class JudgeInsertionFrameListener implements ActionListener {
     
     private static final Logger LOG = Logger

@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -141,11 +142,10 @@ final public class OverviewFrame extends JFrame implements Observer {
         try {
             Connection sql = TabServer.getConnectionPool().getConnection();
             Statement statement = sql.createStatement();
-            ResultSet rs = statement.executeQuery("select (name) from "
-                    + table + ";");
+            ResultSet rs = statement.executeQuery("select \"name\" from " + table + ";");
             int index = 0;
             while (rs.next()) {
-                String entry = rs.getString("NAME");
+                String entry = rs.getString(1);
                 /*
                  * If it's a team, append the institution of the team
                  */
@@ -155,6 +155,9 @@ final public class OverviewFrame extends JFrame implements Observer {
                 model.add(index, entry);
                 ++index;
             }
+            rs.close();
+            statement.close();
+            sql.close();
         } catch (SQLException e) {
             LOG.error("Unable to update overview frame", e);
         }
@@ -168,23 +171,18 @@ final public class OverviewFrame extends JFrame implements Observer {
             /*
              * Get the speakers on the team
              */
-            // FIXME: small hack here to ensure that the teamname (which
-            // might
-            // contain a ' is properly escaped:
-            String teamName_ = teamName.replaceAll("'", "''");
-            query = "select speaker1, speaker2 from teams where teams.name = '"
-                    + teamName + "';";
-            Statement speakerStatement = sql.createStatement();
-            ResultSet rs = speakerStatement.executeQuery(query);
+            PreparedStatement teamStatement = sql
+                            .prepareStatement("select speaker1, speaker2 from teams where teams.name = ?;");
+            teamStatement.setString(1, teamName);
+            ResultSet rs = teamStatement.executeQuery();
             rs.next();
             String speaker1 = rs.getString("SPEAKER1");
             String speaker2 = rs.getString("SPEAKER2");
-            
             /*
              * Get the institution of speaker1
              */
             query = "select (institution) from speakers where speakers.name = '"
-                    + speaker1 + "'";
+                            + speaker1 + "'";
             Statement instStatement = sql.createStatement();
             rs = instStatement.executeQuery(query);
             rs.next();
@@ -195,7 +193,7 @@ final public class OverviewFrame extends JFrame implements Observer {
              * Get the institution of speaker2
              */
             query = "select (institution) from speakers where speakers.name = '"
-                    + speaker2 + "'";
+                            + speaker2 + "'";
             Statement statement = sql.createStatement();
             rs = statement.executeQuery(query);
             rs.next();
@@ -212,9 +210,8 @@ final public class OverviewFrame extends JFrame implements Observer {
             }
             
         } catch (SQLException e) {
-            LOG.error(
-                    "Unable to find what institution two speakers are from.",
-                    e);
+            LOG.error("Unable to find what institution two speakers are from.",
+                            e);
         }
         
         return returnValue;

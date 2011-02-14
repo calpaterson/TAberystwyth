@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 
-import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.OverviewFrame;
 
@@ -39,11 +39,12 @@ public class JudgeInsertionFrameListener implements ActionListener {
     
     private JudgeInsertionFrame frame;
     
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         frame = JudgeInsertionFrame.getInstance();
         if (e.getActionCommand().equals("Save")) {
             try {
-                SQLConnection sql = SQLConnection.getInstance();
+                Connection sql = TabServer.getConnectionPool().getConnection();
                 synchronized (sql) {
                     String s = "insert into judges (name, institution, rating) values (?,?,?);";
                     PreparedStatement p = sql.prepareStatement(s);

@@ -19,6 +19,8 @@
 package taberystwyth.view;
 
 import java.awt.GridLayout;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -29,56 +31,66 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import taberystwyth.db.SQLConnection;
+import org.apache.log4j.Logger;
 
+import taberystwyth.db.TabServer;
+
+/**
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
+ * @author Cal Paterson
+ * 
+ */
 public class ViewRoundFrame extends JFrame {
-    
-    JLabel roundLabel = new JLabel("Round:");
-    JLabel motionLabel = new JLabel("Motion:");
-    
-    JComboBox rounds = new JComboBox();
-    
-    JTextField motion = new JTextField();
-    
-    JButton clear = new JButton("Clear");
-    JButton view = new JButton("View");
-    
-    Vector<JLabel> roundOptions = new Vector<JLabel>();
-    
-    public ViewRoundFrame() {
-        setVisible(true);
-        setTitle("View Rounds");
-        
-        setLayout(new GridLayout(3, 2));
-        
-        add(roundLabel);
-        add(rounds);
-        
-        addRounds();
-        
-        add(motionLabel);
-        add(motion);
-        
-        add(clear);
-        add(view);
-        
-        pack();
-    }
-    
-    private void addRounds() {
-        SQLConnection sql = SQLConnection.getInstance();
-        synchronized (sql) {
-            ResultSet rs = sql
-                    .executeQuery("select distinct round from room;");
-            
-            try {
-                while (rs.next()) {
-                    rounds.addItem(rs.getString("round"));
-                }
-            } catch (SQLException e) {
-                sql.panic(e, "Unable to select roundnumbers");
-            }
-        }
-        
-    }
+
+	JLabel roundLabel = new JLabel("Round:");
+	JLabel motionLabel = new JLabel("Motion:");
+
+	JComboBox rounds = new JComboBox();
+
+	JTextField motion = new JTextField();
+
+	JButton clear = new JButton("Clear");
+	JButton view = new JButton("View");
+
+	Vector<JLabel> roundOptions = new Vector<JLabel>();
+
+	Logger LOG = Logger.getLogger(ViewRoundFrame.class);
+
+	public ViewRoundFrame() {
+		setVisible(true);
+		setTitle("View Rounds");
+
+		setLayout(new GridLayout(3, 2));
+
+		add(roundLabel);
+		add(rounds);
+
+		addRounds();
+
+		add(motionLabel);
+		add(motion);
+
+		add(clear);
+		add(view);
+
+		pack();
+	}
+
+	private void addRounds() {
+
+		try {
+			Connection sql = TabServer.getConnectionPool().getConnection();
+			PreparedStatement stmt = sql
+					.prepareStatement("select distinct round from room;");
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				rounds.addItem(rs.getString("round"));
+			}
+
+		} catch (SQLException e) {
+			LOG.error("Unable to select roundnumbers", e);
+		}
+
+	}
 }

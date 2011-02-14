@@ -105,7 +105,7 @@ public final class Allocator {
 		 * Figure out the current round
 		 */
 		int round;
-		stmt = sql.prepareStatement("select max(\"round\") from \"rooms\";");
+		stmt = sql.prepareStatement("select max(\"round\") from rooms;");
 		rs = stmt.executeQuery();
 
 		if (rs.next()) {
@@ -118,7 +118,7 @@ public final class Allocator {
 		/*
 		 * Generate matches
 		 */
-		stmt = sql.prepareStatement("select count(*) / 4 from \"teams\";");
+		stmt = sql.prepareStatement("select count(*) / 4 from teams;");
 		rs = stmt.executeQuery();
 		rs.next();
 		final int nMatches = rs.getInt(1);
@@ -179,7 +179,7 @@ public final class Allocator {
 			 * Allocate Judges
 			 */
 			if (judgeAlgo == JudgeAllocation.BALANCED) {
-				stmt = sql.prepareStatement("select \"name\" from \"judges\" order by \"rating\" desc");
+				stmt = sql.prepareStatement("select \"name\" from judges order by \"rating\" desc");
 				rs = stmt.executeQuery();
 				/*
 				 * Allocate wings in a round-robin way
@@ -206,7 +206,7 @@ public final class Allocator {
 			 * Allocate locations
 			 */
 			if (locationAlgo == LocationAllocation.RANDOM) {
-				stmt = sql.prepareStatement("select \"name\" from \"locations\" order by random();");
+				stmt = sql.prepareStatement("select \"name\" from locations order by random();");
 				rs = stmt.executeQuery();
 				int i = 0;
 				while (rs.next() && i < matches.size()) {
@@ -220,7 +220,7 @@ public final class Allocator {
 
 			for (Match m : matches) {
 				synchronized (sql) {
-					String s = "insert into \"rooms\" " +
+					String s = "insert into rooms " +
 							"(\"first_prop\", \"second_prop\"," +
 							" \"first_op\", \"second_op\", " +
 							"\"location\", \"round\") values (?,?,?,?,?,?);";
@@ -254,7 +254,7 @@ public final class Allocator {
 				sql.commit();
 
 				for (String w : m.getWings()) {
-					s = "insert into \"judging_panels\" " +
+					s = "insert into judging_panels " +
 							"(\"name\", " +
 							"\"round\", " +
 							"\"room\", " +
@@ -361,7 +361,7 @@ public final class Allocator {
 			/*
 			 * Check if any rounds have happened yet, if not set all scores to 0
 			 */
-			stmt = sql.prepareStatement("select count (*) from \"team_results\";");
+			stmt = sql.prepareStatement("select count (*) from team_results;");
 			rs = stmt.executeQuery();
 			rs.next();
 			if (rs.getInt(1) == 0) {
@@ -377,7 +377,7 @@ public final class Allocator {
 			 */
 			for (String name : getTeamNames()) {
 				int teamPoints = 0;
-				stmt = sql.prepareStatement("select \"position\" from \"team_results\" where \"team\" = ?;");
+				stmt = sql.prepareStatement("select \"position\" from team_results where \"team\" = ?;");
 				stmt.setString(1, name);
 				rs = stmt.executeQuery();
 
@@ -409,7 +409,7 @@ public final class Allocator {
 	 */
 	protected ArrayList<String> getTeamNames() throws SQLException {
 		ArrayList<String> teamNames = new ArrayList<String>();
-		stmt = sql.prepareStatement("select \"name\" from \"teams\";");
+		stmt = sql.prepareStatement("select \"name\" from teams;");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				teamNames.add(rs.getString("name"));

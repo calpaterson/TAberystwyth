@@ -62,7 +62,7 @@ public final class LocationInsertionFrameListener implements ActionListener {
 		try {
 			sql = TabServer.getConnectionPool().getConnection();
 		} catch (SQLException e) {
-			LOG.error("Can't get connection to database: " + e.getMessage());
+			LOG.error("Can't get connection to database", e);
 		}
 
 	}
@@ -73,7 +73,7 @@ public final class LocationInsertionFrameListener implements ActionListener {
 		if (e.getActionCommand().equals("Save")) {
 			try {
 				PreparedStatement p = sql
-						.prepareStatement("insert into locations (name, rating) values (?, ?);");
+						.prepareStatement("insert into locations (\"name\", \"rating\") values (?, ?);");
 				p.setString(1, frame.getLocationName().getText());
 				p.setInt(2, Integer.parseInt((frame.getRating().getText())));
 				p.execute();

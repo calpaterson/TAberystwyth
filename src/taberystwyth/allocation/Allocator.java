@@ -32,9 +32,7 @@ import org.apache.log4j.Logger;
 import taberystwyth.allocation.exceptions.JudgesRequiredException;
 import taberystwyth.allocation.exceptions.LocationsRequiredException;
 import taberystwyth.allocation.exceptions.SwingTeamsRequiredException;
-import taberystwyth.allocation.options.JudgeAllocation;
-import taberystwyth.allocation.options.LocationAllocation;
-import taberystwyth.allocation.options.TeamAllocation;
+import taberystwyth.allocation.options.TabAlgorithm;
 import taberystwyth.db.TabServer;
 
 /**
@@ -92,9 +90,9 @@ public final class Allocator {
      * @throws JudgesRequiredException
      *             the judges required exception
      */
-    public void allocate(final TeamAllocation teamAlgo,
-                    final JudgeAllocation judgeAlgo,
-                    final LocationAllocation locationAlgo)
+    public void allocate(final TabAlgorithm teamAlgo,
+                    final TabAlgorithm judgeAlgo,
+                    final TabAlgorithm locationAlgo)
                     throws SQLException, SwingTeamsRequiredException,
                     LocationsRequiredException, JudgesRequiredException {
         
@@ -135,7 +133,7 @@ public final class Allocator {
         /*
          * Allocate teams
          */
-        if (teamAlgo == TeamAllocation.WUDC) {
+        if (teamAlgo.getName().equals("WUDC")) {
             final TreeMap<Integer, ArrayList<String>> pools = getLeveledPools();
             
             final int highestTeamScore = pools.lastKey();
@@ -180,7 +178,7 @@ public final class Allocator {
             /*
              * Allocate Judges
              */
-            if (judgeAlgo == JudgeAllocation.BALANCED) {
+            if (judgeAlgo.getName().equals("Balanced")) {
                 stmt = sql.prepareStatement("select \"name\" from judges order by \"rating\" desc");
                 rs = stmt.executeQuery();
                 /*
@@ -207,7 +205,7 @@ public final class Allocator {
             /*
              * Allocate locations
              */
-            if (locationAlgo == LocationAllocation.RANDOM) {
+            if (locationAlgo.getName().equals("Random")) {
                 stmt = sql.prepareStatement("select \"name\" from locations order by random();");
                 rs = stmt.executeQuery();
                 int i = 0;
@@ -216,7 +214,7 @@ public final class Allocator {
                     ++i;
                 }
                 
-            } else if (locationAlgo == LocationAllocation.BEST_TO_BEST) {
+            } else if (locationAlgo.getName().equals("Best to Best")) {
                 /* VOID */
             }
             

@@ -22,8 +22,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
@@ -33,13 +35,12 @@ import org.apache.log4j.Logger;
 
 import taberystwyth.controller.OverviewFrameMenuListener;
 import taberystwyth.controller.TeamListListener;
-import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 
 final public class OverviewFrame extends JFrame implements Observer {
     
     private static final long serialVersionUID = 1L;
-    private OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener(
-            this);
+    private OverviewFrameMenuListener menuListener = new OverviewFrameMenuListener();
     
     private final static Logger LOG = Logger.getLogger(OverviewFrame.class);
     
@@ -59,7 +60,7 @@ final public class OverviewFrame extends JFrame implements Observer {
     private JMenuBar menu;
     
     private OverviewFrame() {
-       
+        
         setLayout(new BorderLayout());
         setTitle("TAberystwyth");
         /*
@@ -86,7 +87,7 @@ final public class OverviewFrame extends JFrame implements Observer {
         /*
          * Add menu bar
          */
-        menu = new OverviewFrameMenu(new OverviewFrameMenuListener(this));
+        menu = new OverviewFrameMenu(new OverviewFrameMenuListener());
         add(menu, BorderLayout.NORTH);
         
         /*
@@ -120,8 +121,7 @@ final public class OverviewFrame extends JFrame implements Observer {
         /*
          * Add myself as an observer and force and update
          */
-        SQLConnection.getInstance().addObserver(this);
-        SQLConnection.getInstance().start();
+        TabServer.getInstance().addObserver(this);
     }
     
     private void refreshTeams() {
@@ -138,85 +138,85 @@ final public class OverviewFrame extends JFrame implements Observer {
     
     private void refreshList(String table, DefaultListModel model) {
         model.removeAllElements();
-        SQLConnection sql = SQLConnection.getInstance();
-        synchronized (sql) {
-            ResultSet rs = sql.executeQuery("select (name) from " + table
-                    + ";");
+        try {
+            Connection sql = TabServer.getConnectionPool().getConnection();
+            Statement statement = sql.createStatement();
+            ResultSet rs = statement.executeQuery("select (name) from "
+                    + table + ";");
             int index = 0;
-            try {
-                while (rs.next()) {
-                    String entry = rs.getString("NAME");
-                    /*
-                     * If it's a team, append the institution of the team
-                     */
-                    if (table.equals("teams")) {
-                        entry += " (" + getInstitution(entry) + ")";
-                    }
-                    model.add(index, entry);
-                    ++index;
+            while (rs.next()) {
+                String entry = rs.getString("NAME");
+                /*
+                 * If it's a team, append the institution of the team
+                 */
+                if (table.equals("teams")) {
+                    entry += " (" + getInstitution(entry) + ")";
                 }
-            } catch (SQLException e) {
-                SQLConnection.getInstance().panic(e,
-                        "Unable to refresh overview frame");
+                model.add(index, entry);
+                ++index;
             }
+        } catch (SQLException e) {
+            LOG.error("Unable to update overview frame", e);
         }
     }
     
     private String getInstitution(final String teamName) {
         String query = null;
         String returnValue = null;
-        SQLConnection sql = SQLConnection.getInstance();
-        synchronized (sql) {
-            try {
-                /*
-                 * Get the speakers on the team
-                 */
-                // FIXME: small hack here to ensure that the teamname (which
-                // might
-                // contain a ' is properly escaped:
-                String teamName_ = teamName.replaceAll("'", "''");
-                query = "select speaker1, speaker2 from teams where teams.name = '"
-                        + teamName + "';";
-                ResultSet rs = sql.executeQuery(query);
-                rs.next();
-                String speaker1 = rs.getString("SPEAKER1");
-                String speaker2 = rs.getString("SPEAKER2");
-                
-                /*
-                 * Get the institution of speaker1
-                 */
-                query = "select (institution) from speakers where speakers.name = '"
-                        + speaker1 + "'";
-                rs = sql.executeQuery(query);
-                rs.next();
-                String inst1 = rs.getString("INSTITUTION");
-                rs.close();
-                
-                /*
-                 * Get the institution of speaker2
-                 */
-                query = "select (institution) from speakers where speakers.name = '"
-                        + speaker2 + "'";
-                rs = sql.executeQuery(query);
-                rs.next();
-                String inst2 = rs.getString("INSTITUTION");
-                rs.close();
-                
-                /*
-                 * Compare them
-                 */
-                if (!inst1.equals(inst2)) {
-                    returnValue = "Mixed";
-                } else {
-                    returnValue = inst1;
-                }
-                
-            } catch (SQLException e) {
-                sql.panic(e,
-                        "Unable to find what institution two speakers are from.  Query was:\n"
-                                + query);
+        try {
+            Connection sql = TabServer.getConnectionPool().getConnection();
+            /*
+             * Get the speakers on the team
+             */
+            // FIXME: small hack here to ensure that the teamname (which
+            // might
+            // contain a ' is properly escaped:
+            String teamName_ = teamName.replaceAll("'", "''");
+            query = "select speaker1, speaker2 from teams where teams.name = '"
+                    + teamName + "';";
+            Statement speakerStatement = sql.createStatement();
+            ResultSet rs = speakerStatement.executeQuery(query);
+            rs.next();
+            String speaker1 = rs.getString("SPEAKER1");
+            String speaker2 = rs.getString("SPEAKER2");
+            
+            /*
+             * Get the institution of speaker1
+             */
+            query = "select (institution) from speakers where speakers.name = '"
+                    + speaker1 + "'";
+            Statement instStatement = sql.createStatement();
+            rs = instStatement.executeQuery(query);
+            rs.next();
+            String inst1 = rs.getString("INSTITUTION");
+            rs.close();
+            
+            /*
+             * Get the institution of speaker2
+             */
+            query = "select (institution) from speakers where speakers.name = '"
+                    + speaker2 + "'";
+            Statement statement = sql.createStatement();
+            rs = statement.executeQuery(query);
+            rs.next();
+            String inst2 = rs.getString("INSTITUTION");
+            rs.close();
+            
+            /*
+             * Compare them
+             */
+            if (!inst1.equals(inst2)) {
+                returnValue = "Mixed";
+            } else {
+                returnValue = inst1;
             }
+            
+        } catch (SQLException e) {
+            LOG.error(
+                    "Unable to find what institution two speakers are from.",
+                    e);
         }
+        
         return returnValue;
     }
     

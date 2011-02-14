@@ -25,6 +25,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,7 +33,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
 import taberystwyth.db.Generator;
-import taberystwyth.db.SQLConnection;
+import taberystwyth.db.TabServer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -93,9 +94,8 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
         @Override
         protected Void doInBackground() throws Exception {
             Generator generator = Generator.getInstance();
-            SQLConnection sql = SQLConnection.getInstance();
+            Connection sql = TabServer.getConnectionPool().getConnection();
             
-            sql.setChangeTracking(false);
             int progress = 0;
             
             for (int i = 0; i <= Generator.N_TEAMS; ++i){
@@ -116,7 +116,6 @@ public class GenerateFrame extends JFrame implements ActionListener, PropertyCha
                 setProgress(progress);
             }
             
-            sql.setChangeTracking(true);
             return null;
         }
         

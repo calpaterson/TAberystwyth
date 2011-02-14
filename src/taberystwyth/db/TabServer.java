@@ -9,12 +9,14 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.apache.log4j.Logger;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.Server;
 
-public class TabServer {
+public class TabServer implements Observer {
     
     private static final Logger LOG = Logger.getLogger(TabServer.class);
     
@@ -91,5 +93,16 @@ public class TabServer {
                     LOG.error("Unable to read file: " + file.getAbsolutePath(), e);
                 }
             }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void addObserver(Observer o) {
+        // TODO Auto-generated method stub
+        
     }
 }

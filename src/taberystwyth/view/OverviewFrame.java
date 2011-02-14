@@ -274,4 +274,8 @@ final public class OverviewFrame extends JFrame implements Observer {
     public JMenuBar getMenu() {
         return menu;
     }
+
+    public void setDebug(boolean b) {
+        ((OverviewFrameMenu) menu).setDebug(b);      
+    }
 }

@@ -22,6 +22,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import taberystwyth.controller.DebugMenuListener;
 import taberystwyth.controller.OverviewFrameMenuListener;
 
 public class OverviewFrameMenu extends JMenuBar {
@@ -31,6 +32,8 @@ public class OverviewFrameMenu extends JMenuBar {
     JMenu roundsMenu = new JMenu("Rounds");
     JMenu insertMenu = new JMenu("Insert");
     JMenu helpMenu = new JMenu("Help");
+    JMenu debugMenu = new JMenu("Debug");
+    JMenuItem generateTab = new JMenuItem("Generate Tab");
     
     JMenuItem quit = new JMenuItem("Quit");
     
@@ -55,10 +58,13 @@ public class OverviewFrameMenu extends JMenuBar {
         
         helpMenu.add(about);
         
+        debugMenu.add(generateTab);
+        
         add(fileMenu);
         add(insertMenu);
         add(roundsMenu);
         add(helpMenu);
+        add(debugMenu);
         
         quit.addActionListener(menuListener);
         speakers.addActionListener(menuListener);
@@ -67,6 +73,12 @@ public class OverviewFrameMenu extends JMenuBar {
         drawRound.addActionListener(menuListener);
         viewRounds.addActionListener(menuListener);
         about.addActionListener(menuListener);
+        generateTab.addActionListener(new DebugMenuListener());
+
+    }
+    
+    public void setDebug(boolean b){
+        debugMenu.setVisible(b);
     }
     
 }

@@ -139,14 +139,10 @@ public final class Main {
          */
         if (args.length > 0 && args[0].equals("--debug")) {
             LOG.info("Entering debug mode.");
+            OverviewFrame.getInstance().setDebug(true);
             
-            final JMenu debugMenu = new JMenu("Debug");
-            final JMenuItem generateTab = new JMenuItem(
-                            "Generate Tab");
-            generateTab.addActionListener(new DebugMenuListener());
-            debugMenu.add(generateTab);
-            
-            OverviewFrame.getInstance().getMenu().add(debugMenu);
+        } else {
+            OverviewFrame.getInstance().setDebug(false);
         }
         
     }

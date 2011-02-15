@@ -31,48 +31,48 @@ public class ResultEntryFrame extends JFrame {
     
  
     private static final long serialVersionUID = 6978383396277378717L;
-    private Logger LOG = Logger.getLogger(ResultEntryFrame.class);
+    private static final Logger LOG = Logger.getLogger(ResultEntryFrame.class);
     private static ResultEntryFrame instance = new ResultEntryFrame();
     
     // JLabels
-    JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
-    JLabel chooseRoomLabel = new JLabel("Room:");
+    private JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
+    private JLabel chooseRoomLabel = new JLabel("Room:");
     
-    JLabel fPropLabel = new JLabel("First Proposition");
-    JLabel fOpLabel = new JLabel("First Opposition");
-    JLabel sPropLabel = new JLabel("Second Proposition");
-    JLabel sOpLabel = new JLabel("Second Opposition");
+    private JLabel fPropLabel = new JLabel("First Proposition");
+    private  JLabel fOpLabel = new JLabel("First Opposition");
+    private JLabel sPropLabel = new JLabel("Second Proposition");
+    private JLabel sOpLabel = new JLabel("Second Opposition");
     
-    JLabel fPropS1Label = new JLabel("Speaker");
-    JLabel fPropS2Label = new JLabel("Speaker");
-    JLabel fOpS1Label = new JLabel("Speaker");
-    JLabel fOpS2Label = new JLabel("Speaker");
-    JLabel sPropS1Label = new JLabel("Speaker");
-    JLabel sPropS2Label = new JLabel("Speaker");
-    JLabel sOpS1Label = new JLabel("Speaker");
-    JLabel sOpS2Label = new JLabel("Speaker");
+    private JLabel fPropS1Label = new JLabel("Speaker");
+    private JLabel fPropS2Label = new JLabel("Speaker");
+    private  JLabel fOpS1Label = new JLabel("Speaker");
+    private JLabel fOpS2Label = new JLabel("Speaker");
+    private JLabel sPropS1Label = new JLabel("Speaker");
+    private JLabel sPropS2Label = new JLabel("Speaker");
+    private JLabel sOpS1Label = new JLabel("Speaker");
+    private JLabel sOpS2Label = new JLabel("Speaker");
     
     // ComboBox
-    DefaultComboBoxModel rooms = new DefaultComboBoxModel();
-    JComboBox roomBox = new JComboBox();
-    JComboBox fPropPosition;
-    JComboBox fOpPosition;
-    JComboBox sPropPosition;
-    JComboBox sOpPosition;
+    private DefaultComboBoxModel rooms = new DefaultComboBoxModel();
+    private JComboBox roomBox = new JComboBox();
+    private JComboBox fPropPosition;
+    private JComboBox fOpPosition;
+    private  JComboBox sPropPosition;
+    private  JComboBox sOpPosition;
     
     // Text fields
-    JTextField fPropS1Points = new JTextField(3);
-    JTextField fPropS2Points = new JTextField(3);
-    JTextField fOpS1Points = new JTextField(3);
-    JTextField fOpS2Points = new JTextField(3);
-    JTextField sPropS1Points = new JTextField(3);
-    JTextField sPropS2Points = new JTextField(3);
-    JTextField sOpS1Points = new JTextField(3);
-    JTextField sOpS2Points = new JTextField(3);
+    private JTextField fPropS1Points = new JTextField(3);
+    private JTextField fPropS2Points = new JTextField(3);
+    private JTextField fOpS1Points = new JTextField(3);
+    private JTextField fOpS2Points = new JTextField(3);
+    private JTextField sPropS1Points = new JTextField(3);
+    private JTextField sPropS2Points = new JTextField(3);
+    private  JTextField sOpS1Points = new JTextField(3);
+    private  JTextField sOpS2Points = new JTextField(3);
     
     // Buttons
-    JButton clear = new JButton("Clear");
-    JButton save = new JButton("Save");
+    private JButton clear = new JButton("Clear");
+    private JButton save = new JButton("Save");
     
     private ResultEntryFrame() {
         setLayout(new MigLayout("wrap 4, flowx, fillx", "[left]rel[right]"));
@@ -324,6 +324,8 @@ public class ResultEntryFrame extends JFrame {
                 sOpPosition.setSelectedIndex(rs.getInt("position") - 1);
             }
 
+            
+            //FIXME also set speaker points
 
             conn.close();
             

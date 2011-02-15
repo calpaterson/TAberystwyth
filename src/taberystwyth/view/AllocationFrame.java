@@ -47,27 +47,27 @@ import taberystwyth.controller.AllocationFrameListener;
  */
 final public class AllocationFrame extends JFrame {
     
-    AllocationFrameListener listener = new AllocationFrameListener();
+    private AllocationFrameListener listener = new AllocationFrameListener();
     
-    JTextField motionField = new JTextField(20);
+    private JTextField motionField = new JTextField(20);
     
-    JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
-    JTextArea teamDrawTypeDescription = new JTextArea(3, 32);
-    JComboBox teamDrawTypeBox = new JComboBox();
-    DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
+    private JLabel teamDrawTypeLabel = new JLabel("Draw teams with: ");
+    private JTextArea teamDrawTypeDescription = new JTextArea(3, 32);
+    private JComboBox teamDrawTypeBox = new JComboBox();
+    private DefaultComboBoxModel teamDrawTypes = new DefaultComboBoxModel();
     
-    JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
-    JTextArea locationDrawTypeDescription = new JTextArea(3, 32);
-    JComboBox locationDrawTypeBox = new JComboBox();
-    DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
+    private JLabel locationDrawTypeLabel = new JLabel("Draw locations with: ");
+    private JTextArea locationDrawTypeDescription = new JTextArea(3, 32);
+    private JComboBox locationDrawTypeBox = new JComboBox();
+    private DefaultComboBoxModel locationDrawTypes = new DefaultComboBoxModel();
     
-    JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
-    JTextArea judgeDrawTypeDescription = new JTextArea(3, 32);
-    JComboBox judgeDrawTypeBox = new JComboBox();
-    DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
+    private JLabel judgeDrawTypeLabel = new JLabel("Draw judges with: ");
+    private JTextArea judgeDrawTypeDescription = new JTextArea(3, 32);
+    private JComboBox judgeDrawTypeBox = new JComboBox();
+    private DefaultComboBoxModel judgeDrawTypes = new DefaultComboBoxModel();
     
-    JButton cancel = new JButton("Cancel");
-    JButton allocate = new JButton("Allocate");
+    private JButton cancel = new JButton("Cancel");
+    private JButton allocate = new JButton("Allocate");
     
     private static final long serialVersionUID = 1L;
     private static AllocationFrame instance = new AllocationFrame();

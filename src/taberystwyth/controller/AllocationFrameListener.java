@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -18,11 +19,13 @@ import taberystwyth.allocation.options.Balanced;
 import taberystwyth.allocation.options.Random;
 import taberystwyth.allocation.options.TabAlgorithm;
 import taberystwyth.allocation.options.WUDC;
+import taberystwyth.slides.XHTMLFactory;
 import taberystwyth.view.AllocationFrame;
 
 public class AllocationFrameListener implements ActionListener, ItemListener {
     
-    private static final Logger LOG = Logger.getLogger(AllocationFrame.class);
+    private static final Logger LOG = Logger
+                    .getLogger(AllocationFrame.class);
     
     @Override
     public void actionPerformed(ActionEvent event) {
@@ -32,8 +35,10 @@ public class AllocationFrameListener implements ActionListener, ItemListener {
         }
 
         else if (event.getActionCommand().equals("Allocate")) {
-            try {                
-                Allocator.getInstance().allocate(new WUDC(), new Balanced(), new Random());
+            try {
+                Allocator.getInstance().allocate(
+                                AllocationFrame.getInstance().getMotion(),
+                                new WUDC(), new Balanced(), new Random());
             } catch (SQLException e) {
                 /*
                  * This is a "proper" error...not much can be done
@@ -72,6 +77,15 @@ public class AllocationFrameListener implements ActionListener, ItemListener {
                                                 + " judge(s).",
                                 "Not enough judges",
                                 JOptionPane.INFORMATION_MESSAGE);
+            }
+            try {
+                XHTMLFactory.getInstance().generateSlides();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
         

@@ -89,7 +89,7 @@ public final class Allocator {
      * @throws JudgesRequiredException
      *             the judges required exception
      */
-    public void allocate(final TabAlgorithm teamAlgo,
+    public void allocate(String motion, final TabAlgorithm teamAlgo,
                     final TabAlgorithm judgeAlgo,
                     final TabAlgorithm locationAlgo) throws SQLException,
                     SwingTeamsRequiredException, LocationsRequiredException,
@@ -115,6 +115,16 @@ public final class Allocator {
             }
             rs.close();
             LOG.debug("Current round is: " + round);
+            
+            /*
+             * Store the motion
+             */
+            stmt = conn.prepareStatement(
+                "insert into motions (\"text\", \"round\") values (?,?);");
+            stmt.setString(1, motion);
+            stmt.setInt(2, round);
+            stmt.execute();
+            stmt.close();
             
             /*
              * Generate matches

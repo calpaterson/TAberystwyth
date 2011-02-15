@@ -31,6 +31,7 @@ import taberystwyth.view.AllocationFrame;
 import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
+import taberystwyth.view.ResultEntryFrame;
 import taberystwyth.view.TeamInsertionFrame;
 
 /**
@@ -67,6 +68,8 @@ public class OverviewFrameMenuListener implements ActionListener {
             AboutDialog.getInstance().setVisible(true);
             // } else if (e.getActionCommand().equals("View Rounds")) {
             // new ViewRoundFrame(); FIXME
+        } else if(e.getActionCommand().equals("Enter Results")){
+            ResultEntryFrame.getInstance().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(overviewFrame,
                             "Not currently implemented!");

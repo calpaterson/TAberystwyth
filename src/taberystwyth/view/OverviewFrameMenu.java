@@ -44,6 +44,7 @@ public class OverviewFrameMenu extends JMenuBar {
     JMenuItem about = new JMenuItem("About");
     
     JMenuItem drawRound = new JMenuItem("Draw Preliminary Round");
+    JMenuItem resultEntry = new JMenuItem("Enter Results");
     JMenuItem viewRounds = new JMenuItem("View Rounds");
     
     public OverviewFrameMenu(OverviewFrameMenuListener menuListener) {
@@ -55,6 +56,7 @@ public class OverviewFrameMenu extends JMenuBar {
         
         roundsMenu.add(drawRound);
         roundsMenu.add(viewRounds);
+        roundsMenu.add(resultEntry);
         
         helpMenu.add(about);
         
@@ -72,6 +74,7 @@ public class OverviewFrameMenu extends JMenuBar {
         locations.addActionListener(menuListener);
         drawRound.addActionListener(menuListener);
         viewRounds.addActionListener(menuListener);
+        resultEntry.addActionListener(menuListener);
         about.addActionListener(menuListener);
         generateTab.addActionListener(new DebugMenuListener());
 

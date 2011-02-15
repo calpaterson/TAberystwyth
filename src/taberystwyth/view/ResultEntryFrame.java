@@ -1,6 +1,5 @@
 package taberystwyth.view;
 
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -22,8 +21,16 @@ import org.apache.log4j.Logger;
 import taberystwyth.controller.RoomBoxListener;
 import taberystwyth.db.TabServer;
 
+/**
+ * A frame which lets users enter the results for the current round
+ * 
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
+ *
+ */
 public class ResultEntryFrame extends JFrame {
     
+ 
+    private static final long serialVersionUID = 6978383396277378717L;
     private Logger LOG = Logger.getLogger(ResultEntryFrame.class);
     private static ResultEntryFrame instance = new ResultEntryFrame();
     
@@ -160,10 +167,15 @@ public class ResultEntryFrame extends JFrame {
         
     }
     
+    /**
+     * Get's the instance of the frame singleton
+     * @return An instance of the frame
+     */
     public static ResultEntryFrame getInstance() {
         return instance;
     }
     
+    @Override
     public void setVisible(boolean b) {
         if (b) {
             this.refreshComponents();
@@ -173,7 +185,8 @@ public class ResultEntryFrame extends JFrame {
     }
     
     /**
-     * Set the components to the first room of this round
+     * Update the list of rooms and set the components to the first 
+     * room that happens to be selected
      */
     private void refreshComponents() {
         // Get a list of rooms
@@ -204,7 +217,8 @@ public class ResultEntryFrame extends JFrame {
     }
     
     /**
-     * Update the components to the selected room
+     * Update the components to the selected room in the 
+     * roomBox
      */
     public void changeRoom() {
         int round = roundNumber();
@@ -254,6 +268,62 @@ public class ResultEntryFrame extends JFrame {
 
             pack();
             setMinimumSize(getSize());
+            
+            //Set the team positions
+            
+            //The two prepared statements
+            PreparedStatement countPositions = conn.prepareStatement("select count(\"position\") from team_results " +
+            		"where \"team\" = ? and \"round\" = ?;");
+            PreparedStatement getPosition = conn.prepareStatement("select * from team_results " +
+            		"where \"team\" = ? and \"round\" = ?;");
+            countPositions.setInt(2, round);
+            getPosition.setInt(2, round);
+            
+            //Team position for first prop
+            countPositions.setString(1, fPropLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, fPropLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                fPropPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+            
+            //Team position for first op
+            countPositions.setString(1, fOpLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, fOpLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                fOpPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+            
+            //Team position for second prop
+            countPositions.setString(1, sPropLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, sPropLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                sPropPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+
+            
+            //Team position for second op
+            countPositions.setString(1, sOpLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, sOpLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                sOpPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+
 
             conn.close();
             
@@ -282,5 +352,8 @@ public class ResultEntryFrame extends JFrame {
 
         
     }
+    
+
+
     
 }

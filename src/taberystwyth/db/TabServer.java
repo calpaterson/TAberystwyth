@@ -49,7 +49,8 @@ public class TabServer extends Observable implements Runnable {
     
     public void createDatabase(File location) {
         connectionPool = JdbcConnectionPool.create(
-                        "jdbc:h2:" + location.getAbsolutePath(), "sa", "sa");
+                        "jdbc:h2:" + location.getAbsolutePath()
+                                        + ";CIPHER=AES", "sa", "sa");
         InputStream sqlStream = TabServer.class
                         .getResourceAsStream("/schema.sql");
         evaluateSQLFile(sqlStream);
@@ -64,7 +65,8 @@ public class TabServer extends Observable implements Runnable {
     public void openDatabase(File location) {
         connectionPool = JdbcConnectionPool.create(
                         "jdbc:h2:" + location.getAbsolutePath()
-                                        + ";IFEXISTS=TRUE", "sa", "sa");
+                                        + ";IFEXISTS=TRUE;CIPHER=AES", "sa",
+                        "sa");
         LOG.info("Opened database: " + location.getAbsolutePath());
     }
     

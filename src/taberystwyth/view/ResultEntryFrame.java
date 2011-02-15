@@ -19,6 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 
+import taberystwyth.controller.RoomBoxListener;
 import taberystwyth.db.TabServer;
 
 public class ResultEntryFrame extends JFrame {
@@ -110,6 +111,8 @@ public class ResultEntryFrame extends JFrame {
         sPropPosition = new JComboBox(sPropPositions);
         sOpPosition = new JComboBox(sOpPositions);
         
+        roomBox.addItemListener(new RoomBoxListener());
+        
         // Setup the GUI
         add(titleLabel, "span");
         
@@ -196,15 +199,16 @@ public class ResultEntryFrame extends JFrame {
         pack();
         this.setMinimumSize(getSize());
         
-        changeRoom(rooms.getElementAt(0).toString());
+        changeRoom();
         
     }
     
     /**
      * Update the components to the selected room
      */
-    private void changeRoom(String room) {
+    public void changeRoom() {
         int round = roundNumber();
+        String room = roomBox.getSelectedItem().toString();
         
         try {
             Connection conn = TabServer.getConnectionPool().getConnection();
@@ -251,7 +255,7 @@ public class ResultEntryFrame extends JFrame {
             pack();
             setMinimumSize(getSize());
 
-            
+            conn.close();
             
         } catch (SQLException e) {
             LOG.error("Can't read database", e);
@@ -262,19 +266,20 @@ public class ResultEntryFrame extends JFrame {
     @SuppressWarnings("cast")
     private int roundNumber() {
         try {
-            PreparedStatement stmt = TabServer
-                            .getConnectionPool()
-                            .getConnection()
-                            .prepareStatement(
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
                                             "select max(\"round\") from rooms;");
             ResultSet rs = stmt.executeQuery();
             
             rs.next();
-            return rs.getInt(1);
+            int roundNumber = rs.getInt(1);
+            conn.close();
+            return  roundNumber;
         } catch (SQLException e) {
             LOG.error("Can't read round number", e);
+            return (Integer) null;
         }
-        return (Integer) null;
+
         
     }
     

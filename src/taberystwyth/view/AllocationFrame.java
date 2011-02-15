@@ -214,4 +214,8 @@ final public class AllocationFrame extends JFrame {
 //          locationDrawTypeBox.getSelectedItem()));
          
     }
+
+    public String getMotion() {
+        return motionField.getText();
+    }
 }

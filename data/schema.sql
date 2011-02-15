@@ -107,12 +107,14 @@ create table judging_panels (
        foreign key ("room") references locations("name")
 );
 
+-- Motions (by round)
 create table motions (
        "text" text not null,
        "round" smallint not null,
        primary key ("round")
 );
 
+-- The name of the tournament
 create table tournament_name (
        "name" text not null,
        primary key ("name")

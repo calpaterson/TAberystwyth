@@ -18,11 +18,13 @@
 
 package taberystwyth.slides;
 
+import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,18 +32,21 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
 import taberystwyth.db.TabServer;
 
 public final class XHTMLFactory {
     
     private HashMap<String, String> subs = new HashMap<String, String>();
     private static XHTMLFactory instance = new XHTMLFactory();
+    private static final Logger LOG = Logger.getLogger(XHTMLFactory.class);
     
     private XHTMLFactory() {
         /* VOID */
     }
     
-    public XHTMLFactory getInstance() {
+    public static XHTMLFactory getInstance() {
         return instance;
     }
     
@@ -50,6 +55,12 @@ public final class XHTMLFactory {
          * Create the temporary directory that all of the xhtml will be put in
          */
         File root = getTemporaryDirectory();
+        LOG.debug("The temporary directory is: " + root.getAbsolutePath());
+        
+        // If we can, open the directory in the local explorer
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(root);
+        }
         
         /*
          * Common
@@ -58,24 +69,29 @@ public final class XHTMLFactory {
         Statement statement;
         ResultSet rs;
         Connection conn = TabServer.getConnectionPool().getConnection();
+        
         /*
          * Get the current round
          */
         query = "select max(\"round\") from rooms;";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
+        rs.next();
         int round = rs.getInt(1);
         rs.close();
         statement.close();
+        LOG.debug("Current round is: " + round);
         
         /*
          * Update the substitution map
          */
         subs.clear();
         
+        // insert round
         subs.put("<!--ROUND-->", Integer.toString(round));
         
-        query = "select \"text\" from motion where \"round\" = " + round
+        // insert motion
+        query = "select \"text\" from motions where \"round\" = " + round
                         + ";";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
@@ -84,6 +100,7 @@ public final class XHTMLFactory {
         rs.close();
         statement.close();
         
+        // insert the tournament name
         query = "select \"name\" from tournament_name";
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
@@ -169,7 +186,7 @@ public final class XHTMLFactory {
         rs.close();
         statement.close();
         conn.close();
-        return null;
+        return root;
     }
     
     private String getFullTabTable() {

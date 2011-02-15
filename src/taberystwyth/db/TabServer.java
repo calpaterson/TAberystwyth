@@ -38,7 +38,8 @@ public class TabServer extends Observable implements Runnable {
     private TabServer() {
         try {
             server = Server.createTcpServer(
-                            new String[] { "-tcpAllowOthers" }).start();
+                            new String[] { "-tcpPort", "1337", "-tcp",
+                                    "-tcpSSL", "-tcpAllowOthers" }).start();
             new Thread(this).start();
             LOG.info(server.getStatus());
         } catch (SQLException e) {

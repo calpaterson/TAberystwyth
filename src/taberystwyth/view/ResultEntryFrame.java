@@ -1,6 +1,5 @@
 package taberystwyth.view;
 
-import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Connection;
@@ -19,52 +18,61 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 
+import taberystwyth.controller.RoomBoxListener;
 import taberystwyth.db.TabServer;
 
+/**
+ * A frame which lets users enter the results for the current round
+ * 
+ * @author Roberto Sarrionandia [r@sarrionandia.com]
+ *
+ */
 public class ResultEntryFrame extends JFrame {
     
-    private Logger LOG = Logger.getLogger(ResultEntryFrame.class);
+ 
+    private static final long serialVersionUID = 6978383396277378717L;
+    private static final Logger LOG = Logger.getLogger(ResultEntryFrame.class);
     private static ResultEntryFrame instance = new ResultEntryFrame();
     
     // JLabels
-    JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
-    JLabel chooseRoomLabel = new JLabel("Room:");
+    private JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
+    private JLabel chooseRoomLabel = new JLabel("Room:");
     
-    JLabel fPropLabel = new JLabel("First Proposition");
-    JLabel fOpLabel = new JLabel("First Opposition");
-    JLabel sPropLabel = new JLabel("Second Proposition");
-    JLabel sOpLabel = new JLabel("Second Opposition");
+    private JLabel fPropLabel = new JLabel("First Proposition");
+    private  JLabel fOpLabel = new JLabel("First Opposition");
+    private JLabel sPropLabel = new JLabel("Second Proposition");
+    private JLabel sOpLabel = new JLabel("Second Opposition");
     
-    JLabel fPropS1Label = new JLabel("Speaker");
-    JLabel fPropS2Label = new JLabel("Speaker");
-    JLabel fOpS1Label = new JLabel("Speaker");
-    JLabel fOpS2Label = new JLabel("Speaker");
-    JLabel sPropS1Label = new JLabel("Speaker");
-    JLabel sPropS2Label = new JLabel("Speaker");
-    JLabel sOpS1Label = new JLabel("Speaker");
-    JLabel sOpS2Label = new JLabel("Speaker");
+    private JLabel fPropS1Label = new JLabel("Speaker");
+    private JLabel fPropS2Label = new JLabel("Speaker");
+    private  JLabel fOpS1Label = new JLabel("Speaker");
+    private JLabel fOpS2Label = new JLabel("Speaker");
+    private JLabel sPropS1Label = new JLabel("Speaker");
+    private JLabel sPropS2Label = new JLabel("Speaker");
+    private JLabel sOpS1Label = new JLabel("Speaker");
+    private JLabel sOpS2Label = new JLabel("Speaker");
     
     // ComboBox
-    DefaultComboBoxModel rooms = new DefaultComboBoxModel();
-    JComboBox roomBox = new JComboBox();
-    JComboBox fPropPosition;
-    JComboBox fOpPosition;
-    JComboBox sPropPosition;
-    JComboBox sOpPosition;
+    private DefaultComboBoxModel rooms = new DefaultComboBoxModel();
+    private JComboBox roomBox = new JComboBox();
+    private JComboBox fPropPosition;
+    private JComboBox fOpPosition;
+    private  JComboBox sPropPosition;
+    private  JComboBox sOpPosition;
     
     // Text fields
-    JTextField fPropS1Points = new JTextField(3);
-    JTextField fPropS2Points = new JTextField(3);
-    JTextField fOpS1Points = new JTextField(3);
-    JTextField fOpS2Points = new JTextField(3);
-    JTextField sPropS1Points = new JTextField(3);
-    JTextField sPropS2Points = new JTextField(3);
-    JTextField sOpS1Points = new JTextField(3);
-    JTextField sOpS2Points = new JTextField(3);
+    private JTextField fPropS1Points = new JTextField(3);
+    private JTextField fPropS2Points = new JTextField(3);
+    private JTextField fOpS1Points = new JTextField(3);
+    private JTextField fOpS2Points = new JTextField(3);
+    private JTextField sPropS1Points = new JTextField(3);
+    private JTextField sPropS2Points = new JTextField(3);
+    private  JTextField sOpS1Points = new JTextField(3);
+    private  JTextField sOpS2Points = new JTextField(3);
     
     // Buttons
-    JButton clear = new JButton("Clear");
-    JButton save = new JButton("Save");
+    private JButton clear = new JButton("Clear");
+    private JButton save = new JButton("Save");
     
     private ResultEntryFrame() {
         setLayout(new MigLayout("wrap 4, flowx, fillx", "[left]rel[right]"));
@@ -109,6 +117,8 @@ public class ResultEntryFrame extends JFrame {
         fOpPosition = new JComboBox(fOpPositions);
         sPropPosition = new JComboBox(sPropPositions);
         sOpPosition = new JComboBox(sOpPositions);
+        
+        roomBox.addItemListener(new RoomBoxListener());
         
         // Setup the GUI
         add(titleLabel, "span");
@@ -157,10 +167,15 @@ public class ResultEntryFrame extends JFrame {
         
     }
     
+    /**
+     * Get's the instance of the frame singleton
+     * @return An instance of the frame
+     */
     public static ResultEntryFrame getInstance() {
         return instance;
     }
     
+    @Override
     public void setVisible(boolean b) {
         if (b) {
             this.refreshComponents();
@@ -170,7 +185,8 @@ public class ResultEntryFrame extends JFrame {
     }
     
     /**
-     * Set the components to the first room of this round
+     * Update the list of rooms and set the components to the first 
+     * room that happens to be selected
      */
     private void refreshComponents() {
         // Get a list of rooms
@@ -196,15 +212,17 @@ public class ResultEntryFrame extends JFrame {
         pack();
         this.setMinimumSize(getSize());
         
-        changeRoom(rooms.getElementAt(0).toString());
+        changeRoom();
         
     }
     
     /**
-     * Update the components to the selected room
+     * Update the components to the selected room in the 
+     * roomBox
      */
-    private void changeRoom(String room) {
+    public void changeRoom() {
         int round = roundNumber();
+        String room = roomBox.getSelectedItem().toString();
         
         try {
             Connection conn = TabServer.getConnectionPool().getConnection();
@@ -250,8 +268,66 @@ public class ResultEntryFrame extends JFrame {
 
             pack();
             setMinimumSize(getSize());
+            
+            //Set the team positions
+            
+            //The two prepared statements
+            PreparedStatement countPositions = conn.prepareStatement("select count(\"position\") from team_results " +
+            		"where \"team\" = ? and \"round\" = ?;");
+            PreparedStatement getPosition = conn.prepareStatement("select * from team_results " +
+            		"where \"team\" = ? and \"round\" = ?;");
+            countPositions.setInt(2, round);
+            getPosition.setInt(2, round);
+            
+            //Team position for first prop
+            countPositions.setString(1, fPropLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, fPropLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                fPropPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+            
+            //Team position for first op
+            countPositions.setString(1, fOpLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, fOpLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                fOpPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+            
+            //Team position for second prop
+            countPositions.setString(1, sPropLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, sPropLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                sPropPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
 
             
+            //Team position for second op
+            countPositions.setString(1, sOpLabel.getText());
+            rs = countPositions.executeQuery();
+            rs.next();
+            if(rs.getInt(1) > 0){
+                getPosition.setString(1, sOpLabel.getText());
+                rs = getPosition.executeQuery();
+                rs.next();
+                sOpPosition.setSelectedIndex(rs.getInt("position") - 1);
+            }
+
+            
+            //FIXME also set speaker points
+
+            conn.close();
             
         } catch (SQLException e) {
             LOG.error("Can't read database", e);
@@ -262,20 +338,24 @@ public class ResultEntryFrame extends JFrame {
     @SuppressWarnings("cast")
     private int roundNumber() {
         try {
-            PreparedStatement stmt = TabServer
-                            .getConnectionPool()
-                            .getConnection()
-                            .prepareStatement(
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
                                             "select max(\"round\") from rooms;");
             ResultSet rs = stmt.executeQuery();
             
             rs.next();
-            return rs.getInt(1);
+            int roundNumber = rs.getInt(1);
+            conn.close();
+            return  roundNumber;
         } catch (SQLException e) {
             LOG.error("Can't read round number", e);
+            return (Integer) null;
         }
-        return (Integer) null;
+
         
     }
+    
+
+
     
 }

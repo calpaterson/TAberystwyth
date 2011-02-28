@@ -4,11 +4,6 @@ TAberystwyth is a debating competition organiser.
 
 BUGS
 ====
-The entire SQL approach needs to be redone
- - Allow synchronization of the SQLConn singleton across whole
- transactions (and work out the sqlite weirdness to boot)
- - Must provide prep'd statements to callers 
- - Must provide closing
 Compile a version of the JDBC jar from github that includes source code
 
 For v0.1
@@ -21,7 +16,7 @@ For v0.1
 TODO
 ====
 - Data entry
-    - results
+    - results (nearly!)
     - wing/judge feedback
 - Multiple headed entry
 - Printing

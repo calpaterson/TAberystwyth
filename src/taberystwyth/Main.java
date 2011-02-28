@@ -21,6 +21,7 @@ package taberystwyth;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -31,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import taberystwyth.controller.DebugMenuListener;
 import taberystwyth.db.TabServer;
+import taberystwyth.view.CreationFrame;
 import taberystwyth.view.OverviewFrame;
 
 /**
@@ -47,6 +49,8 @@ public final class Main {
     private Main() {
         /* VOID */
     }
+    
+    private static String[] args;
     
     /**
      * The main method
@@ -67,6 +71,12 @@ public final class Main {
                             e1);
         }
         
+        Main.args = args;
+        
+        displayIntroDialog(null);
+    }
+    
+    public static void displayIntroDialog(JFrame that) {
         /*
          * Run a "simple" dialog locating the current tab or creating a new one
          */
@@ -79,29 +89,16 @@ public final class Main {
                             "TAberystwyth",
                             JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options,
-                            options[0]);
+                            options[1]);
             if (n == 0) {
                 /*
-                 * Create a new tab
+                 * Show the frame for creation of a new tab
                  */
                 problem = false;
-                JFileChooser jfc = new JFileChooser();
-                jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
-                                "tab"));
-                jfc.showDialog(null, "Create");
-                File selection = jfc.getSelectedFile();
-                try {
-                    TABSERVER.createDatabase(selection);
-                } catch (Exception e) {
-                    String error = "Unable to create selected tab";
-                    LOG.error(error, e);
-                    JOptionPane.showMessageDialog(null, error, "File Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                    problem = true;
-                }
+                CreationFrame.getInstance().setVisible(true);
             } else if (n == 1) {
                 /*
-                 * Open an existing tab
+                 * Show an open dialog box
                  */
                 problem = false;
                 JFileChooser jfc = new JFileChooser();
@@ -125,7 +122,6 @@ public final class Main {
         }
         
         try {
-            Class.forName("taberystwyth.allocation.Allocator");
             Class.forName("taberystwyth.view.OverviewFrame");
         } catch (Exception e) {
             LOG.fatal("Unable to load the singleton classes.", e);
@@ -140,7 +136,6 @@ public final class Main {
         if (args.length > 0 && args[0].equals("--debug")) {
             LOG.info("Entering debug mode.");
             OverviewFrame.getInstance().setDebug(true);
-            
         } else {
             OverviewFrame.getInstance().setDebug(false);
         }

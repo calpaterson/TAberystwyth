@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.JButton;
+
 import org.apache.log4j.Logger;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.h2.tools.Server;
@@ -48,9 +50,10 @@ public class TabServer extends Observable implements Runnable {
     }
     
     public void createDatabase(File location) {
-        connectionPool = JdbcConnectionPool.create(
-                        "jdbc:h2:" + location.getAbsolutePath()
-                                        + ";CIPHER=AES", "sa", "sa");
+        String jdbcString = "jdbc:h2:" + location.getAbsolutePath()
+                        + "CIPHER=AES";
+        connectionPool = JdbcConnectionPool
+                        .create("jdbc:h2:" + location.getAbsolutePath(), "sa", "password sa");
         InputStream sqlStream = TabServer.class
                         .getResourceAsStream("/schema.sql");
         evaluateSQLFile(sqlStream);
@@ -59,15 +62,15 @@ public class TabServer extends Observable implements Runnable {
         } catch (IOException e) {
             LOG.error("Unable to close SQL stream", e);
         }
-        LOG.info("Created database: " + location.getAbsolutePath());
+        LOG.info("Created database: " + jdbcString);
     }
     
     public void openDatabase(File location) {
-        connectionPool = JdbcConnectionPool.create(
-                        "jdbc:h2:" + location.getAbsolutePath()
-                                        + ";IFEXISTS=TRUE;CIPHER=AES", "sa",
-                        "sa");
-        LOG.info("Opened database: " + location.getAbsolutePath());
+        String jdbcString = "jdbc:h2:" + location.getAbsolutePath()
+                        + ";IFEXISTS=TRUE;CIPHER=AES";
+        connectionPool = JdbcConnectionPool.create(jdbcString, "sa",
+                        "password sa");
+        LOG.info("Opened database: " + jdbcString);
     }
     
     /**

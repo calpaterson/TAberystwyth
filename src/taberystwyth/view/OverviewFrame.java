@@ -53,6 +53,8 @@ final public class OverviewFrame extends JFrame implements Observer {
     
     private final static Logger LOG = Logger.getLogger(OverviewFrame.class);
     
+    private boolean debug = false;
+    
     /*
      * Models
      */
@@ -66,12 +68,34 @@ final public class OverviewFrame extends JFrame implements Observer {
         return instance;
     }
     
-    private JMenuBar menu;
+    private OverviewFrameMenu menu;
     
-    private OverviewFrame() {
-        
+    private OverviewFrame(){
+        /* VOID */
+    }
+    
+    public void createAndShow() {
         setLayout(new BorderLayout());
-        setTitle("TAberystwyth");
+        
+        /*
+         * Set the window title with the name of the tournament
+         */
+        try {
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(
+                            "select \"name\" from tournament_name limit 1;");
+            rs.next();
+            setTitle(rs.getString(1));
+            rs.close();
+            statement.close();
+            conn.close();
+        } catch (SQLException e){
+            LOG.fatal("Unable to get the tournamment name from the " + 
+                            "database", e);
+            System.exit(1);
+        }
+        
         /*
          * When the window is closed, exit the program
          */
@@ -98,6 +122,9 @@ final public class OverviewFrame extends JFrame implements Observer {
          */
         menu = new OverviewFrameMenu(new OverviewFrameMenuListener());
         add(menu, BorderLayout.NORTH);
+        if (debug){
+            menu.setDebug(true);
+        }
         
         /*
          * Holding panel
@@ -190,7 +217,7 @@ final public class OverviewFrame extends JFrame implements Observer {
                 }
                 
                 long end = System.currentTimeMillis();
-                LOG.info("RefreshList() had the lock for " + table + 
+                LOG.debug("RefreshList() had the lock for " + table + 
                    " for " + ((end - start)) + " millis");
             }
             
@@ -261,7 +288,7 @@ final public class OverviewFrame extends JFrame implements Observer {
     
     @Override
     public void update(Observable o, Object arg) {
-        LOG.info("Updating view");
+        LOG.debug("Updating view");
         refreshTeams();
         refreshJudges();
         refreshLocation();
@@ -275,7 +302,7 @@ final public class OverviewFrame extends JFrame implements Observer {
         return menu;
     }
 
-    public void setDebug(boolean b) {
-        ((OverviewFrameMenu) menu).setDebug(b);      
+    public void setDebug(boolean debug) {
+        this.debug=debug;    
     }
 }

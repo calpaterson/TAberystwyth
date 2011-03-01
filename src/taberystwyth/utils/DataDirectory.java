@@ -3,12 +3,10 @@ package taberystwyth.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -75,6 +73,9 @@ public class DataDirectory {
         
         try {
             if (!directory.exists()) {
+                /*
+                 * Create the directory
+                 */
                 boolean success = directory.mkdir();
                 if (!success) {
                     IOException ioe = new IOException(
@@ -84,6 +85,11 @@ public class DataDirectory {
                     throw ioe;
                 }
                 LOG.info("Created data directory: " + directoryPath);
+                
+                /*
+                 * Create the index
+                 */
+                setIndex(new HashMap<String, File>());
             }
             
             if (!directory.isDirectory()) {

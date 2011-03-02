@@ -112,23 +112,30 @@ public final class XHTMLFactory {
          * Find the three templates that are global to the round
          */
         ArrayList<File> globalTemplates = new ArrayList<File>(3);
-        final String DRAW_TITLE_PATH = "/draw-title-slide.html";
-        final String MOTION_SLIDE_PATH = "/motion-slide.html";
-        final InputStream DRAW_TITLE_STREAM = this.getClass()
-                        .getResourceAsStream(DRAW_TITLE_PATH);
-        final InputStream MOTION_SLIDE_STREAM = this.getClass()
-                        .getResourceAsStream(MOTION_SLIDE_PATH);
+        final String titleTemplatePath = "/draw-title-slide.html";
+        final String motionTemplatePath = "/motion-slide.html";
+        final InputStream titleTemplateStream = this.getClass()
+                        .getResourceAsStream(titleTemplatePath);
+        final InputStream motionTemplateStream = this.getClass()
+                        .getResourceAsStream(motionTemplatePath);
         
         /*
          * Build the title and motion slides, these can be done with only the
          * previous three substitution substitutions
          */
-        final File DRAW_TITLE_FILE = new File(root.getAbsolutePath()
+        final File titleFile = new File(root.getAbsolutePath()
                         + System.getProperty("file.separator")
                         + "title-slide.html");
-        DRAW_TITLE_FILE.createNewFile();
-        writeWithSubstitutions(DRAW_TITLE_STREAM, DRAW_TITLE_FILE);
-        LOG.info("Wrote draw title slide");
+        titleFile.createNewFile();
+        writeWithSubstitutions(titleTemplateStream, titleFile);
+        LOG.info("Wrote title slide");
+        
+        final File motionFile = new File(root.getAbsolutePath()
+                        + System.getProperty("file.separator")
+                        + "motion.html");
+        motionFile.createNewFile();
+        writeWithSubstitutions(motionTemplateStream, motionFile);
+        LOG.info("Wrote motion slide");
         
         return root;
     }

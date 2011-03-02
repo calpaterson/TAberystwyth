@@ -6,6 +6,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 
@@ -36,10 +37,14 @@ public class CreationFrameListener implements ActionListener {
             /*
              * Create and start the database in the correct place
              */
-            String fileName = unfuck(frame.getTournamentName());
+            String tournamentName = frame.getTournamentName();
+            String fileName = unfuck(tournamentName);
+            HashMap<String, String> index = DataDirectory.getInstance().getIndex();
+            index.put(tournamentName, fileName);
+            DataDirectory.getInstance().setIndex(index);
             File directory = DataDirectory.getInstance().getDirectory();
             TabServer.getInstance().createDatabase(
-                            new File(directory + "/" + fileName));
+                            new File(directory + System.getProperty("file.separator") + fileName));
             
             /*
              * Insert the name of the tournament

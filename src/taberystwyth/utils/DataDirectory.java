@@ -24,26 +24,54 @@ public class DataDirectory {
         /* VOID */
     }
     
-    File index = new File(getDirectory().getAbsolutePath()
-                    + System.getProperty("file.separator") + "index");
+    /**
+     * The path to the data directory. On unix this is "~/.taberystwyth/"
+     */
+    private final String DIRECTORY_PATH = System.getProperty("user.home")
+                    + System.getProperty("file.separator") + ".taberystwyth"
+                    + System.getProperty("file.separator");
     
-    public HashMap<String, File> getIndex() {
-        HashMap<String, File> returnValue = null;
+    /**
+     * The path to the index file. On unix this is "~/.taberystwyth/index"
+     */
+    private final String INDEX_PATH = DIRECTORY_PATH + "index";
+    
+    /**
+     * Returns the current index, unless there is none, in which case it
+     * returns an empty index
+     * 
+     * @return the current index
+     */
+    public HashMap<String, String> getIndex() {
+        HashMap<String, String> returnValue = null;
+        File index = new File(INDEX_PATH);
         try {
             FileInputStream fis = new FileInputStream(index);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            returnValue = (HashMap<String, File>) ois.readObject();
+            returnValue = (HashMap<String, String>) ois.readObject();
             ois.close();
             fis.close();
-        } catch (Exception e){
-            LOG.fatal("Unable to read index file", e);
-            System.exit(1);
+        } catch (Exception e) {
+            returnValue = new HashMap<String, String>();
         }
         return returnValue;
     }
     
-    public void setIndex(HashMap<String, File> map) {
+    /**
+     * Sets the current index with the argument provided
+     * 
+     * @param map
+     *            the new index
+     */
+    public void setIndex(HashMap<String, String> map) {
+        LOG.info("Index file is : " + INDEX_PATH);
+        File index = new File(INDEX_PATH);
         try {
+            /*
+             * Ensure that the data directory has been created
+             */
+            createDirectory();
+            
             /*
              * Delete and recreate the index file
              */
@@ -63,39 +91,23 @@ public class DataDirectory {
         }
     }
     
+    /**
+     * Returns the current data directory
+     * 
+     * @return the data directory
+     */
     public File getDirectory() {
-        String directoryPath = System.getProperty("user.home")
-                        + System.getProperty("file.separator")
-                        + ".taberystwyth"
-                        + System.getProperty("file.separator");
-        LOG.info("Directory set as: " + directoryPath);
-        File directory = new File(directoryPath);
+        LOG.info("Data directory is: " + DIRECTORY_PATH);
+        File directory = new File(DIRECTORY_PATH);
         
-        try {
-            if (!directory.exists()) {
-                /*
-                 * Create the directory
-                 */
-                boolean success = directory.mkdir();
-                if (!success) {
-                    IOException ioe = new IOException(
-                                    "Tried to open as data directory but failed: "
-                                                    + directoryPath);
-                    LOG.fatal(ioe);
-                    throw ioe;
-                }
-                LOG.info("Created data directory: " + directoryPath);
-                
-                /*
-                 * Create the index
-                 */
-                setIndex(new HashMap<String, File>());
-            }
+        try {         
+            createDirectory();
             
             if (!directory.isDirectory()) {
                 IOException ioe = new IOException("Tried to open data "
                                 + "directory but it exists "
-                                + "and is not a directory: " + directoryPath);
+                                + "and is not a directory: "
+                                + DIRECTORY_PATH);
                 LOG.fatal(ioe);
                 throw ioe;
             }
@@ -104,9 +116,41 @@ public class DataDirectory {
              * Basically nothing can be done for it, so let's just crash and
              * hope someone is reading the log
              */
+            LOG.fatal("Something went wrong with getting the data " + 
+                            "directory", ioe);
             System.exit(1);
         }
         
         return directory;
+    }
+    
+    /**
+     * If the data directory does not already exist, make it.  If the data
+     * directory does already exist, nothing is done
+     * @throws IOException
+     */
+    private void createDirectory() throws IOException{
+        File directory = new File(DIRECTORY_PATH);
+        if (!directory.exists()) {
+            /*
+             * Create the directory
+             */
+            boolean success = directory.mkdir();
+            if (!success) {
+                IOException ioe = new IOException(
+                                "Tried to open as data directory but failed: "
+                                                + DIRECTORY_PATH);
+                LOG.fatal(ioe);
+                throw ioe;
+            }
+            LOG.info("Created data directory: " + DIRECTORY_PATH);
+            
+            /*
+             * Create the index
+             */
+            setIndex(new HashMap<String, String>());
+            LOG.info("Created the index: " + INDEX_PATH);
+        }
+
     }
 }

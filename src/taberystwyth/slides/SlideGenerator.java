@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,22 +54,18 @@ public final class SlideGenerator {
     
     public File generateSlides() throws SQLException, IOException {
         /*
-         * Create the temporary directory that all of the xhtml will be put in
+         * Create the temporary directory that all of the html will be put in
          */
         File root = getTemporaryDirectory();
         LOG.debug("The temporary directory is: " + root.getAbsolutePath());
-        
-        // If we can, open the directory in the local explorer
-        if (Desktop.isDesktopSupported()) {
-            Desktop.getDesktop().open(root);
-        }
         
         /*
          * Common
          */
         String query;
         Statement statement;
-        ResultSet rs;
+        PreparedStatement prep1, prep2;
+        ResultSet rs1, rs2;
         Connection conn = TabServer.getConnectionPool().getConnection();
         
         /*
@@ -76,10 +73,10 @@ public final class SlideGenerator {
          */
         query = "select max(\"round\") from rooms;";
         statement = conn.createStatement();
-        rs = statement.executeQuery(query);
-        rs.next();
-        int round = rs.getInt(1);
-        rs.close();
+        rs1 = statement.executeQuery(query);
+        rs1.next();
+        int round = rs1.getInt(1);
+        rs1.close();
         statement.close();
         LOG.debug("Current round is: " + round);
         
@@ -90,19 +87,19 @@ public final class SlideGenerator {
         query = "select \"text\" from motions where \"round\" = " + round
                         + ";";
         statement = conn.createStatement();
-        rs = statement.executeQuery(query);
-        rs.next();
-        substitutionMap.put("<!--MOTION-->", rs.getString(1));
-        rs.close();
+        rs1 = statement.executeQuery(query);
+        rs1.next();
+        substitutionMap.put("<!--MOTION-->", rs1.getString(1));
+        rs1.close();
         statement.close();
         
         // insert the tournament name
         query = "select \"name\" from tournament_name";
         statement = conn.createStatement();
-        rs = statement.executeQuery(query);
-        rs.next();
-        substitutionMap.put("<!--TOURNAMENT_NAME-->", rs.getString(1));
-        rs.close();
+        rs1 = statement.executeQuery(query);
+        rs1.next();
+        substitutionMap.put("<!--TOURNAMENT_NAME-->", rs1.getString(1));
+        rs1.close();
         statement.close();
         
         LOG.info("Finished inserting the three general substitutions "
@@ -136,6 +133,82 @@ public final class SlideGenerator {
         motionFile.createNewFile();
         writeWithSubstitutions(motionTemplateStream, motionFile);
         LOG.info("Wrote motion slide");
+        
+        /*
+         * Build the match and ballot slides
+         * 
+         * Loop over the rooms that have been generated for this round
+         */
+        query = "select \"first_prop\", \"first_op\", \"second_prop\", "
+                        + "\"second_op\", \"location\" from rooms where "
+                        + "\"round\" = ?;";
+        prep1 = conn.prepareStatement(query);
+        prep1.setInt(1, round);
+        rs1 = prep1.executeQuery();
+        while (rs1.next()) {
+            /*
+             * Put all of the stuff from the rooms table into the substitution
+             * map
+             */
+            String room = rs1.getString(5);
+            substitutionMap.put("<!--FIRST_PROP-->", rs1.getString(1));
+            substitutionMap.put("<!--FIRST_OP-->", rs1.getString(2));
+            substitutionMap.put("<!--SECOND_PROP-->", rs1.getString(3));
+            substitutionMap.put("<!--SECOND_OP-->", rs1.getString(4));
+            substitutionMap.put("<!--ROOM-->", rs1.getString(5));
+            
+            /*
+             * Pull out the judges for the current room
+             */
+            String innerQuery = "select \"name\", \"isChair\" from "
+                            + "judging_panels where \"room\" = ? "
+                            + "and \"round\" = ?";
+            prep2 = conn.prepareStatement(innerQuery);
+            prep2.setString(1, room);
+            prep2.setInt(2, round);
+            rs2 = prep2.executeQuery();
+            while (rs2.next()) {
+                ArrayList<String> wingsArray = new ArrayList<String>();
+                /*
+                 * If he's a chair, put him in the substitution map
+                 */
+                if (rs2.getBoolean(2)) {
+                    substitutionMap.put("<!--CHAIR-->", rs2.getString(1));
+                } else {
+                    wingsArray.add(rs2.getString(1));
+                }
+                /*
+                 * Put all the wings together in commas (there might be no
+                 * wings)
+                 */
+                if (wingsArray.size() > 0) {
+                    String wings = "";
+                    wings += wingsArray.get(0);
+                    for (int i = 1; i < wingsArray.size(); i++) {
+                        wings += ", " + wingsArray.get(i);
+                    }
+                    substitutionMap.put("<!--WINGS-->", wings);
+                }
+            }
+            
+            /*
+             * FIXME: test logging
+             */
+            for (Entry<String, String> e : substitutionMap.entrySet()) {
+                LOG.info(e.getKey() + " = " + e.getValue());
+            }
+            prep2.close();
+        }
+        prep1.close();
+        rs1.close();
+        statement.close();
+        
+        // If we can, open the directory in the local explorer
+        if (Desktop.isDesktopSupported()) {
+            Desktop.getDesktop().open(root);
+        } else {
+            // FIXME: Do something else
+        }
         
         return root;
     }

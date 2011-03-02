@@ -19,7 +19,7 @@ import taberystwyth.allocation.options.Balanced;
 import taberystwyth.allocation.options.Random;
 import taberystwyth.allocation.options.TabAlgorithm;
 import taberystwyth.allocation.options.WUDC;
-import taberystwyth.slides.XHTMLFactory;
+import taberystwyth.slides.SlideGenerator;
 import taberystwyth.view.AllocationFrame;
 
 public class AllocationFrameListener implements ActionListener, ItemListener {
@@ -79,7 +79,7 @@ public class AllocationFrameListener implements ActionListener, ItemListener {
                                 JOptionPane.INFORMATION_MESSAGE);
             }
             try {
-                XHTMLFactory.getInstance().generateSlides();
+                SlideGenerator.getInstance().generateSlides();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

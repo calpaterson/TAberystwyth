@@ -37,17 +37,17 @@ import org.apache.log4j.Logger;
 
 import taberystwyth.db.TabServer;
 
-public final class XHTMLFactory {
+public final class SlideGenerator {
     
     private HashMap<String, String> substitutionMap = new HashMap<String, String>();
-    private static XHTMLFactory instance = new XHTMLFactory();
-    private static final Logger LOG = Logger.getLogger(XHTMLFactory.class);
+    private static SlideGenerator instance = new SlideGenerator();
+    private static final Logger LOG = Logger.getLogger(SlideGenerator.class);
     
-    private XHTMLFactory() {
+    private SlideGenerator() {
         /* VOID */
     }
     
-    public static XHTMLFactory getInstance() {
+    public static SlideGenerator getInstance() {
         return instance;
     }
     
@@ -112,7 +112,7 @@ public final class XHTMLFactory {
          * Find the three templates that are global to the round
          */
         ArrayList<File> globalTemplates = new ArrayList<File>(3);
-        final String titleTemplatePath = "/draw-title-slide.html";
+        final String titleTemplatePath = "/title-slide.html";
         final String motionTemplatePath = "/motion-slide.html";
         final InputStream titleTemplateStream = this.getClass()
                         .getResourceAsStream(titleTemplatePath);

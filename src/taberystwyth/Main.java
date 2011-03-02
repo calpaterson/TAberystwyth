@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import taberystwyth.controller.DebugMenuListener;
 import taberystwyth.db.TabServer;
 import taberystwyth.view.CreationFrame;
+import taberystwyth.view.OpenFrame;
 import taberystwyth.view.OverviewFrame;
 
 /**
@@ -101,6 +102,8 @@ public final class Main {
                  * Show an open dialog box
                  */
                 problem = false;
+                OpenFrame.getInstance().setVisible(true);
+                /*
                 JFileChooser jfc = new JFileChooser();
                 jfc.setFileFilter(new FileNameExtensionFilter("Tab files",
                                 "tab"));
@@ -115,6 +118,7 @@ public final class Main {
                                     JOptionPane.ERROR_MESSAGE);
                     problem = true;
                 }
+                */
             } else if (n == 2) {
                 LOG.fatal("User closed program");
                 System.exit(0);

@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -38,7 +39,7 @@ import taberystwyth.db.TabServer;
 
 public final class XHTMLFactory {
     
-    private HashMap<String, String> subs = new HashMap<String, String>();
+    private HashMap<String, String> substitutionMap = new HashMap<String, String>();
     private static XHTMLFactory instance = new XHTMLFactory();
     private static final Logger LOG = Logger.getLogger(XHTMLFactory.class);
     
@@ -82,13 +83,8 @@ public final class XHTMLFactory {
         statement.close();
         LOG.debug("Current round is: " + round);
         
-        /*
-         * Update the substitution map
-         */
-        subs.clear();
-        
         // insert round
-        subs.put("<!--ROUND-->", Integer.toString(round));
+        substitutionMap.put("<!--ROUND-->", Integer.toString(round));
         
         // insert motion
         query = "select \"text\" from motions where \"round\" = " + round
@@ -96,7 +92,7 @@ public final class XHTMLFactory {
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         rs.next();
-        subs.put("<!--MOTION-->", rs.getString(1));
+        substitutionMap.put("<!--MOTION-->", rs.getString(1));
         rs.close();
         statement.close();
         
@@ -105,87 +101,35 @@ public final class XHTMLFactory {
         statement = conn.createStatement();
         rs = statement.executeQuery(query);
         rs.next();
-        subs.put("<!--TOURNAMENT_NAME-->", rs.getString(1));
+        substitutionMap.put("<!--TOURNAMENT_NAME-->", rs.getString(1));
         rs.close();
         statement.close();
+        
+        LOG.info("Finished inserting the three general substitutions "
+                        + "into the subtitution map");
+        
+        /*
+         * Find the three templates that are global to the round
+         */
+        ArrayList<File> globalTemplates = new ArrayList<File>(3);
+        final String DRAW_TITLE_PATH = "/draw-title-slide.html";
+        final String MOTION_SLIDE_PATH = "/motion-slide.html";
+        final InputStream DRAW_TITLE_STREAM = this.getClass()
+                        .getResourceAsStream(DRAW_TITLE_PATH);
+        final InputStream MOTION_SLIDE_STREAM = this.getClass()
+                        .getResourceAsStream(MOTION_SLIDE_PATH);
         
         /*
          * Build the title and motion slides, these can be done with only the
-         * global substitutions
+         * previous three substitution substitutions
          */
-        writeWithSubstitutions(root, "draw-title-slide.xhtml",
-                        "draw-title-slide.xhtml");
-        writeWithSubstitutions(root, "motion-slide.xhtml",
-                        "motion-slide.xhtml");
+        final File DRAW_TITLE_FILE = new File(root.getAbsolutePath()
+                        + System.getProperty("file.separator")
+                        + "title-slide.html");
+        DRAW_TITLE_FILE.createNewFile();
+        writeWithSubstitutions(DRAW_TITLE_STREAM, DRAW_TITLE_FILE);
+        LOG.info("Wrote draw title slide");
         
-        /*
-         * Build the full tab
-         */
-        subs.put("<!--FULL_TAB-->", getFullTabTable());
-        
-        /*
-         * Build the match slides
-         */
-        query = "select \"round\", " + "\"location\", " + "\"first_prop\", "
-                        + "\"first_op\", " + "\"second_prop\", "
-                        + "\"second_op\" " + "from rooms";
-        final int FIRST_PROP = 3;
-        final int FIRST_OP = 4;
-        final int SECOND_PROP = 5;
-        final int SECOND_OP = 6;
-        statement = conn.createStatement();
-        rs = statement.executeQuery(query);
-        while (rs.next()) {
-            /*
-             * Get the chair for this room
-             */
-            String chairQuery = "select (\"name\") from judging_panels where "
-                            + "\"isChair\" = 1";
-            Statement chairStatement = conn.createStatement();
-            ResultSet chairRS = chairStatement.executeQuery(chairQuery);
-            chairRS.next();
-            String chair = chairRS.getString(1);
-            chairRS.close();
-            chairStatement.close();
-            subs.put("<!--CHAIR-->", chair);
-            
-            /*
-             * Get the wings
-             */
-            String wingsQuery = "select (\"name\") from judging_panels where "
-                            + "\"isChair\" = 0 order by random()";
-            Statement wingsStatement = conn.createStatement();
-            ResultSet wingsRS = wingsStatement.executeQuery(wingsQuery);
-            wingsRS.next();
-            String wings = wingsRS.getString(1);
-            while (wingsRS.next()) {
-                wings += ", ";
-                wings += wingsRS.getString(1);
-            }
-            wingsStatement.close();
-            subs.put("<!--WINGS-->", wings);
-            
-            /*
-             * Get the teams
-             */
-            subs.put("<!--FIRST_PROP-->", rs.getString(FIRST_PROP));
-            subs.put("<!--FIRST_OP-->", rs.getString(FIRST_OP));
-            subs.put("<!--SECOND_PROP-->", rs.getString(SECOND_PROP));
-            subs.put("<!--SECOND_OP-->", rs.getString(SECOND_OP));
-            
-            // FIXME: There should be some deterministic ordering of slides
-            writeWithSubstitutions(root, "motion-slide.xhtml", round + "-"
-                            + chair + ".xhtml");
-        }
-        
-        /*
-         * Build the scroller
-         */
-        // FIXME: no idea
-        
-        rs.close();
-        statement.close();
-        conn.close();
         return root;
     }
     
@@ -194,29 +138,40 @@ public final class XHTMLFactory {
         return null;
     }
     
-    private void writeWithSubstitutions(File root, String templateName,
-                    String outputName) throws IOException {
-        File titlePage = new File(root, outputName);
-        if (!titlePage.createNewFile()) {
-            throw new IOException("Was not able to create " + templateName);
-        }
-        FileWriter fr = new FileWriter(titlePage);
+    private void writeWithSubstitutions(InputStream templateStream,
+                    File outputFile) throws IOException {
+        /*
+         * Create the output file and it's writers
+         */
+        FileWriter fr = new FileWriter(outputFile);
         BufferedWriter br = new BufferedWriter(fr);
-        InputStream template = this.getClass().getResourceAsStream(
-                        templateName);
-        br.write(applySubstitutionMap(template));
+        
+        /*
+         * Write the template out to the output file with the substitutions
+         */
+        br.write(applySubstitutionMap(templateStream));
+        
+        templateStream.close();
         br.close();
         fr.close();
     }
     
-    private String applySubstitutionMap(InputStream input) {
-        String output = input.toString();
-        return applySubstitutionMap(output);
+    private String applySubstitutionMap(InputStream input)
+                    throws IOException {
+        StringBuilder buffer = new StringBuilder(1000);
+        int i = input.read();
+        char current;
+        do {
+            current = (char) i;
+            buffer.append(current);
+            i = input.read();
+        } while (i != -1);
+        return applySubstitutionMap(buffer.toString());
     }
     
     private String applySubstitutionMap(String input) {
         String output = input;
-        for (Entry<String, String> e : subs.entrySet()) {
+        for (Entry<String, String> e : substitutionMap.entrySet()) {
             output = output.replace(e.getKey(), e.getValue());
         }
         return output;

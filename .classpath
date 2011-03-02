@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry including="*html" kind="src" path="xhtml"/>
+	<classpathentry including="*html" kind="src" path="html"/>
 	<classpathentry including="*jpeg" kind="src" path="img"/>
 	<classpathentry including="*sql" kind="src" path="data"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

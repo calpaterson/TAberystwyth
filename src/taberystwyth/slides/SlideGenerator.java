@@ -145,6 +145,7 @@ public final class SlideGenerator {
         prep1 = conn.prepareStatement(query);
         prep1.setInt(1, round);
         rs1 = prep1.executeQuery();
+        int slideNumber = 0;
         while (rs1.next()) {
             /*
              * Put all of the stuff from the rooms table into the substitution
@@ -155,7 +156,7 @@ public final class SlideGenerator {
             substitutionMap.put("<!--FIRST_OP-->", rs1.getString(2));
             substitutionMap.put("<!--SECOND_PROP-->", rs1.getString(3));
             substitutionMap.put("<!--SECOND_OP-->", rs1.getString(4));
-            substitutionMap.put("<!--ROOM-->", rs1.getString(5));
+            substitutionMap.put("<!--LOCATION-->", rs1.getString(5));
             
             /*
              * Pull out the judges for the current room
@@ -191,13 +192,26 @@ public final class SlideGenerator {
                 }
             }
             
-            /*
-             * FIXME: test logging
-             */
-            for (Entry<String, String> e : substitutionMap.entrySet()) {
-                LOG.info(e.getKey() + " = " + e.getValue());
-            }
-            prep2.close();
+            final File matchFile = new File(root.getAbsolutePath()
+                            + System.getProperty("file.separator")
+                            + "match-" + slideNumber + ".html");
+            titleFile.createNewFile();
+            final InputStream matchTemplateStream = this.getClass()
+                            .getResourceAsStream("/match-slide.html");
+            writeWithSubstitutions(matchTemplateStream, matchFile);
+            LOG.info("Wrote match slide " + slideNumber);
+            
+            final File ballotFile = new File(root.getAbsolutePath()
+                            + System.getProperty("file.separator")
+                            + "ballot-" + slideNumber + ".html");
+            titleFile.createNewFile();
+            final InputStream ballotTemplateStream = this.getClass()
+                            .getResourceAsStream("/ballot.html");
+            writeWithSubstitutions(ballotTemplateStream, ballotFile);
+            LOG.info("Wrote ballot slide " + slideNumber);
+            
+            
+            ++slideNumber;
         }
         prep1.close();
         rs1.close();

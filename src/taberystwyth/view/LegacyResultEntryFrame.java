@@ -27,12 +27,12 @@ import taberystwyth.db.TabServer;
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  *
  */
-public class ResultEntryFrame extends JFrame {
+public class LegacyResultEntryFrame extends JFrame {
     
  
     private static final long serialVersionUID = 6978383396277378717L;
-    private static final Logger LOG = Logger.getLogger(ResultEntryFrame.class);
-    private static ResultEntryFrame instance = new ResultEntryFrame();
+    private static final Logger LOG = Logger.getLogger(LegacyResultEntryFrame.class);
+    private static LegacyResultEntryFrame instance = new LegacyResultEntryFrame();
     
     // JLabels
     private JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
@@ -74,7 +74,7 @@ public class ResultEntryFrame extends JFrame {
     private JButton clear = new JButton("Clear");
     private JButton save = new JButton("Save");
     
-    private ResultEntryFrame() {
+    private LegacyResultEntryFrame() {
         setLayout(new MigLayout("wrap 4, flowx, fillx", "[left]rel[right]"));
         setTitle("Enter Results");
         
@@ -84,7 +84,7 @@ public class ResultEntryFrame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evt) {
-                ResultEntryFrame.getInstance().setVisible(false);
+                LegacyResultEntryFrame.getInstance().setVisible(false);
             }
         });
         
@@ -171,7 +171,7 @@ public class ResultEntryFrame extends JFrame {
      * Get's the instance of the frame singleton
      * @return An instance of the frame
      */
-    public static ResultEntryFrame getInstance() {
+    public static LegacyResultEntryFrame getInstance() {
         return instance;
     }
     

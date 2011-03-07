@@ -306,6 +306,189 @@ public class ResultEntryFrame extends JFrame {
             return (Integer) null;
         }
 
+    }
+    
+    /**
+     * Commit the current frame to the database
+     */
+    public void commit(){
+        String query = 
+            "insert into team_results " +
+            "(\"round\", \"team\", \"position\") " +
+            "values (?,?,?);";
+        
+        Connection c;
+        try {
+            c = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt = c.prepareStatement(query);
+            
+            //First Prop Result
+            stmt.setInt(1, roundNumber());
+            stmt.setString(2, fPropLabel.getText());
+            stmt.setInt(3, positionToInteger(fPropPosition.getSelectedItem().toString()));
+            stmt.execute();
+            
+            //Second Prop Result
+            stmt.setInt(1, roundNumber());
+            stmt.setString(2, sPropLabel.getText());
+            stmt.setInt(3, positionToInteger(sPropPosition.getSelectedItem().toString()));
+            stmt.execute();
+            
+            //First Op Result
+            stmt.setInt(1, roundNumber());
+            stmt.setString(2, fOpLabel.getText());
+            stmt.setInt(3, positionToInteger(fOpPosition.getSelectedItem().toString()));
+            stmt.execute();
+
+            //Second Op Result
+            stmt.setInt(1, roundNumber());
+            stmt.setString(2, sOpLabel.getText());
+            stmt.setInt(3, positionToInteger(sOpPosition.getSelectedItem().toString()));
+            stmt.execute();
+            
+            /*
+             * Speaker scores
+             */
+            
+            //First Prop Speaker 1
+            insertUpdateSpeakerScore(
+                            fPropS1Label.getText(),
+                            fPropLabel.getText(),
+                            Integer.parseInt(fPropS1Points.getText()));
+            //First Prop Speaker 2
+            insertUpdateSpeakerScore(
+                            fPropS2Label.getText(),
+                            fPropLabel.getText(),
+                            Integer.parseInt(fPropS2Points.getText()));
+            //Second Prop Speaker 1
+            insertUpdateSpeakerScore(
+                            sPropS1Label.getText(),
+                            sPropLabel.getText(),
+                            Integer.parseInt(sPropS1Points.getText()));
+            //Second Prop Speaker 2
+            insertUpdateSpeakerScore(
+                            sPropS2Label.getText(),
+                            sPropLabel.getText(),
+                            Integer.parseInt(sPropS2Points.getText()));
+            //First Op Speaker 1
+            insertUpdateSpeakerScore(
+                            fOpS1Label.getText(),
+                            fOpLabel.getText(),
+                            Integer.parseInt(fOpS1Points.getText()));
+            //First Op Speaker 2
+            insertUpdateSpeakerScore(
+                            fOpS2Label.getText(),
+                            fOpLabel.getText(),
+                            Integer.parseInt(fOpS2Points.getText()));
+            //Second Op Speaker 1
+            insertUpdateSpeakerScore(
+                            sOpS1Label.getText(),
+                            sOpLabel.getText(),
+                            Integer.parseInt(sOpS1Points.getText()));
+            //Second Op Speaker 2
+            insertUpdateSpeakerScore(
+                            sOpS2Label.getText(),
+                            sOpLabel.getText(),
+                            Integer.parseInt(sOpS2Points.getText()));
+
+
+        } catch (SQLException e) {
+            LOG.fatal("Unable to insert results into database", e);
+        }
+        
+        
+    }
+    
+    /**
+     * Convert a string position to its integer representation
+     * @param position ("1st", "2nd", "3rd" or "4th")
+     * @return  (1,2,3 or 4)
+     */
+    private int positionToInteger(String position){
+        if(position.equals("1st")) return 1;
+        else if (position.equals("2nd")) return 2;
+        else if (position.equals("3rd")) return 3;
+        else if (position.equals("4th")) return 4;
+        else return 0;
+    }
+    
+    /**
+     * If a speaker score already exists, update it. Otherwise insert it
+     * @param speaker Name of the speaker
+     * @param instutition Institution of the speaker
+     */
+    private void insertUpdateSpeakerScore(String speaker, String institution, int points){
+        final String insertQuery = "insert into speaker_results " +
+        "(\"round\", \"speaker\", \"institution\", \"points\") " +
+        "values(?, ?, ?, ?);";
+        
+        final String updateQuery = "update speaker_results " +
+        		"set \"points\" = ? " +
+        		"where \"speaker\" = ? and \"institution\" = ?;";
+        
+        try {
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt;
+            
+            if (speakerInserted(speaker, institution)){
+                //Update the speaker points
+                stmt = conn.prepareStatement(updateQuery);
+                
+                stmt.setInt(1, points);
+                stmt.setString(1, speaker);
+                stmt.setString(3, institution);
+                
+                stmt.execute();
+                
+            }
+            
+            else{
+                //Insert the speaker points
+                stmt = conn.prepareStatement(insertQuery);
+                
+                stmt.setInt(1, roundNumber());
+                stmt.setString(2, speaker);
+                stmt.setString(3, institution);
+                stmt.setInt(4, points);
+                
+                stmt.execute();
+                
+            }
+            conn.close();
+            
+        } catch (SQLException e) {
+            LOG.fatal("Unable to insert speaker score", e);
+        }
+        
+    }
+    
+    /**
+     * Checks if a speaker has already been inserted
+     * @param speaker THe speaker to check for
+     * @param institution The institution the speaker belongs to
+     * @return Whether or not they have been inserted
+     */
+    private boolean speakerInserted(String speaker, String institution){
+        final String query = "select count (*) from speaker_results where " +
+        		"\"speaker\" = ? and \"institution\" = ?";
+        try {
+            Connection conn = TabServer.getConnectionPool().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            
+            ResultSet rs = stmt.executeQuery();
+            conn.close();
+            stmt.close();
+            
+            rs.next();
+            int count = rs.getInt(1);
+            rs.close();
+            
+            return(count > 0);
+            
+        } catch (SQLException e) {
+            LOG.fatal("Can't tell if the speaker has already been inserted", e);
+            return false;
+        }
         
     }
     

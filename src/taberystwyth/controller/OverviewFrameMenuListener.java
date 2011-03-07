@@ -28,10 +28,10 @@ import javax.swing.filechooser.FileFilter;
 
 import taberystwyth.view.AboutDialog;
 import taberystwyth.view.AllocationFrame;
+import taberystwyth.view.DataEntryListFrame;
 import taberystwyth.view.JudgeInsertionFrame;
 import taberystwyth.view.LocationInsertionFrame;
 import taberystwyth.view.OverviewFrame;
-import taberystwyth.view.LegacyResultEntryFrame;
 import taberystwyth.view.TeamInsertionFrame;
 
 /**
@@ -69,7 +69,7 @@ public class OverviewFrameMenuListener implements ActionListener {
             // } else if (e.getActionCommand().equals("View Rounds")) {
             // new ViewRoundFrame(); FIXME
         } else if(e.getActionCommand().equals("Enter Results")){
-            LegacyResultEntryFrame.getInstance().setVisible(true);
+            DataEntryListFrame.getInstance().setVisible(true);
         } else {
             JOptionPane.showMessageDialog(overviewFrame,
                             "Not currently implemented!");

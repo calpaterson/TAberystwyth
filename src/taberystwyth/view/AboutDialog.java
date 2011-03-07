@@ -50,7 +50,7 @@ final public class AboutDialog extends JDialog {
          * The captions
          */
         JLabel name = new JLabel("TAberystwyth v0.0, Bitch.");
-        JLabel desc = new JLabel("A Debating Competition Organiser");
+        JLabel desc = new JLabel("A Debating Competition Solution");
         
         /*
          * The close button

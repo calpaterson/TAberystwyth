@@ -14,6 +14,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 
+import taberystwyth.controller.DataEntryListListener;
 import taberystwyth.db.TabServer;
 
 /**
@@ -24,11 +25,13 @@ import taberystwyth.db.TabServer;
 public class DataEntryListFrame extends JFrame {
     
     private static final Logger LOG = Logger
-                    .getLogger(LegacyResultEntryFrame.class);
+                    .getLogger(ResultEntryFrame.class);
     private static DataEntryListFrame instance = new DataEntryListFrame();
     private Connection conn;
     DefaultComboBoxModel roomListModel = new DefaultComboBoxModel();
     JComboBox roomList;
+    
+    DataEntryListListener listener;
     
     JButton btnEnterData = new JButton("Enter Data");
     JButton btnClose = new JButton("Close");
@@ -43,6 +46,10 @@ public class DataEntryListFrame extends JFrame {
         this.add(roomList, "span");
         this.add(btnClose);
         this.add(btnEnterData);
+        
+        listener = new DataEntryListListener(this);
+        btnClose.addActionListener(listener);
+        btnEnterData.addActionListener(listener);
         
         // Move/resize the frame
         this.pack();
@@ -131,6 +138,12 @@ public class DataEntryListFrame extends JFrame {
             super.setVisible(b);
         }
         else super.setVisible(b);
+    }
+
+    public void enterData() {
+        ResultEntryFrame.getInstance().changeRoom(roomList.getSelectedItem().toString());
+        ResultEntryFrame.getInstance().setVisible(true);
+        
     }
     
 }

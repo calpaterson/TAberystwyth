@@ -18,7 +18,6 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 
-import taberystwyth.controller.RoomBoxListener;
 import taberystwyth.db.TabServer;
 
 /**
@@ -27,16 +26,17 @@ import taberystwyth.db.TabServer;
  * @author Roberto Sarrionandia [r@sarrionandia.com]
  *
  */
-public class LegacyResultEntryFrame extends JFrame {
+public class ResultEntryFrame extends JFrame {
     
  
     private static final long serialVersionUID = 6978383396277378717L;
-    private static final Logger LOG = Logger.getLogger(LegacyResultEntryFrame.class);
-    private static LegacyResultEntryFrame instance = new LegacyResultEntryFrame();
+    private static final Logger LOG = Logger.getLogger(ResultEntryFrame.class);
+    private static ResultEntryFrame instance = new ResultEntryFrame();
+    
+    String room;
     
     // JLabels
     private JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
-    private JLabel chooseRoomLabel = new JLabel("Room:");
     
     private JLabel fPropLabel = new JLabel("First Proposition");
     private  JLabel fOpLabel = new JLabel("First Opposition");
@@ -53,8 +53,6 @@ public class LegacyResultEntryFrame extends JFrame {
     private JLabel sOpS2Label = new JLabel("Speaker");
     
     // ComboBox
-    private DefaultComboBoxModel rooms = new DefaultComboBoxModel();
-    private JComboBox roomBox = new JComboBox();
     private JComboBox fPropPosition;
     private JComboBox fOpPosition;
     private  JComboBox sPropPosition;
@@ -74,7 +72,7 @@ public class LegacyResultEntryFrame extends JFrame {
     private JButton clear = new JButton("Clear");
     private JButton save = new JButton("Save");
     
-    private LegacyResultEntryFrame() {
+    private ResultEntryFrame() {
         setLayout(new MigLayout("wrap 4, flowx, fillx", "[left]rel[right]"));
         setTitle("Enter Results");
         
@@ -84,7 +82,7 @@ public class LegacyResultEntryFrame extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evt) {
-                LegacyResultEntryFrame.getInstance().setVisible(false);
+                ResultEntryFrame.getInstance().setVisible(false);
             }
         });
         
@@ -118,14 +116,10 @@ public class LegacyResultEntryFrame extends JFrame {
         sPropPosition = new JComboBox(sPropPositions);
         sOpPosition = new JComboBox(sOpPositions);
         
-        roomBox.addItemListener(new RoomBoxListener());
         
         // Setup the GUI
         add(titleLabel, "span");
-        
-        add(chooseRoomLabel, "span 2");
-        add(roomBox, "span 2");
-        
+                
         add(fPropLabel, "span 2, split 2");
         add(fPropPosition, "align left");
         add(fOpLabel, "span 2, split 2");
@@ -160,7 +154,6 @@ public class LegacyResultEntryFrame extends JFrame {
         add(save, "span 2");
         
         // Pack
-        // FIXME Make size a little wider
         this.pack();
         this.setMinimumSize(getSize());
         setLocationRelativeTo(OverviewFrame.getInstance());
@@ -171,58 +164,19 @@ public class LegacyResultEntryFrame extends JFrame {
      * Get's the instance of the frame singleton
      * @return An instance of the frame
      */
-    public static LegacyResultEntryFrame getInstance() {
+    public static ResultEntryFrame getInstance() {
         return instance;
     }
     
-    @Override
-    public void setVisible(boolean b) {
-        if (b) {
-            this.refreshComponents();
-            super.setVisible(b);
-        } else
-            super.setVisible(b);
-    }
-    
-    /**
-     * Update the list of rooms and set the components to the first 
-     * room that happens to be selected
-     */
-    private void refreshComponents() {
-        // Get a list of rooms
-        try {
-            PreparedStatement stmt = TabServer.getConnectionPool()
-                            .getConnection()
-                            .prepareStatement("select * from locations;");
-            ResultSet rs = stmt.executeQuery();
-            
-            while (rs.next()) {
-                rooms.addElement(rs.getString("name"));
-            }
-            
-            roomBox.setModel(rooms);
-        } catch (SQLException e) {
-            LOG.error("Can't get list of rooms", e);
-        }
-        
-        // Change the round number
-        titleLabel.setText("Insert Data for Round " + roundNumber());
-        
-        // Update the window size
-        pack();
-        this.setMinimumSize(getSize());
-        
-        changeRoom();
-        
-    }
     
     /**
      * Update the components to the selected room in the 
      * roomBox
+     * @param room The location we want to display for
      */
-    public void changeRoom() {
+    public void changeRoom(String room) {
+        this.room = room;
         int round = roundNumber();
-        String room = roomBox.getSelectedItem().toString();
         
         try {
             Connection conn = TabServer.getConnectionPool().getConnection();

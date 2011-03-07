@@ -31,6 +31,8 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
+import org.apache.log4j.Logger;
+
 import net.miginfocom.swing.MigLayout;
 import taberystwyth.db.Generator;
 
@@ -62,6 +64,8 @@ public class GenerateFrame extends JFrame implements ActionListener,
         setLayout(new MigLayout("wrap 1", "[center]"));
         setTitle("Generate");
         
+        final Logger LOG = Logger.getLogger(GenerateFrame.class);
+        
         /*
          * When the window is closed, make it invisible
          */
@@ -74,9 +78,7 @@ public class GenerateFrame extends JFrame implements ActionListener,
         
         generateButton = new JButton("Generate");
         
-        int length = Generator.N_TEAMS + Generator.N_JUDGES
-                        + Generator.N_LOCATIONS;
-        progressBar = new JProgressBar(0, length);
+        progressBar = new JProgressBar();
         
         generateButton.addActionListener(this);
         
@@ -90,28 +92,36 @@ public class GenerateFrame extends JFrame implements ActionListener,
     
     private class Generation extends SwingWorker<Void, Void> {
         
+        private final Logger LOG = Logger.getLogger(Generation.class);
+        
         @Override
         protected Void doInBackground() throws Exception {
+            
             Generator generator = Generator.getInstance();
             
-            int progress = 0;
+            int maxProgress = Generator.N_TEAMS + Generator.N_JUDGES
+                            + Generator.N_LOCATIONS;
+            int currentProgress = 0;
             
             for (int i = 0; i <= Generator.N_TEAMS; ++i) {
                 generator.genTeam();
-                ++progress;
-                setProgress(progress);
+                ++currentProgress;
+                setProgress((int) Math.round((100.0 / maxProgress)
+                                * currentProgress));
             }
             
             for (int i = 0; i <= Generator.N_JUDGES; ++i) {
                 generator.genJudge();
-                ++progress;
-                setProgress(progress);
+                ++currentProgress;
+                setProgress((int) Math.round((100.0 / maxProgress)
+                                * currentProgress));
             }
             
             for (int i = 0; i <= Generator.N_LOCATIONS; ++i) {
                 generator.genLocation();
-                ++progress;
-                setProgress(progress);
+                ++currentProgress;
+                setProgress((int) Math.round((100.0 / maxProgress)
+                                * currentProgress));
             }
             
             return null;

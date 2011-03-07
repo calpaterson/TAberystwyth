@@ -52,13 +52,13 @@ final public class Generator {
     private Random gen = new Random();
     
     /** The Constant N_TEAMS. */
-    public static final int N_TEAMS = 32;
+    public static final int N_TEAMS = 800;
     
     /** The Constant N_LOCATIONS. */
-    public static final int N_LOCATIONS = 8;
+    public static final int N_LOCATIONS = 210;
     
     /** The Constant N_JUDGES. */
-    public static final int N_JUDGES = 30;
+    public static final int N_JUDGES = 800;
     
     /**
      * Instantiates a new random tab generator.
@@ -124,7 +124,7 @@ final public class Generator {
                 String s = "insert into locations " + "(\"name\", "
                                 + "\"rating\") " + "values (?, ?);";
                 String location = locations[gen.nextInt(locations.length)]
-                                + gen.nextInt(100);
+                                + " " + gen.nextInt(1000);
                 PreparedStatement p = conn.prepareStatement(s);
                 p.setString(1, location);
                 p.setInt(2, 50);
@@ -219,7 +219,8 @@ final public class Generator {
      */
     private String genName() {
         return firstNames[gen.nextInt(firstNames.length)] + " "
-                        + surnames[gen.nextInt(surnames.length)];
+                        + surnames[gen.nextInt(surnames.length)] + " "
+                        + gen.nextInt(1000);
     }
     
     /** The institutions. */
@@ -352,25 +353,14 @@ final public class Generator {
             "Samuel", "Sophie", "Thomas", "William" };
     
     /** The locations. */
-    private String[] locations = {
-            "B23",
-            "Old Hall",
-            "Blenheim Palace",
-            "Council Chamber",
-            "Irish Room",
-            "A14",
-            "Maths Room",
-            "Edinburgh Old Town and New Town",
-            "A6",
-            "Tito's Bedroom",
+    private String[] locations = { "B23", "Old Hall", "Blenheim Palace",
+            "Council Chamber", "Irish Room", "A14", "Maths Room",
+            "Edinburgh Old Town and New Town", "A6", "Tito's Bedroom",
             "Giants Causeway", "Heart of Neolithic Orkney",
             "Ironbridge Gorge", "Jurassic Coast", "Kew Gardens",
-            "Pier Pressure", "Maritime Greenwich",
-            "Seddon Room",
-            "St. Margarets Church",
-            "Borth Animalarium",
-            "Yokos", "Tower of London",
-            "Westminster Palace, Westminster Abbey" };
+            "Pier Pressure", "Maritime Greenwich", "Seddon Room",
+            "St. Margarets Church", "Borth Animalarium", "Yokos",
+            "Tower of London", "Westminster Palace, Westminster Abbey" };
     
     String[] surnames = { "Jones", "Williams", "Davies", "Evans", "Thomas",
             "Roberts", "Lewis", "Hughes", "Morgan", "Griffiths", "Edwards",

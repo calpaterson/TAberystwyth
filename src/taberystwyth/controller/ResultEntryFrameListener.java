@@ -15,7 +15,7 @@ public class ResultEntryFrameListener implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.equals("Save")) frame.commit(); 
+        if(e.getActionCommand().equals("Save")) frame.commit(); 
     }
     
 }

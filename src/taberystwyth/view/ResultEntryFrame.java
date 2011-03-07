@@ -18,6 +18,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 
+import taberystwyth.controller.ResultEntryFrameListener;
 import taberystwyth.db.TabServer;
 
 /**
@@ -34,6 +35,8 @@ public class ResultEntryFrame extends JFrame {
     private static ResultEntryFrame instance = new ResultEntryFrame();
     
     String room;
+    
+    private ResultEntryFrameListener listener = new ResultEntryFrameListener(this);
     
     // JLabels
     private JLabel titleLabel = new JLabel("Enter Data For Round X"); // FIXME
@@ -152,6 +155,8 @@ public class ResultEntryFrame extends JFrame {
         
         add(clear, "span 2");
         add(save, "span 2");
+        
+        save.addActionListener(listener);
         
         // Pack
         this.pack();

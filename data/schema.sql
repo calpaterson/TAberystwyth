@@ -73,12 +73,12 @@ create table team_results (
 -- Speaker Results ("speaker points")
 create table speaker_results (
        "round" smallint not null,
-       "institution" text not null,	
        "speaker" text not null,
        "points" smallint not null,
+		"institution" text not null,
        primary key ("round", "speaker"),
        foreign key ("speaker") references speakers("name"),
-	   foreign key ("institution") references speakers("institution"),
+		foreign key ("institution") references speakers("institution"),
        constraint check_points check ("points" between 0 and 100)
 );
       

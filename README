@@ -5,6 +5,7 @@ TAberystwyth is a debating competition organiser.
 BUGS
 ====
 Compile a version of the JDBC jar from github that includes source code
+Database schema has uniqueness issues. We probably need indices.
 
 For v0.1
 ========

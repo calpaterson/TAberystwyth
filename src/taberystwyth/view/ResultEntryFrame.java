@@ -480,6 +480,9 @@ public class ResultEntryFrame extends JFrame {
             Connection conn = TabServer.getConnectionPool().getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             
+            stmt.setString(1, speaker);
+            stmt.setString(2, institution);
+            
             ResultSet rs = stmt.executeQuery();
             conn.close();
             stmt.close();

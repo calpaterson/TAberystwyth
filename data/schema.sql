@@ -75,10 +75,10 @@ create table speaker_results (
        "round" smallint not null,
        "speaker" text not null,
        "points" smallint not null,
-		"institution" text not null,
+	   "institution" text not null,
        primary key ("round", "speaker"),
        foreign key ("speaker") references speakers("name"),
-		foreign key ("institution") references speakers("institution"),
+       constraint check_institution check ("institution" in (select "institution" from speakers)),
        constraint check_points check ("points" between 0 and 100)
 );
       
